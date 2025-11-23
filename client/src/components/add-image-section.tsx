@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ImageIcon, Plus } from "lucide-react";
 import { UseMutationResult } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { MediaUploadModal } from "./media-upload-modal";
+import { ImageUploadModal } from "./image-upload-modal";
 import { MediaWithCaption } from "@shared/schema";
 
 interface AddImageSectionProps {
@@ -15,54 +15,30 @@ interface AddImageSectionProps {
 }
 
 export function AddImageSection({ rowId, location, onClose, onAddImage }: AddImageSectionProps) {
-  const [mediaUploadOpen, setMediaUploadOpen] = useState(false);
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const { toast } = useToast();
 
-  const handleMediaSave = async (media: MediaWithCaption) => {
+  const handleSaveImages = async (images: MediaWithCaption[]) => {
     try {
-      await onAddImage.mutateAsync({ 
-        rowId, 
-        imageUrl: media.url, 
-        caption: media.caption 
-      });
-      
-      toast({
-        title: "Media Added",
-        description: "Media has been added successfully.",
-      });
-      
-      setMediaUploadOpen(false);
-      onClose();
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to add media.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleMediaSaveMultiple = async (mediaList: MediaWithCaption[]) => {
-    try {
-      for (const media of mediaList) {
+      for (const image of images) {
         await onAddImage.mutateAsync({ 
           rowId, 
-          imageUrl: media.url, 
-          caption: media.caption 
+          imageUrl: image.url, 
+          caption: image.caption 
         });
       }
       
       toast({
-        title: "Album Added",
-        description: `${mediaList.length} media items have been added successfully.`,
+        title: "Images Added",
+        description: `${images.length} image(s) added successfully.`,
       });
       
-      setMediaUploadOpen(false);
+      setUploadModalOpen(false);
       onClose();
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to add some media items.",
+        description: "Failed to add some images.",
         variant: "destructive",
       });
     }
@@ -80,15 +56,15 @@ export function AddImageSection({ rowId, location, onClose, onAddImage }: AddIma
           <div className="flex flex-col gap-6 items-center text-center">
             <div className="bg-muted/50 backdrop-blur-sm border border-border rounded-lg p-6">
               <p className="text-muted-foreground mb-4 text-sm">
-                🎬 Add images or videos to this location
+                🎬 Add images to this location
               </p>
               <Button 
-                onClick={() => setMediaUploadOpen(true)}
+                onClick={() => setUploadModalOpen(true)}
                 className="bg-green-500 hover:bg-green-600 text-white"
                 data-testid="button-open-media-upload"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Add Media
+                Add Images
               </Button>
             </div>
 
@@ -105,12 +81,11 @@ export function AddImageSection({ rowId, location, onClose, onAddImage }: AddIma
         </CardContent>
       </Card>
 
-      {/* Media Upload Modal */}
-      <MediaUploadModal
-        open={mediaUploadOpen}
-        onOpenChange={setMediaUploadOpen}
-        onSave={handleMediaSave}
-        onSaveMultiple={handleMediaSaveMultiple}
+      {/* Image Upload Modal */}
+      <ImageUploadModal
+        open={uploadModalOpen}
+        onOpenChange={setUploadModalOpen}
+        onSave={handleSaveImages}
       />
     </>
   );
