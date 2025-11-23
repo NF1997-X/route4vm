@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertTableRowSchema, insertTableColumnSchema, insertRouteOptimizationSchema, insertLayoutPreferencesSchema, insertPageSchema, insertSharedTableStateSchema, insertSavedShareLinkSchema, insertCustomTableSchema, insertCustomTableRowSchema, type RouteOptimizationRequest } from "@shared/schema";
+import { insertTableRowSchema, insertTableColumnSchema, insertRouteOptimizationSchema, insertLayoutPreferencesSchema, insertPageSchema, insertSharedTableStateSchema, insertSavedShareLinkSchema, insertCustomTableSchema, insertCustomTableRowSchema, tableRows as tableRowsSchema, type RouteOptimizationRequest } from "@shared/schema";
 import { z } from "zod";
 import { optimizeRoute } from "./routeOptimizer";
 import { calculateTollPrice, calculateRoutesForDestinations } from "./openrouteservice";
@@ -565,7 +565,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         validRows,
         validatedData.algorithm || 'nearest_neighbor',
         validatedData.startLocation,
-        validatedData.prioritizeDelivery || false
+        false
       );
 
       res.json(result);
@@ -793,7 +793,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!setting) {
         // Return default value for footerCompanyName if not found
         if (key === 'footerCompanyName') {
-          return res.json({ key, value: 'Vending Machine' });
+          return res.json({ key, value: 'FamilyMart Operations' });
         }
         return res.status(404).json({ message: "Setting not found" });
       }

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import fs from 'fs';
 import csv from 'csv-parser';
 import { db } from './server/db';
@@ -32,7 +33,7 @@ async function importCSV() {
   
   // Read CSV file
   await new Promise<void>((resolve, reject) => {
-    fs.createReadStream('../table_rows.csv')
+    fs.createReadStream('./csv/table_rows.csv')
       .pipe(csv())
       .on('data', (data: CSVRow) => results.push(data))
       .on('end', () => resolve())

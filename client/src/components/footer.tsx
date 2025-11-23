@@ -18,7 +18,7 @@ export function Footer({ editMode = false }: FooterProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [companyName, setCompanyName] = useState("App v1.0.0");
+  const [companyName, setCompanyName] = useState("FamilyMart Operations");
   const [companyUrl, setCompanyUrl] = useState("");
   const { toast } = useToast();
 
@@ -126,70 +126,48 @@ export function Footer({ editMode = false }: FooterProps) {
   return (
     <>
       <footer 
-        className={`sticky bottom-0 z-40 w-full border-t-2 border-blue-500/50 dark:border-blue-400/50 bg-gradient-to-r from-blue-500/10 via-blue-600/10 to-blue-700/10 dark:from-blue-500/20 dark:via-blue-600/20 dark:to-blue-700/20 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-lg shadow-blue-500/20 transition-all duration-500 ease-out ${
+        className={`fixed bottom-0 left-0 right-0 z-40 w-full border-t-2 border-blue-500/50 dark:border-blue-400/50 bg-gradient-to-r from-blue-500/10 via-blue-600/10 to-blue-700/10 dark:from-blue-500/20 dark:via-blue-600/20 dark:to-blue-700/20 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-lg shadow-blue-500/20 transition-all duration-500 ease-out ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
         }`}
       >
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-2">
           <div className={`transition-all duration-700 ease-out ${
             isLoaded ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
           }`}>
             {/* Main Footer Content */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
-              {/* Left Section - Tagline */}
-              <div className="flex items-center gap-2 text-[11px]">
-                <div className="text-slate-600 dark:text-slate-400 font-medium">
-                  Delivering Convenience
+            <div className="flex items-center justify-center">
+              {/* Footer Text */}
+              <div className="text-[10px] text-slate-600 dark:text-slate-400 text-center">
+                <div className="flex items-center gap-1.5">
+                  <span>Built with</span>
+                  <span className="text-red-500">❤️</span>
+                  <span>for</span>
+                  {companyUrl ? (
+                    <a
+                      href={companyUrl}
+                      onClick={handleLinkClick}
+                      className="font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200 hover:underline"
+                    >
+                      {companyName}
+                    </a>
+                  ) : (
+                    <span className="font-bold">{companyName}</span>
+                  )}
+                  {editMode && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setEditDialogOpen(true)}
+                      className="h-5 w-5 p-0 hover:bg-blue-500/10 dark:hover:bg-blue-400/10 transition-all"
+                      data-testid="button-edit-footer"
+                    >
+                      <Pencil className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+                    </Button>
+                  )}
                 </div>
-                <div className="w-1.5 h-1.5 bg-blue-500/60 dark:bg-blue-400/60 rounded-full"></div>
-                <div className="text-slate-600 dark:text-slate-400 font-medium">
-                  One Route at a Time
+                <div className="mt-0.5 text-slate-500 dark:text-slate-500">
+                  <span className="font-bold">Powered by React & Vite</span>
                 </div>
-              </div>
-
-              {/* Center Section - Company Name with Edit */}
-              <div className="flex items-center gap-2">
-                {companyUrl ? (
-                  <a
-                    href={companyUrl}
-                    onClick={handleLinkClick}
-                    className="text-[11px] text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold transition-colors duration-200 flex items-center gap-1.5 group"
-                  >
-                    <span>{companyName}</span>
-                    <LinkIcon className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </a>
-                ) : (
-                  <span className="text-[11px] text-slate-700 dark:text-slate-300 font-semibold">
-                    {companyName}
-                  </span>
-                )}
-                {editMode && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setEditDialogOpen(true)}
-                    className="h-6 w-6 p-0 hover:bg-blue-500/10 dark:hover:bg-blue-400/10 transition-all"
-                    data-testid="button-edit-footer"
-                  >
-                    <Pencil className="w-3 h-3 text-blue-600 dark:text-blue-400" />
-                  </Button>
-                )}
-              </div>
-
-              {/* Right Section - Copyright */}
-              <div className="text-[10px] text-slate-500 dark:text-slate-500">
-                © {currentYear} All rights reserved
-              </div>
-            </div>
-
-            {/* Bottom Section - Additional Info */}
-            <div className="mt-2 pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
-              <div className="flex flex-wrap items-center justify-center gap-3 text-[9px] text-slate-500 dark:text-slate-500">
-                <span>Route Optimization System</span>
-                <div className="w-1 h-1 bg-slate-400/50 rounded-full"></div>
-                <span>Real-time Tracking</span>
-                <div className="w-1 h-1 bg-slate-400/50 rounded-full"></div>
-                <span>Data Management</span>
               </div>
             </div>
           </div>

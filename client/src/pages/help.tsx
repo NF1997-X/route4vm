@@ -165,10 +165,12 @@ export default function HelpPage() {
                         6. Delivery Alternate System
                       </h3>
                       <ul className="list-disc list-inside space-y-1 ml-4 text-sm">
-                        <li>4 delivery states: Normal, Alt 1, Alt 2, Inactive</li>
-                        <li>Alt 1: Deliveries on Monday/Wednesday/Friday/Sunday</li>
-                        <li>Alt 2: Deliveries on Tuesday/Thursday/Saturday</li>
-                        <li>Automatic sorting based on current day</li>
+                        <li>4 delivery states: Daily, Alt 1, Alt 2, Inactive</li>
+                        <li>Daily: Deliveries every day (including weekends)</li>
+                        <li>Alt 1: Deliveries on odd days only (1st, 3rd, 5th, 7th, etc.) - No weekend delivery</li>
+                        <li>Alt 2: Deliveries on even days only (2nd, 4th, 6th, 8th, etc.) - No weekend delivery</li>
+                        <li>Inactive: No deliveries</li>
+                        <li>Automatic sorting based on current day of month</li>
                         <li>Color-coded visual indicators for each state</li>
                         <li>Off-schedule entries displayed with reduced brightness</li>
                       </ul>
@@ -255,8 +257,8 @@ export default function HelpPage() {
                     Keyboard Shortcuts
                   </h2>
                   <ul className="list-disc list-inside space-y-1 ml-4 text-sm">
-                    <li><kbd className="px-2 py-1 text-xs bg-slate-800 rounded border border-slate-700">Esc</kbd> - Close modal/dialog windows</li>
-                    <li><kbd className="px-2 py-1 text-xs bg-slate-800 rounded border border-slate-700">Enter</kbd> - Submit forms and confirm actions</li>
+                    <li><kbd className="px-2 py-1 text-xs bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded border border-slate-400 dark:border-slate-700">Esc</kbd> - Close modal/dialog windows</li>
+                    <li><kbd className="px-2 py-1 text-xs bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded border border-slate-400 dark:border-slate-700">Enter</kbd> - Submit forms and confirm actions</li>
                   </ul>
                 </section>
 

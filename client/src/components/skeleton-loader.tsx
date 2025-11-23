@@ -170,10 +170,10 @@ export function LoadingOverlay({ message = "Loading...", type = "pulse" }: { mes
           </div>
           
           {/* Outer rotating ring */}
-          <div className="absolute inset-0 -m-2 rounded-3xl border-4 border-blue-400/20 animate-spin" style={{ animationDuration: '3s' }}></div>
+          <div className="absolute inset-0 -m-2 rounded-xl border-4 border-blue-400/20 animate-spin" style={{ animationDuration: '3s' }}></div>
           
           {/* Pulsing outer glow */}
-          <div className="absolute inset-0 -m-4 rounded-3xl bg-blue-500/10 animate-ping" style={{ animationDuration: '2s' }}></div>
+          <div className="absolute inset-0 -m-4 rounded-xl bg-blue-500/10 animate-ping" style={{ animationDuration: '2s' }}></div>
         </div>
         
         {/* Tips only - no message, no loader animation */}

@@ -53,28 +53,41 @@ export default function CustomTableView() {
     let filtered = [...rows];
     
     // Apply delivery alternate day-based filtering
-    const today = new Date().getDay(); // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
-    const isAlt1Day = [1, 3, 5, 0].includes(today); // Mon, Wed, Fri, Sun
-    const isAlt2Day = [2, 4, 6].includes(today); // Tue, Thu, Sat
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+    const dayOfMonth = now.getDate(); // 1-31
+    
+    const isWeekend = dayOfWeek === 5 || dayOfWeek === 6; // Friday=5, Saturday=6
+    const isAlt1Day = dayOfMonth % 2 === 1 && !isWeekend; // Odd days (1,3,5,7...) excluding weekend
+    const isAlt2Day = dayOfMonth % 2 === 0 && !isWeekend; // Even days (2,4,6,8...) excluding weekend
     
     // Sort based on delivery alternate and current day
     filtered = filtered.sort((a, b) => {
-      const aAlt = a.deliveryAlt || "normal";
-      const bAlt = b.deliveryAlt || "normal";
+      const aAlt = a.deliveryAlt || "daily";
+      const bAlt = b.deliveryAlt || "daily";
       
       // Inactive always at bottom
       if (aAlt === "inactive" && bAlt !== "inactive") return 1;
       if (aAlt !== "inactive" && bAlt === "inactive") return -1;
       
+      // Daily always at top (delivers every day including weekends)
+      if (aAlt === "daily" && bAlt !== "daily") return -1;
+      if (aAlt !== "daily" && bAlt === "daily") return 1;
+      
+      // On weekends, alt1 and alt2 are off (show dimmed), daily still delivers
+      if (isWeekend) {
+        return 0; // Alt1 and Alt2 same priority on weekend (both off)
+      }
+      
       // Priority based on day
       if (isAlt1Day) {
-        // Alt1 and normal at top, alt2 at bottom
-        if ((aAlt === "alt1" || aAlt === "normal") && bAlt === "alt2") return -1;
-        if (aAlt === "alt2" && (bAlt === "alt1" || bAlt === "normal")) return 1;
+        // Alt1 at top, alt2 at bottom
+        if (aAlt === "alt1" && bAlt === "alt2") return -1;
+        if (aAlt === "alt2" && bAlt === "alt1") return 1;
       } else if (isAlt2Day) {
-        // Alt2 and normal at top, alt1 at bottom
-        if ((aAlt === "alt2" || aAlt === "normal") && bAlt === "alt1") return -1;
-        if (aAlt === "alt1" && (bAlt === "alt2" || bAlt === "normal")) return 1;
+        // Alt2 at top, alt1 at bottom
+        if (aAlt === "alt2" && bAlt === "alt1") return -1;
+        if (aAlt === "alt1" && bAlt === "alt2") return 1;
       }
       
       return 0;

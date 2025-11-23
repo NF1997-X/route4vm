@@ -239,23 +239,34 @@ export function DataTable({
   
   // Helper function to determine schedule status
   const getScheduleStatus = (row: TableRowType) => {
+    // Main page (not shared view, not custom table): only check if active/inactive
+    if (!isSharedView) {
+      if (row.active === false) {
+        return 'inactive'; // Red/dimmed - power off
+      } else {
+        return 'on-schedule'; // Always bright/visible on main page
+      }
+    }
+    
+    // Shared view & custom table: apply full schedule logic
     const currentDay = new Date().getDay();
     const alt1Days = [1, 3, 5, 0]; // Mon, Wed, Fri, Sun
     const alt2Days = [2, 4, 6];    // Tue, Thu, Sat
     
     if (row.active === false || row.deliveryAlt === "inactive") {
-      return 'inactive'; // Red
+      return 'inactive'; // Red - don't show if power off
     } else if (
       (row.deliveryAlt === "alt1" && !alt1Days.includes(currentDay)) ||
       (row.deliveryAlt === "alt2" && !alt2Days.includes(currentDay))
     ) {
-      return 'off-schedule'; // Yellow
+      return 'off-schedule'; // Yellow - alt not matching today
     } else if (
-      isSharedView && 
       row.delivery === "Weekday" && 
       (currentDay === 5 || currentDay === 6) // Friday or Saturday
     ) {
-      return 'off-schedule'; // Yellow for weekday delivery on Fri/Sat in shared view
+      return 'off-schedule'; // Yellow - weekday delivery on weekend
+    } else if (row.delivery === "Daily") {
+      return 'on-schedule'; // Daily = always on schedule
     } else {
       return 'on-schedule'; // Green
     }
@@ -336,6 +347,12 @@ export function DataTable({
       const onScheduleRows = rows.filter(row => getScheduleStatus(row) === 'on-schedule');
       const offScheduleRows = rows.filter(row => getScheduleStatus(row) === 'off-schedule');
       const inactiveRows = rows.filter(row => getScheduleStatus(row) === 'inactive');
+      
+      // For shared view: DON'T show inactive rows (power off)
+      if (isSharedView) {
+        return [...onScheduleRows, ...offScheduleRows];
+      }
+      
       return [...onScheduleRows, ...offScheduleRows, ...inactiveRows];
     } else {
       // Regular view mode: only put inactive rows at bottom
@@ -1132,10 +1149,10 @@ export function DataTable({
           </div>
         </div>
       )}
-      <div className="overflow-x-auto w-full">
+      <div className="overflow-x-auto w-full rounded-xl">
         <DragDropContext onDragEnd={handleDragEnd}>
-          <Table className="min-w-full">
-            <TableHeader className="table-header-glass sticky top-0 z-20 bg-white dark:bg-slate-900 border-b-2 border-yellow-400/30">
+          <Table className="min-w-full rounded-xl overflow-hidden">
+            <TableHeader className="table-header-glass sticky top-0 z-20 bg-white dark:bg-slate-900 border-b-2 border-yellow-400/30 rounded-t-xl">
               <Droppable
                 droppableId="columns"
                 direction="horizontal"
@@ -1256,29 +1273,23 @@ export function DataTable({
                               {...provided.draggableProps}
                               className={`table-row-glass group ${
                                 (() => {
-                                  // Apply 3-color styling ONLY for shared view or edit mode
-                                  if (isSharedView || editMode) {
-                                    const status = getScheduleStatus(row);
-                                    if (status === 'inactive') {
-                                      return "bg-gray-100/60 dark:bg-gray-800/40 opacity-50";
-                                    } else if (status === 'off-schedule') {
-                                      return row.location === "QL Kitchen" 
-                                        ? "bg-gradient-to-r from-gray-100/80 to-slate-100/80 dark:from-gray-800/60 dark:to-slate-800/60 opacity-60" 
-                                        : "odd:bg-white dark:odd:bg-gray-900/50 even:bg-blue-50/50 dark:even:bg-blue-900/20 opacity-60";
-                                    } else {
-                                      return row.location === "QL Kitchen" 
-                                        ? "bg-gradient-to-r from-gray-100/80 to-slate-100/80 dark:from-gray-800/60 dark:to-slate-800/60" 
-                                        : "odd:bg-white dark:odd:bg-gray-900/50 even:bg-blue-50/50 dark:even:bg-blue-900/20";
-                                    }
-                                  } else {
-                                    // Regular view mode: standard styling
+                                  // Main page (NOT shared view): only dim if power off (inactive)
+                                  if (!isSharedView) {
                                     if (row.active === false) {
-                                      return "bg-gray-100/60 dark:bg-gray-800/40 opacity-50";
+                                      return "bg-gray-300 dark:bg-gray-800 opacity-40";
                                     } else {
-                                      return row.location === "QL Kitchen" 
-                                        ? "bg-gradient-to-r from-gray-100/80 to-slate-100/80 dark:from-gray-800/60 dark:to-slate-800/60" 
-                                        : "odd:bg-white dark:odd:bg-gray-900/50 even:bg-blue-50/50 dark:even:bg-blue-900/20";
+                                      return "bg-gradient-to-r from-gray-100 to-slate-100 dark:from-gray-900 dark:to-gray-950";
                                     }
+                                  }
+                                  
+                                  // Shared view & custom table: apply schedule-based styling
+                                  const status = getScheduleStatus(row);
+                                  if (status === 'inactive') {
+                                    return "bg-gray-300 dark:bg-gray-800 opacity-40";
+                                  } else if (status === 'off-schedule') {
+                                    return "bg-gradient-to-r from-gray-100 to-slate-100 dark:from-gray-900 dark:to-gray-950 opacity-60";
+                                  } else {
+                                    return "bg-gradient-to-r from-gray-100 to-slate-100 dark:from-gray-900 dark:to-gray-950";
                                   }
                                 })()
                               } hover:bg-blue-100/60 dark:hover:bg-blue-800/30 table-cell-unique-transition ${
@@ -1289,7 +1300,7 @@ export function DataTable({
                               {visibleColumns.map((column) => (
                                 <TableCell
                                   key={column.id}
-                                  className="p-4 align-middle [&:has([role=checkbox])]:pr-0 px-3 py-3 table-cell-10px text-center text-[12px] bg-transparent text-foreground whitespace-nowrap font-normal table-zoom-in"
+                                  className="p-4 align-middle [&:has([role=checkbox])]:pr-0 px-3 py-3 table-cell-10px text-center text-[13px] bg-transparent text-black dark:text-gray-100 font-bold whitespace-nowrap table-zoom-in"
                                   style={{
                                     minWidth: "100px",
                                     ...(column.dataKey === "location" && {
@@ -1360,12 +1371,14 @@ export function DataTable({
                                         qrCode={row.qrCode || undefined}
                                         no={row.no}
                                         markerColor={row.markerColor || undefined}
+                                        images={row.images || []}
                                         onUpdateRow={(updates) =>
                                           onUpdateRow.mutate({
                                             id: row.id,
                                             updates,
                                           })
                                         }
+                                        onOpenImageModal={() => onSelectRowForImage(row.id)}
                                         editMode={false}
                                         allRows={rows}
                                         iconType="info"
@@ -1390,12 +1403,12 @@ export function DataTable({
                                         }
                                       />
                                     ) : (
-                                      <span className="text-[9px] text-gray-500 dark:text-gray-400 font-medium">
+                                      <span className="text-[9px] text-black dark:text-slate-100 font-medium">
                                         {getCellValue(row, column, index) || '—'}
                                       </span>
                                     )
                                   ) : column.dataKey === "id" ? (
-                                    <span className="font-mono text-slate-600 dark:text-slate-300" style={{ fontSize: '10px' }}>
+                                    <span className="font-mono text-black dark:text-slate-100" style={{ fontSize: '10px' }}>
                                       {getCellValue(row, column, index)}
                                     </span>
                                   ) : column.dataKey === "no" && editMode && row.location !== "QL Kitchen" ? (
@@ -1425,7 +1438,7 @@ export function DataTable({
                                       }
                                     />
                                   ) : (
-                                    <span className="text-[9px] text-gray-500 dark:text-gray-400 font-medium">
+                                    <span className="text-[9px] text-black dark:text-slate-100 font-medium">
                                       {column.dataKey === "kilometer" ? (
                                         <MobileTooltip
                                           content={(() => {
@@ -1498,25 +1511,25 @@ export function DataTable({
                                       <Button
                                         size="sm"
                                         variant="ghost"
-                                        className={`bg-transparent border-transparent hover:bg-transparent hover:border-transparent ${!isAuthenticated ? "opacity-50 cursor-not-allowed" : "text-blue-400 dark:text-blue-300 hover:text-blue-500 dark:hover:text-blue-400"} ${
+                                        className={`bg-transparent border-transparent hover:bg-transparent hover:border-transparent ${!editMode ? "opacity-50 cursor-not-allowed" : "text-blue-400 dark:text-blue-300 hover:text-blue-500 dark:hover:text-blue-400"} ${
                                           onDeleteRow.isPending &&
                                           onDeleteRow.variables === row.id
                                             ? "mutation-loading"
                                             : ""
                                         }`}
                                         onClick={() =>
-                                          isAuthenticated &&
+                                          editMode &&
                                           handleDeleteClick(row.id)
                                         }
                                         disabled={
-                                          !isAuthenticated ||
+                                          !editMode ||
                                           (onDeleteRow.isPending &&
                                             onDeleteRow.variables === row.id)
                                         }
                                         data-testid={`button-delete-row-${row.id}`}
                                         title={
-                                          !isAuthenticated
-                                            ? "Authentication required to delete rows"
+                                          !editMode
+                                            ? "Enable edit mode to delete rows"
                                             : "Delete row"
                                         }
                                       >
@@ -1540,12 +1553,14 @@ export function DataTable({
                                       qrCode={row.qrCode || undefined}
                                       no={row.no}
                                       markerColor={row.markerColor || undefined}
+                                      images={row.images || []}
                                       onUpdateRow={(updates) =>
                                         onUpdateRow.mutate({
                                           id: row.id,
                                           updates,
                                         })
                                       }
+                                      onOpenImageModal={() => onSelectRowForImage(row.id)}
                                       editMode={editMode}
                                       allRows={rows}
                                       iconType={editMode ? "filetext" : "info"}
@@ -1672,12 +1687,12 @@ export function DataTable({
                 </TableBody>
               )}
             </Droppable>
-            <tfoot>
-              <TableRow>
+            <tfoot className="rounded-b-xl">
+              <TableRow className="rounded-b-xl">
                 {visibleColumns.map((column, index) => (
                   <TableCell
                     key={column.id}
-                    className="px-3 py-3 text-center table-header-footer-12px font-semibold tracking-wide border-t border-border sticky bottom-0 bg-white dark:bg-slate-900 shadow-sm whitespace-nowrap"
+                    className="px-3 py-3 text-center table-header-footer-12px font-semibold tracking-wide border-t border-border sticky bottom-0 bg-white dark:bg-slate-900 shadow-sm whitespace-nowrap first:rounded-bl-xl last:rounded-br-xl"
                     style={{
                       textAlign: "center",
                       fontSize: "10px",
@@ -1714,7 +1729,7 @@ export function DataTable({
                     )}
                   </TableCell>
                 ))}
-                <TableCell className="px-3 py-3 text-center table-header-footer-12px font-semibold tracking-wide border-t border-border sticky bottom-0 bg-white dark:bg-slate-900 shadow-sm text-foreground whitespace-nowrap" style={{ textAlign: "center", fontSize: '10px' }}>
+                <TableCell className="px-3 py-3 text-center table-header-footer-12px font-semibold tracking-wide border-t border-border sticky bottom-0 bg-white dark:bg-slate-900 shadow-sm text-foreground whitespace-nowrap first:rounded-bl-xl last:rounded-br-xl" style={{ textAlign: "center", fontSize: '10px' }}>
                   <span className="font-semibold bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text text-transparent">—</span>
                 </TableCell>
               </TableRow>

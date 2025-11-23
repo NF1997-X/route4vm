@@ -22,13 +22,15 @@ interface InfoModalProps {
   qrCode?: string;
   no?: number;
   markerColor?: string;
+  images?: Array<{ url: string; caption?: string }>;
   onUpdateRow?: (updates: any) => void;
+  onOpenImageModal?: () => void;
   editMode?: boolean;
   allRows?: any[];
   iconType?: 'info' | 'filetext';
 }
 
-export function InfoModal({ info, rowId, code, route, location, latitude, longitude, qrCode, no, markerColor, onUpdateRow, editMode = false, allRows = [], iconType = 'info' }: InfoModalProps) {
+export function InfoModal({ info, rowId, code, route, location, latitude, longitude, qrCode, no, markerColor, images = [], onUpdateRow, onOpenImageModal, editMode = false, allRows = [], iconType = 'info' }: InfoModalProps) {
   const [open, setOpen] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [scannedResult, setScannedResult] = useState<string>("");
@@ -258,7 +260,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
         </Button>
       </DialogTrigger>
       <DialogContent 
-        className="max-w-lg overflow-hidden flex flex-col bg-white/70 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-200/60 dark:border-white/10 shadow-[0_20px_60px_0_rgba(0,0,0,0.25)] rounded-3xl transition-smooth data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-90 data-[state=open]:zoom-in-95 duration-300 ease-out"
+        className="max-w-lg overflow-hidden flex flex-col bg-white/70 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-200/60 dark:border-white/10 shadow-[0_20px_60px_0_rgba(0,0,0,0.25)] rounded-xl transition-smooth data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-90 data-[state=open]:zoom-in-95 duration-300 ease-out"
         style={{
           maxHeight: 'min(90vh, calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 40px))',
           touchAction: 'pan-y',
@@ -266,7 +268,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
       >
         {/* iOS Frosted Glass Layer */}
         <div 
-          className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-white/60 via-white/40 to-white/50 dark:from-black/40 dark:via-black/20 dark:to-black/30 border-0 shadow-inner" 
+          className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-br from-white/60 via-white/40 to-white/50 dark:from-black/40 dark:via-black/20 dark:to-black/30 border-0 shadow-inner" 
           style={{
             backdropFilter: 'blur(40px)',
             WebkitBackdropFilter: 'blur(40px)',
@@ -291,6 +293,84 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
             overscrollBehavior: 'contain',
           }}
         >
+          {/* Image Preview Section */}
+          {images && images.length > 0 && (
+            <div className="bg-transparent backdrop-blur-sm rounded-xl p-4 space-y-3 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-pink-500 dark:bg-pink-400 rounded-full"></div>
+                  <h4 className="font-semibold text-pink-600 dark:text-pink-400" style={{fontSize: '10px'}}>📸 Images ({images.length})</h4>
+                </div>
+                {editMode && onOpenImageModal && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setOpen(false);
+                      onOpenImageModal();
+                    }}
+                    className="text-xs h-7 px-2 bg-pink-100 hover:bg-pink-200 dark:bg-pink-900/30 dark:hover:bg-pink-900/50 text-pink-700 dark:text-pink-300"
+                  >
+                    Manage
+                  </Button>
+                )}
+              </div>
+              
+              <div className="flex gap-2">
+                {/* First 2 images as preview */}
+                {images.slice(0, 2).map((img, index) => (
+                  <div
+                    key={index}
+                    className="relative w-20 h-20 rounded-lg overflow-hidden border-2 border-pink-200 dark:border-pink-700 shadow-md cursor-pointer hover:border-pink-400 dark:hover:border-pink-500 transition-all"
+                    onClick={() => {
+                      if (onOpenImageModal) {
+                        setOpen(false);
+                        onOpenImageModal();
+                      }
+                    }}
+                  >
+                    <img
+                      src={img.url}
+                      alt={img.caption || `Image ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    {img.caption && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-[8px] px-1 py-0.5 truncate">
+                        {img.caption}
+                      </div>
+                    )}
+                  </div>
+                ))}
+                
+                {/* "+X more" indicator if more than 2 images */}
+                {images.length > 2 && (
+                  <div
+                    className="relative w-20 h-20 rounded-lg overflow-hidden border-2 border-dashed border-pink-300 dark:border-pink-600 bg-pink-50 dark:bg-pink-900/20 flex items-center justify-center cursor-pointer hover:border-pink-400 dark:hover:border-pink-500 hover:bg-pink-100 dark:hover:bg-pink-900/30 transition-all"
+                    onClick={() => {
+                      if (onOpenImageModal) {
+                        setOpen(false);
+                        onOpenImageModal();
+                      }
+                    }}
+                  >
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-pink-600 dark:text-pink-400">
+                        +{images.length - 2}
+                      </div>
+                      <div className="text-[8px] text-pink-500 dark:text-pink-400">
+                        more
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <p className="text-muted-foreground text-[9px]">
+                Click to view all images in gallery
+              </p>
+            </div>
+          )}
+
           {/* Mini Map Section */}
           {latitude && longitude && !isNaN(parseFloat(latitude)) && !isNaN(parseFloat(longitude)) && (
             <div className="bg-transparent backdrop-blur-sm rounded-xl p-4 space-y-3 shadow-sm">

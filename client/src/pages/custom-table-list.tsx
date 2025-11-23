@@ -12,8 +12,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Share2, Trash2, Copy, Check, Home, Edit, ArrowLeft } from "lucide-react";
+import { Plus, Share2, Trash2, Copy, Check, Home, Edit, ArrowLeft, MoreVertical, ChevronDown } from "lucide-react";
 import type { TableRow, CustomTable } from "@shared/schema";
 import { Footer } from "@/components/footer";
 import { LoadingOverlay } from "@/components/skeleton-loader";
@@ -317,7 +328,7 @@ export default function CustomTableList() {
         </div>
 
         {/* Location Selection Table */}
-        <div className="bg-white/90 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-300 dark:border-white/10 shadow-xl rounded-3xl overflow-hidden mb-8">
+        <div className="bg-white/90 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-300 dark:border-white/10 shadow-xl rounded-xl overflow-hidden mb-8">
           {/* Header with Search */}
           <div className="p-6 pb-4 border-b border-gray-300 dark:border-white/10">
             <h2 className="text-sm font-semibold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
@@ -413,7 +424,7 @@ export default function CustomTableList() {
         </div>
 
         {/* Existing Custom Tables */}
-        <div className="bg-white/90 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-300 dark:border-white/10 shadow-xl rounded-3xl p-6">
+        <div className="bg-white/90 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-300 dark:border-white/10 shadow-xl rounded-xl p-6">
           <h6 className="font-semibold mb-4 text-gray-900 dark:text-white" style={{ fontSize: '12px' }}>My Custom Tables</h6>
           {customTables.length === 0 ? (
             <p className="text-center text-gray-600 dark:text-gray-400 py-8">
@@ -422,61 +433,81 @@ export default function CustomTableList() {
           ) : (
             <div className="space-y-4">
               {customTables.map((table) => (
-                <div
-                  key={table.id}
-                  className="custom-table-card flex items-center justify-between p-4 bg-transparent rounded-xl border border-gray-300 dark:border-gray-800/40 hover:bg-gray-50 dark:hover:bg-white/5"
-                >
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 dark:text-white text-[12px]">{table.name}</h3>
-                    {table.description && (
-                      <p className="text-sm text-gray-600 dark:text-gray-400">{table.description}</p>
-                    )}
-                    <p className="text-gray-500 dark:text-gray-500 mt-1" style={{ fontSize: '10px' }}>
-                      Created {new Date(table.createdAt).toLocaleDateString()}
-                    </p>
+                <Collapsible key={table.id}>
+                  <div className="custom-table-card flex items-center justify-between p-4 bg-transparent rounded-xl border border-gray-300 dark:border-gray-800/40 hover:bg-gray-50 dark:hover:bg-white/5">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-[12px]">{table.name}</h3>
+                        {(table.description || table.createdAt) && (
+                          <CollapsibleTrigger asChild>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-5 w-5 p-0 hover:bg-transparent"
+                            >
+                              <ChevronDown className="h-3 w-3 text-gray-500 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                            </Button>
+                          </CollapsibleTrigger>
+                        )}
+                      </div>
+                      <CollapsibleContent className="mt-2">
+                        {table.description && (
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{table.description}</p>
+                        )}
+                        <p className="text-gray-500 dark:text-gray-500 mt-1" style={{ fontSize: '10px' }}>
+                          Created {new Date(table.createdAt).toLocaleDateString()}
+                        </p>
+                      </CollapsibleContent>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => window.open(`/custom/${table.shareId}`, "_blank")}
+                        size="sm"
+                        variant="outline"
+                        className="bg-transparent border-transparent hover:bg-blue-500/10"
+                      >
+                        View
+                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="bg-transparent border-transparent hover:bg-gray-500/10 h-8 w-8 p-0"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48">
+                          <DropdownMenuItem onClick={() => copyShareLink(table)}>
+                            {copiedId === table.id ? (
+                              <>
+                                <Check className="h-4 w-4 mr-2 text-green-500" />
+                                Copied!
+                              </>
+                            ) : (
+                              <>
+                                <Share2 className="h-4 w-4 mr-2" />
+                                Copy Share Link
+                              </>
+                            )}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleEditTable(table)}>
+                            <Edit className="h-4 w-4 mr-2 text-green-600" />
+                            Edit Locations
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onClick={() => deleteTableMutation.mutate(table.id)}
+                            className="text-red-500 focus:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete Table
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => copyShareLink(table)}
-                      size="sm"
-                      variant="outline"
-                      className="bg-transparent border-transparent hover:bg-blue-500/10"
-                      title="Copy share link"
-                    >
-                      {copiedId === table.id ? (
-                        <Check className="h-4 w-4 text-green-500" />
-                      ) : (
-                        <Share2 className="h-4 w-4" />
-                      )}
-                    </Button>
-                    <Button
-                      onClick={() => window.open(`/custom/${table.shareId}`, "_blank")}
-                      size="sm"
-                      variant="outline"
-                      className="bg-transparent border-transparent hover:bg-blue-500/10"
-                    >
-                      View
-                    </Button>
-                    <Button
-                      onClick={() => handleEditTable(table)}
-                      size="sm"
-                      variant="outline"
-                      className="bg-transparent border-transparent hover:bg-green-500/10 text-green-600"
-                      title="Edit locations"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      onClick={() => deleteTableMutation.mutate(table.id)}
-                      size="sm"
-                      variant="outline"
-                      className="bg-transparent border-transparent hover:bg-red-500/10 text-red-500"
-                      title="Delete table"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
+                </Collapsible>
               ))}
             </div>
           )}
@@ -485,14 +516,14 @@ export default function CustomTableList() {
         {/* Create Table Dialog */}
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
         <DialogContent 
-          className="bg-white/90 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-300 dark:border-white/10 shadow-xl rounded-3xl"
+          className="bg-white/90 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-300 dark:border-white/10 shadow-xl rounded-xl"
           style={{
             maxHeight: 'min(80vh, calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 40px))',
             touchAction: 'pan-y',
           }}
         >
           <div 
-            className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-white/60 via-white/40 to-white/50 dark:from-black/40 dark:via-black/20 dark:to-black/30 border-0 shadow-inner" 
+            className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-br from-white/60 via-white/40 to-white/50 dark:from-black/40 dark:via-black/20 dark:to-black/30 border-0 shadow-inner" 
             style={{
               backdropFilter: 'blur(40px)',
               WebkitBackdropFilter: 'blur(40px)',
@@ -563,14 +594,14 @@ export default function CustomTableList() {
         }
       }}>
         <DialogContent 
-          className="bg-white/90 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-300 dark:border-white/10 shadow-xl rounded-3xl max-h-[80vh] overflow-y-auto"
+          className="bg-white/90 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-300 dark:border-white/10 shadow-xl rounded-xl max-h-[80vh] overflow-y-auto"
           style={{
             maxHeight: 'min(80vh, calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 40px))',
             touchAction: 'pan-y',
           }}
         >
           <div 
-            className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-white/60 via-white/40 to-white/50 dark:from-black/40 dark:via-black/20 dark:to-black/30 border-0 shadow-inner" 
+            className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-br from-white/60 via-white/40 to-white/50 dark:from-black/40 dark:via-black/20 dark:to-black/30 border-0 shadow-inner" 
             style={{
               backdropFilter: 'blur(40px)',
               WebkitBackdropFilter: 'blur(40px)',

@@ -41,8 +41,8 @@ export function ColumnCustomizationModal({
   useEffect(() => {
     if (columns.length > 0) {
       const columnsToHide = editMode 
-        ? ['longitude', 'latitude', 'tollPrice'] // In edit mode, hide longitude, latitude, and tollPrice
-        : ['longitude', 'latitude', 'info', 'tollPrice']; // In view mode, also hide info column and tollPrice
+        ? ['longitude', 'latitude', 'tollPrice', 'images'] // In edit mode, hide longitude, latitude, tollPrice, and images
+        : ['longitude', 'latitude', 'info', 'tollPrice', 'images']; // In view mode, also hide info column, tollPrice, and images
       
       const columnItems: ColumnItem[] = columns
         .filter(column => !columnsToHide.includes(column.dataKey))
@@ -86,8 +86,8 @@ export function ColumnCustomizationModal({
 
   const handleReset = () => {
     const columnsToHide = editMode 
-      ? ['longitude', 'latitude', 'tollPrice'] // In edit mode, hide longitude, latitude, and tollPrice
-      : ['longitude', 'latitude', 'info', 'tollPrice']; // In view mode, also hide info column and tollPrice
+      ? ['longitude', 'latitude', 'tollPrice', 'images'] // In edit mode, hide longitude, latitude, tollPrice, and images
+      : ['longitude', 'latitude', 'info', 'tollPrice', 'images']; // In view mode, also hide info column, tollPrice, and images
     
     const resetColumns = columns
       .filter(column => !columnsToHide.includes(column.dataKey))
@@ -134,9 +134,9 @@ export function ColumnCustomizationModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-white/70 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-200/60 dark:border-white/10 shadow-[0_20px_60px_0_rgba(0,0,0,0.25)] rounded-3xl transition-smooth">
+      <DialogContent className="max-w-md bg-white/70 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-200/60 dark:border-white/10 shadow-[0_20px_60px_0_rgba(0,0,0,0.25)] rounded-xl transition-smooth">
         {/* iOS Frosted Glass Layer */}
-        <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-white/60 via-white/40 to-white/50 dark:from-black/40 dark:via-black/20 dark:to-black/30 backdrop-blur-3xl border-0 shadow-inner" />
+        <div className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-br from-white/60 via-white/40 to-white/50 dark:from-black/40 dark:via-black/20 dark:to-black/30 backdrop-blur-3xl border-0 shadow-inner" />
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold flex items-center gap-2 text-blue-600 dark:text-blue-400">
             <Columns3 className="w-6 h-6" />

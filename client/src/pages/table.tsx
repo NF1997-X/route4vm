@@ -265,7 +265,7 @@ export default function TablePage() {
         .map(col => col.id);
       
       const latLngColumns = columns.filter(col => 
-        col.dataKey === 'latitude' || col.dataKey === 'longitude'
+        col.dataKey === 'latitude' || col.dataKey === 'longitude' || col.dataKey === 'images'
       ).map(col => col.id);
       
       setVisibleColumns(defaultVisibleColumns.length > 0 ? defaultVisibleColumns : columns.map(col => col.id).filter(id => !latLngColumns.includes(id)));
@@ -437,10 +437,10 @@ export default function TablePage() {
       .filter((col): col is TableColumn => col !== undefined)
       .filter(col => visibleColumns.includes(col.id));
 
-    // Hide latitude, longitude, and tollPrice columns unless in edit mode
+    // Hide latitude, longitude, tollPrice, and images columns unless in edit mode
     if (!editMode) {
       filteredColumns = filteredColumns.filter(col => 
-        col.dataKey !== 'latitude' && col.dataKey !== 'longitude' && col.dataKey !== 'tollPrice'
+        col.dataKey !== 'latitude' && col.dataKey !== 'longitude' && col.dataKey !== 'tollPrice' && col.dataKey !== 'images'
       );
     }
 
@@ -1719,7 +1719,6 @@ export default function TablePage() {
         </DialogContent>
       </Dialog>
 
-      {/* Position Dialog */}
       <Dialog open={showPositionDialog && !exitingEditMode} onOpenChange={setShowPositionDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>

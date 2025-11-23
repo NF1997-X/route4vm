@@ -224,7 +224,6 @@ export interface RouteOptimizationRequest {
   rowIds?: string[];
   startLocation?: { latitude: number; longitude: number };
   algorithm?: 'nearest_neighbor' | 'genetic' | 'simulated_annealing';
-  prioritizeDelivery?: boolean;
   maxDistance?: number;
   vehicleSpecs?: {
     type: string; // e.g., "lorry refrigerator 1 ton"

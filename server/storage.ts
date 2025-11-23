@@ -194,19 +194,10 @@ export class MemStorage implements IStorage {
       },
       {
         id: randomUUID(),
-        name: "Trip",
-        dataKey: "trip",
-        type: "select",
-        sortOrder: 7,
-        isEditable: "true",
-        options: ["Daily", "Weekday", "Alt 1", "Alt 2"] as string[],
-      },
-      {
-        id: randomUUID(),
         name: "Parking",
         dataKey: "tngRoute",
         type: "currency",
-        sortOrder: 8,
+        sortOrder: 7,
         isEditable: "true",
         options: [] as string[],
       },
@@ -215,7 +206,7 @@ export class MemStorage implements IStorage {
         name: "Info",
         dataKey: "info",
         type: "text",
-        sortOrder: 9,
+        sortOrder: 8,
         isEditable: "true",
         options: [] as string[],
       },
@@ -430,8 +421,20 @@ export class MemStorage implements IStorage {
 
   private ensureCoreColumns() {
     const existingColumns = Array.from(this.tableColumns.values());
-    const kilometerColumn = existingColumns.find(col => col.dataKey === 'kilometer');
-    const tollPriceColumn = existingColumns.find(col => col.dataKey === 'tollPrice');
+    
+    // Remove duplicate kilometer columns (keep only the first one)
+    const kilometerColumns = existingColumns.filter(col => col.dataKey === 'kilometer');
+    if (kilometerColumns.length > 1) {
+      // Keep the first one, delete the rest
+      for (let i = 1; i < kilometerColumns.length; i++) {
+        this.tableColumns.delete(kilometerColumns[i].id);
+      }
+    }
+    
+    // Refresh after deduplication
+    const updatedColumns = Array.from(this.tableColumns.values());
+    const kilometerColumn = updatedColumns.find(col => col.dataKey === 'kilometer');
+    const tollPriceColumn = updatedColumns.find(col => col.dataKey === 'tollPrice');
     
     if (!kilometerColumn) {
       const infoColumn = existingColumns.find(col => col.dataKey === 'info');
@@ -638,7 +641,6 @@ export class MemStorage implements IStorage {
       "route",
       "code",
       "location",
-      "trip",
       "info",
       "tngRoute",
       "latitude",
@@ -999,18 +1001,10 @@ export class DatabaseStorage implements IStorage {
             options: ["Daily", "Weekday", "Alt 1", "Alt 2"] as string[],
           },
           {
-            name: "Trip",
-            dataKey: "trip",
-            type: "select",
-            sortOrder: 7,
-            isEditable: "true",
-            options: ["Daily", "Weekday", "Alt 1", "Alt 2"] as string[],
-          },
-          {
             name: "Parking",
             dataKey: "tngRoute",
             type: "currency",
-            sortOrder: 8,
+            sortOrder: 7,
             isEditable: "true",
             options: [] as string[],
           },
@@ -1018,7 +1012,7 @@ export class DatabaseStorage implements IStorage {
             name: "Info",
             dataKey: "info",
             type: "text",
-            sortOrder: 9,
+            sortOrder: 8,
             isEditable: "true",
             options: [] as string[],
           },
@@ -1026,7 +1020,7 @@ export class DatabaseStorage implements IStorage {
             name: "Images",
             dataKey: "images",
             type: "images",
-            sortOrder: 10,
+            sortOrder: 9,
             isEditable: "false",
             options: [] as string[],
           },
@@ -1257,11 +1251,23 @@ export class DatabaseStorage implements IStorage {
   private async ensureCoreColumns() {
     try {
       const existingColumns = await this.getTableColumns();
-      const kilometerColumn = existingColumns.find(col => col.dataKey === 'kilometer');
-      const tollPriceColumn = existingColumns.find(col => col.dataKey === 'tollPrice');
+      
+      // Remove duplicate kilometer columns (keep only the first one)
+      const kilometerColumns = existingColumns.filter(col => col.dataKey === 'kilometer');
+      if (kilometerColumns.length > 1) {
+        // Keep the first one, delete the rest
+        for (let i = 1; i < kilometerColumns.length; i++) {
+          await db.delete(tableColumns).where(eq(tableColumns.id, kilometerColumns[i].id));
+        }
+      }
+      
+      // Refresh after deduplication
+      const updatedExistingColumns = await this.getTableColumns();
+      const kilometerColumn = updatedExistingColumns.find(col => col.dataKey === 'kilometer');
+      const tollPriceColumn = updatedExistingColumns.find(col => col.dataKey === 'tollPrice');
       
       if (!kilometerColumn) {
-        const infoColumn = existingColumns.find(col => col.dataKey === 'info');
+        const infoColumn = updatedExistingColumns.find(col => col.dataKey === 'info');
         const infoSortOrder = infoColumn ? infoColumn.sortOrder : 6;
         
         // Create Kilometer column right after Info
@@ -1275,7 +1281,7 @@ export class DatabaseStorage implements IStorage {
         });
         
         // Adjust sortOrder of subsequent columns
-        for (const col of existingColumns) {
+        for (const col of updatedExistingColumns) {
           if (col.sortOrder > infoSortOrder) {
             await db
               .update(tableColumns)
@@ -1497,7 +1503,6 @@ export class DatabaseStorage implements IStorage {
       "route",
       "code",
       "location",
-      "trip",
       "info",
       "tngRoute",
       "latitude",

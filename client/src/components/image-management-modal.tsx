@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ImageIcon, Upload, Link as LinkIcon, Pencil, Trash2, X, AlertTriangle } from "lucide-react";
+import { ImageIcon, Pencil, Trash2, X, AlertTriangle } from "lucide-react";
 import { UseMutationResult } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -31,12 +31,11 @@ interface ImageManagementModalProps {
   location?: string;
   images: ImageData[];
   onAddImage: UseMutationResult<any, Error, { rowId: string; imageUrl: string; caption?: string }, unknown>;
-  onUpdateImage: UseMutationResult<any, Error, { rowId: string; oldImageUrl: string; newImageUrl: string; caption?: string }, unknown>;
-  onDeleteImage: UseMutationResult<any, Error, { rowId: string; imageUrl: string }, unknown>;
+  onUpdateImage: UseMutationResult<any, Error, { rowId: string; imageIndex: number; imageUrl?: string; caption?: string }, unknown>;
+  onDeleteImage: UseMutationResult<any, Error, { rowId: string; imageIndex?: number }, unknown>;
 }
 
 type ModalMode = 'add' | 'edit' | 'delete';
-type AddMethod = 'url' | 'upload';
 type EditAction = 'replace' | 'caption' | 'url';
 type DeleteAction = 'caption' | 'image' | 'all';
 
@@ -54,10 +53,10 @@ export function ImageManagementModal({
   const [mode, setMode] = useState<ModalMode>('add');
   
   // Add Image States
-  const [addMethod, setAddMethod] = useState<AddMethod>('url');
+  const [isBulkMode, setIsBulkMode] = useState(false);
   const [newImageUrl, setNewImageUrl] = useState("");
   const [newImageCaption, setNewImageCaption] = useState("");
-  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [bulkUrls, setBulkUrls] = useState("");
   
   // Edit States
   const [editAction, setEditAction] = useState<EditAction>('replace');
@@ -78,10 +77,10 @@ export function ImageManagementModal({
   useEffect(() => {
     if (open) {
       setMode(hasImages ? 'edit' : 'add');
-      setAddMethod('url');
+      setIsBulkMode(false);
       setNewImageUrl("");
       setNewImageCaption("");
-      setUploadFile(null);
+      setBulkUrls("");
       setEditAction('replace');
       setSelectedImageIndex(0);
       setEditImageUrl("");
@@ -100,32 +99,15 @@ export function ImageManagementModal({
     }
   }, [selectedImageIndex, images]);
 
-  // Handle Add Image
+  // Handle Add Image (Single)
   const handleAddImage = async () => {
     try {
-      let imageUrl = newImageUrl;
-
-      // If upload method, handle file upload
-      if (addMethod === 'upload' && uploadFile) {
-        // Create FormData and upload
-        const formData = new FormData();
-        formData.append('file', uploadFile);
-        
-        const uploadRes = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
-        
-        if (!uploadRes.ok) throw new Error('Upload failed');
-        
-        const uploadData = await uploadRes.json();
-        imageUrl = uploadData.url;
-      }
+      const imageUrl = newImageUrl;
 
       if (!imageUrl) {
         toast({
           title: "Error",
-          description: "Please provide an image URL or upload a file.",
+          description: "Please provide an image URL.",
           variant: "destructive",
         });
         return;
@@ -152,6 +134,70 @@ export function ImageManagementModal({
     }
   };
 
+  // Handle Bulk Add Images
+  const handleBulkAddImages = async () => {
+    try {
+      if (!bulkUrls.trim()) {
+        toast({
+          title: "Error",
+          description: "Please provide at least one image URL.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Split by newlines and filter out empty lines
+      const urls = bulkUrls
+        .split('\n')
+        .map(url => url.trim())
+        .filter(url => url.length > 0);
+
+      if (urls.length === 0) {
+        toast({
+          title: "Error",
+          description: "Please provide valid image URLs.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Add each image
+      let successCount = 0;
+      let failCount = 0;
+
+      for (const url of urls) {
+        try {
+          await onAddImage.mutateAsync({
+            rowId,
+            imageUrl: url,
+            caption: undefined,
+          });
+          successCount++;
+        } catch (error) {
+          failCount++;
+          console.error(`Failed to add image: ${url}`, error);
+        }
+      }
+
+      if (successCount > 0) {
+        toast({
+          title: "Images Added",
+          description: `Successfully added ${successCount} image(s).${failCount > 0 ? ` Failed: ${failCount}` : ''}`,
+        });
+      }
+
+      if (failCount === 0) {
+        onOpenChange(false);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add images.",
+        variant: "destructive",
+      });
+    }
+  };
+
   // Handle Edit Image
   const handleEditImage = async () => {
     try {
@@ -171,8 +217,8 @@ export function ImageManagementModal({
 
         await onUpdateImage.mutateAsync({
           rowId,
-          oldImageUrl: currentImage.url,
-          newImageUrl: editImageUrl,
+          imageIndex: selectedImageIndex,
+          imageUrl: editImageUrl,
           caption: currentImage.caption,
         });
 
@@ -184,8 +230,7 @@ export function ImageManagementModal({
         // Update caption only
         await onUpdateImage.mutateAsync({
           rowId,
-          oldImageUrl: currentImage.url,
-          newImageUrl: currentImage.url,
+          imageIndex: selectedImageIndex,
           caption: editCaption || undefined,
         });
 
@@ -206,8 +251,8 @@ export function ImageManagementModal({
 
         await onUpdateImage.mutateAsync({
           rowId,
-          oldImageUrl: currentImage.url,
-          newImageUrl: editUrlValue,
+          imageIndex: selectedImageIndex,
+          imageUrl: editUrlValue,
           caption: currentImage.caption,
         });
 
@@ -244,8 +289,7 @@ export function ImageManagementModal({
         const currentImage = images[index!];
         await onUpdateImage.mutateAsync({
           rowId,
-          oldImageUrl: currentImage.url,
-          newImageUrl: currentImage.url,
+          imageIndex: index!,
           caption: undefined,
         });
 
@@ -258,7 +302,7 @@ export function ImageManagementModal({
         const imageToDelete = images[index!];
         await onDeleteImage.mutateAsync({
           rowId,
-          imageUrl: imageToDelete.url,
+          imageIndex: index!,
         });
 
         toast({
@@ -267,12 +311,9 @@ export function ImageManagementModal({
         });
       } else if (action === 'all') {
         // Delete all images
-        for (const image of images) {
-          await onDeleteImage.mutateAsync({
-            rowId,
-            imageUrl: image.url,
-          });
-        }
+        await onDeleteImage.mutateAsync({
+          rowId,
+        });
 
         toast({
           title: "All Images Deleted",
@@ -324,19 +365,27 @@ export function ImageManagementModal({
 
                 {/* Add Image Tab */}
                 <TabsContent value="add" className="space-y-4 mt-4">
-                  <Tabs value={addMethod} onValueChange={(v) => setAddMethod(v as AddMethod)}>
-                    <TabsList className="grid w-full grid-cols-2 bg-green-100/50 dark:bg-green-900/30">
-                      <TabsTrigger value="url" className="text-xs">
-                        <LinkIcon className="w-3 h-3 mr-1" />
-                        By URL
-                      </TabsTrigger>
-                      <TabsTrigger value="upload" className="text-xs">
-                        <Upload className="w-3 h-3 mr-1" />
-                        Upload
-                      </TabsTrigger>
-                    </TabsList>
+                  {/* Toggle Single/Bulk Mode */}
+                  <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-2 h-2 rounded-full ${isBulkMode ? 'bg-purple-500' : 'bg-green-500'}`}></div>
+                      <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        {isBulkMode ? '📦 Bulk Add Mode' : '📷 Single Image Mode'}
+                      </span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsBulkMode(!isBulkMode)}
+                      className="text-xs h-7 px-3"
+                    >
+                      {isBulkMode ? 'Switch to Single' : 'Switch to Bulk'}
+                    </Button>
+                  </div>
 
-                    <TabsContent value="url" className="space-y-3 mt-4">
+                  {!isBulkMode ? (
+                    /* Single Image Mode */
+                    <div className="space-y-3">
                       <div>
                         <Label className="text-sm font-semibold">Image URL</Label>
                         <Input
@@ -345,6 +394,9 @@ export function ImageManagementModal({
                           placeholder="https://example.com/image.jpg"
                           className="mt-1"
                         />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Enter the direct URL to your image
+                        </p>
                       </div>
                       <div>
                         <Label className="text-sm font-semibold">Caption (Optional)</Label>
@@ -356,35 +408,42 @@ export function ImageManagementModal({
                           rows={2}
                         />
                       </div>
-                    </TabsContent>
-
-                    <TabsContent value="upload" className="space-y-3 mt-4">
+                      <div className="px-3 py-2 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+                        <p className="text-xs text-gray-700 dark:text-gray-300">
+                          💡 Tip: Use image hosting services like imgur.com, postimages.org, or imgbb.com to get image URLs
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Bulk Add Mode */
+                    <div className="space-y-3">
                       <div>
-                        <Label className="text-sm font-semibold">Select File</Label>
-                        <Input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
-                          className="mt-1"
+                        <Label className="text-sm font-semibold">Image URLs (One per line)</Label>
+                        <Textarea
+                          value={bulkUrls}
+                          onChange={(e) => setBulkUrls(e.target.value)}
+                          placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg&#10;https://example.com/image3.jpg"
+                          className="mt-1 font-mono text-xs"
+                          rows={8}
                         />
-                        {uploadFile && (
-                          <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                            Selected: {uploadFile.name}
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Paste multiple image URLs, one URL per line
+                        </p>
+                      </div>
+                      <div className="px-3 py-2 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg">
+                        <p className="text-xs text-gray-700 dark:text-gray-300">
+                          <span className="font-bold">📦 Bulk Mode:</span> Add multiple images at once. Each URL must be on a separate line. Captions can be added individually later via Edit mode.
+                        </p>
+                      </div>
+                      {bulkUrls.trim() && (
+                        <div className="px-3 py-2 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg">
+                          <p className="text-xs text-green-700 dark:text-green-300">
+                            ✓ Ready to add <span className="font-bold">{bulkUrls.split('\n').filter(url => url.trim()).length}</span> image(s)
                           </p>
-                        )}
-                      </div>
-                      <div>
-                        <Label className="text-sm font-semibold">Caption (Optional)</Label>
-                        <Textarea
-                          value={newImageCaption}
-                          onChange={(e) => setNewImageCaption(e.target.value)}
-                          placeholder="Add a caption..."
-                          className="mt-1"
-                          rows={2}
-                        />
-                      </div>
-                    </TabsContent>
-                  </Tabs>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </TabsContent>
 
                 {/* Edit Image Tab */}
@@ -598,19 +657,27 @@ export function ImageManagementModal({
             {/* No Images State - Show Add Form */}
             {!hasImages && (
               <div className="space-y-4">
-                <Tabs value={addMethod} onValueChange={(v) => setAddMethod(v as AddMethod)}>
-                  <TabsList className="grid w-full grid-cols-2 bg-green-100/50 dark:bg-green-900/30">
-                    <TabsTrigger value="url" className="text-xs">
-                      <LinkIcon className="w-3 h-3 mr-1" />
-                      By URL
-                    </TabsTrigger>
-                    <TabsTrigger value="upload" className="text-xs">
-                      <Upload className="w-3 h-3 mr-1" />
-                      Upload
-                    </TabsTrigger>
-                  </TabsList>
+                {/* Toggle Single/Bulk Mode */}
+                <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${isBulkMode ? 'bg-purple-500' : 'bg-green-500'}`}></div>
+                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      {isBulkMode ? '📦 Bulk Add Mode' : '📷 Single Image Mode'}
+                    </span>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsBulkMode(!isBulkMode)}
+                    className="text-xs h-7 px-3"
+                  >
+                    {isBulkMode ? 'Switch to Single' : 'Switch to Bulk'}
+                  </Button>
+                </div>
 
-                  <TabsContent value="url" className="space-y-3 mt-4">
+                {!isBulkMode ? (
+                  /* Single Image Mode */
+                  <div className="space-y-3">
                     <div>
                       <Label className="text-sm font-semibold">Image URL</Label>
                       <Input
@@ -619,6 +686,9 @@ export function ImageManagementModal({
                         placeholder="https://example.com/image.jpg"
                         className="mt-1"
                       />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Enter the direct URL to your image
+                      </p>
                     </div>
                     <div>
                       <Label className="text-sm font-semibold">Caption (Optional)</Label>
@@ -630,35 +700,42 @@ export function ImageManagementModal({
                         rows={2}
                       />
                     </div>
-                  </TabsContent>
-
-                  <TabsContent value="upload" className="space-y-3 mt-4">
+                    <div className="px-3 py-2 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+                      <p className="text-xs text-gray-700 dark:text-gray-300">
+                        💡 Tip: Use image hosting services like imgur.com, postimages.org, or imgbb.com to get image URLs
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  /* Bulk Add Mode */
+                  <div className="space-y-3">
                     <div>
-                      <Label className="text-sm font-semibold">Select File</Label>
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
-                        className="mt-1"
+                      <Label className="text-sm font-semibold">Image URLs (One per line)</Label>
+                      <Textarea
+                        value={bulkUrls}
+                        onChange={(e) => setBulkUrls(e.target.value)}
+                        placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg&#10;https://example.com/image3.jpg"
+                        className="mt-1 font-mono text-xs"
+                        rows={8}
                       />
-                      {uploadFile && (
-                        <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                          Selected: {uploadFile.name}
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Paste multiple image URLs, one URL per line
+                      </p>
+                    </div>
+                    <div className="px-3 py-2 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg">
+                      <p className="text-xs text-gray-700 dark:text-gray-300">
+                        <span className="font-bold">📦 Bulk Mode:</span> Add multiple images at once. Each URL must be on a separate line. Captions can be added individually later via Edit mode.
+                      </p>
+                    </div>
+                    {bulkUrls.trim() && (
+                      <div className="px-3 py-2 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg">
+                        <p className="text-xs text-green-700 dark:text-green-300">
+                          ✓ Ready to add <span className="font-bold">{bulkUrls.split('\n').filter(url => url.trim()).length}</span> image(s)
                         </p>
-                      )}
-                    </div>
-                    <div>
-                      <Label className="text-sm font-semibold">Caption (Optional)</Label>
-                      <Textarea
-                        value={newImageCaption}
-                        onChange={(e) => setNewImageCaption(e.target.value)}
-                        placeholder="Add a caption..."
-                        className="mt-1"
-                        rows={2}
-                      />
-                    </div>
-                  </TabsContent>
-                </Tabs>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -675,11 +752,11 @@ export function ImageManagementModal({
 
             {mode === 'add' && (
               <Button
-                onClick={handleAddImage}
+                onClick={isBulkMode ? handleBulkAddImages : handleAddImage}
                 disabled={onAddImage.isPending}
                 className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
               >
-                {onAddImage.isPending ? 'Adding...' : 'Add Image'}
+                {onAddImage.isPending ? 'Adding...' : isBulkMode ? 'Add Images' : 'Add Image'}
               </Button>
             )}
 
