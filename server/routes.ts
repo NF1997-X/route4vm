@@ -1,10 +1,10 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage } from "./storage.js";
 import { insertTableRowSchema, insertTableColumnSchema, insertRouteOptimizationSchema, insertLayoutPreferencesSchema, insertPageSchema, insertSharedTableStateSchema, insertSavedShareLinkSchema, insertCustomTableSchema, insertCustomTableRowSchema, tableRows as tableRowsSchema, type RouteOptimizationRequest } from "@shared/schema";
 import { z } from "zod";
-import { optimizeRoute } from "./routeOptimizer";
-import { calculateTollPrice, calculateRoutesForDestinations } from "./openrouteservice";
+import { optimizeRoute } from "./routeOptimizer.js";
+import { calculateTollPrice, calculateRoutesForDestinations } from "./openrouteservice.js";
 
 // UUID validation schema
 const uuidSchema = z.string().uuid();

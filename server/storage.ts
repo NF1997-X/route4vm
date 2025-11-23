@@ -32,7 +32,7 @@ import {
   customTableRows,
 } from "@shared/schema";
 import { randomUUID } from "crypto";
-import { db } from "./db";
+import { db } from "./db.js";
 import { eq, asc, desc } from "drizzle-orm";
 
 export interface IStorage {
