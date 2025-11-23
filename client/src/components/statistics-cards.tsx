@@ -17,7 +17,7 @@ export function StatisticsCards({ rows, isLoading = false }: StatisticsCardsProp
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 gap-4 mb-6" data-testid="statistics-cards">
-        <Card className={`stats-card-glass border-none rounded-xl fade-in-stagger`}>
+        <Card className={`stats-card-glass border-none rounded-2xl fade-in-stagger`}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="space-y-2">
@@ -34,7 +34,7 @@ export function StatisticsCards({ rows, isLoading = false }: StatisticsCardsProp
 
   return (
     <div className="grid grid-cols-1 gap-4 mb-6" data-testid="statistics-cards">
-      <Card className="stats-card-glass border-none rounded-xl fade-in-stagger">
+      <Card className="stats-card-glass border-none rounded-2xl fade-in-stagger">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>

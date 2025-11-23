@@ -54,6 +54,7 @@ export function ImageManagementModal({
   
   // Add Image States
   const [isBulkMode, setIsBulkMode] = useState(false);
+  const [uploadMethod, setUploadMethod] = useState<'url' | 'media'>('url');
   const [newImageUrl, setNewImageUrl] = useState("");
   const [newImageCaption, setNewImageCaption] = useState("");
   const [bulkUrls, setBulkUrls] = useState("");
@@ -78,6 +79,7 @@ export function ImageManagementModal({
     if (open) {
       setMode(hasImages ? 'edit' : 'add');
       setIsBulkMode(false);
+      setUploadMethod('url');
       setNewImageUrl("");
       setNewImageCaption("");
       setBulkUrls("");
@@ -366,53 +368,151 @@ export function ImageManagementModal({
                 {/* Add Image Tab */}
                 <TabsContent value="add" className="space-y-4 mt-4">
                   {/* Toggle Single/Bulk Mode */}
-                  <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+                  <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
                     <div className="flex items-center gap-2">
                       <div className={`w-2 h-2 rounded-full ${isBulkMode ? 'bg-purple-500' : 'bg-green-500'}`}></div>
                       <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                         {isBulkMode ? '📦 Bulk Add Mode' : '📷 Single Image Mode'}
                       </span>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setIsBulkMode(!isBulkMode)}
-                      className="text-xs h-7 px-3"
-                    >
-                      {isBulkMode ? 'Switch to Single' : 'Switch to Bulk'}
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setUploadMethod(uploadMethod === 'url' ? 'media' : 'url')}
+                        className="text-xs h-7 px-3"
+                      >
+                        {uploadMethod === 'url' ? '🔗 URL' : '📁 Media'}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setIsBulkMode(!isBulkMode)}
+                        className="text-xs h-7 px-3"
+                      >
+                        {isBulkMode ? 'Switch to Single' : 'Switch to Bulk'}
+                      </Button>
+                    </div>
                   </div>
 
                   {!isBulkMode ? (
                     /* Single Image Mode */
                     <div className="space-y-3">
-                      <div>
-                        <Label className="text-sm font-semibold">Image URL</Label>
-                        <Input
-                          value={newImageUrl}
-                          onChange={(e) => setNewImageUrl(e.target.value)}
-                          placeholder="https://example.com/image.jpg"
-                          className="mt-1"
-                        />
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Enter the direct URL to your image
-                        </p>
-                      </div>
-                      <div>
-                        <Label className="text-sm font-semibold">Caption (Optional)</Label>
-                        <Textarea
-                          value={newImageCaption}
-                          onChange={(e) => setNewImageCaption(e.target.value)}
-                          placeholder="Add a caption..."
-                          className="mt-1"
-                          rows={2}
-                        />
-                      </div>
-                      <div className="px-3 py-2 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
-                        <p className="text-xs text-gray-700 dark:text-gray-300">
-                          💡 Tip: Use image hosting services like imgur.com, postimages.org, or imgbb.com to get image URLs
-                        </p>
-                      </div>
+                      {uploadMethod === 'url' ? (
+                        /* URL Upload */
+                        <>
+                          <div>
+                            <Label className="text-sm font-semibold">Image URL</Label>
+                            <Input
+                              value={newImageUrl}
+                              onChange={(e) => setNewImageUrl(e.target.value)}
+                              placeholder="https://example.com/image.jpg"
+                              className="mt-1"
+                            />
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Enter the direct URL to your image
+                            </p>
+                          </div>
+                          <div>
+                            <Label className="text-sm font-semibold">Caption (Optional)</Label>
+                            <Textarea
+                              value={newImageCaption}
+                              onChange={(e) => setNewImageCaption(e.target.value)}
+                              placeholder="Add a caption..."
+                              className="mt-1"
+                              rows={2}
+                            />
+                          </div>
+                          <div className="px-3 py-2 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+                            <p className="text-xs text-gray-700 dark:text-gray-300">
+                              💡 Tip: Use image hosting services like imgur.com, postimages.org, or imgbb.com to get image URLs
+                            </p>
+                          </div>
+                        </>
+                      ) : (
+                        /* Media Upload */
+                        <div className="space-y-3">
+                          <div>
+                            <Label className="text-sm font-semibold">Upload Image</Label>
+                            <div className="mt-1">
+                              <Input
+                                type="file"
+                                accept="image/*"
+                                onChange={async (e) => {
+                                  const file = e.target.files?.[0];
+                                  if (!file) return;
+                                  
+                                  try {
+                                    // Convert to base64
+                                    const reader = new FileReader();
+                                    reader.onloadend = async () => {
+                                      const base64 = reader.result as string;
+                                      
+                                      // Upload to ImgBB
+                                      toast({
+                                        title: "Uploading...",
+                                        description: "Uploading image to ImgBB...",
+                                      });
+                                      
+                                      const response = await fetch('/api/upload-image', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ image: base64 }),
+                                      });
+                                      
+                                      if (response.ok) {
+                                        const data = await response.json();
+                                        setNewImageUrl(data.url);
+                                        toast({
+                                          title: "Success",
+                                          description: "Image uploaded successfully!",
+                                        });
+                                      } else {
+                                        throw new Error('Upload failed');
+                                      }
+                                    };
+                                    reader.readAsDataURL(file);
+                                  } catch (error) {
+                                    toast({
+                                      title: "Error",
+                                      description: "Failed to upload image",
+                                      variant: "destructive",
+                                    });
+                                  }
+                                }}
+                                className="cursor-pointer"
+                              />
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Select an image file from your device (will be uploaded to ImgBB)
+                            </p>
+                          </div>
+                          {newImageUrl && (
+                            <div className="space-y-2">
+                              <div className="relative rounded-lg overflow-hidden border border-border bg-muted/30">
+                                <img 
+                                  src={newImageUrl} 
+                                  alt="Preview" 
+                                  className="w-full h-40 object-cover"
+                                />
+                              </div>
+                              <p className="text-xs text-green-600 dark:text-green-400">
+                                ✅ Image uploaded successfully!
+                              </p>
+                            </div>
+                          )}
+                          <div>
+                            <Label className="text-sm font-semibold">Caption (Optional)</Label>
+                            <Textarea
+                              value={newImageCaption}
+                              onChange={(e) => setNewImageCaption(e.target.value)}
+                              placeholder="Add a caption..."
+                              className="mt-1"
+                              rows={2}
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     /* Bulk Add Mode */

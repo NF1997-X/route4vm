@@ -1152,7 +1152,7 @@ export function DataTable({
       <div className="overflow-x-auto w-full rounded-xl">
         <DragDropContext onDragEnd={handleDragEnd}>
           <Table className="min-w-full rounded-xl overflow-hidden">
-            <TableHeader className="table-header-glass sticky top-0 z-20 bg-white dark:bg-slate-900 border-b-2 border-yellow-400/30 rounded-t-xl">
+            <TableHeader className="table-header-glass sticky top-0 z-20 bg-white dark:bg-slate-900 border-b-2 border-yellow-400/30">
               <Droppable
                 droppableId="columns"
                 direction="horizontal"
@@ -1687,12 +1687,12 @@ export function DataTable({
                 </TableBody>
               )}
             </Droppable>
-            <tfoot className="rounded-b-xl">
-              <TableRow className="rounded-b-xl">
+            <tfoot>
+              <TableRow>
                 {visibleColumns.map((column, index) => (
                   <TableCell
                     key={column.id}
-                    className="px-3 py-3 text-center table-header-footer-12px font-semibold tracking-wide border-t border-border sticky bottom-0 bg-white dark:bg-slate-900 shadow-sm whitespace-nowrap first:rounded-bl-xl last:rounded-br-xl"
+                    className="px-3 py-3 text-center table-header-footer-12px font-semibold tracking-wide border-t border-border sticky bottom-0 bg-white dark:bg-slate-900 shadow-sm whitespace-nowrap"
                     style={{
                       textAlign: "center",
                       fontSize: "10px",
@@ -1729,7 +1729,7 @@ export function DataTable({
                     )}
                   </TableCell>
                 ))}
-                <TableCell className="px-3 py-3 text-center table-header-footer-12px font-semibold tracking-wide border-t border-border sticky bottom-0 bg-white dark:bg-slate-900 shadow-sm text-foreground whitespace-nowrap first:rounded-bl-xl last:rounded-br-xl" style={{ textAlign: "center", fontSize: '10px' }}>
+                <TableCell className="px-3 py-3 text-center table-header-footer-12px font-semibold tracking-wide border-t border-border sticky bottom-0 bg-white dark:bg-slate-900 shadow-sm text-foreground whitespace-nowrap" style={{ textAlign: "center", fontSize: '10px' }}>
                   <span className="font-semibold bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text text-transparent">—</span>
                 </TableCell>
               </TableRow>
