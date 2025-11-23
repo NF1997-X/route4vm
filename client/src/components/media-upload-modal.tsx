@@ -77,6 +77,50 @@ export function MediaUploadModal({ open, onOpenChange, onSave, onSaveMultiple }:
     return result.url;
   };
 
+  const uploadUrlToImgBB = async (imageUrl: string): Promise<string> => {
+    // Fetch image from URL
+    const response = await fetch(imageUrl);
+    if (!response.ok) {
+      throw new Error('Failed to fetch image from URL');
+    }
+    
+    // Convert to blob then to base64
+    const blob = await response.blob();
+    const reader = new FileReader();
+    
+    return new Promise((resolve, reject) => {
+      reader.onloadend = async () => {
+        try {
+          const base64data = reader.result as string;
+          
+          // Upload to ImgBB
+          const uploadResponse = await fetch('/api/upload-image', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              image: base64data,
+              name: 'uploaded-image',
+            }),
+          });
+
+          if (!uploadResponse.ok) {
+            const error = await uploadResponse.json();
+            throw new Error(error.error || 'Upload failed');
+          }
+
+          const result = await uploadResponse.json();
+          resolve(result.url);
+        } catch (error) {
+          reject(error);
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
@@ -164,65 +208,158 @@ export function MediaUploadModal({ open, onOpenChange, onSave, onSaveMultiple }:
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (mode === "single") {
       if (!url.trim()) return;
 
-      // Extract MIME type from data URL if available
-      const getMimeTypeFromDataURL = (dataUrl: string) => {
-        if (dataUrl.startsWith('data:')) {
-          const match = dataUrl.match(/^data:([^;]+)/);
-          return match ? match[1] : undefined;
+      setIsProcessing(true);
+      
+      try {
+        let finalUrl = url.trim();
+        
+        // If it's an image URL (not data URL or video), upload to ImgBB
+        if (mediaType === 'image' && !url.startsWith('data:') && (url.startsWith('http://') || url.startsWith('https://'))) {
+          toast({
+            title: "Uploading to ImgBB...",
+            description: "Processing your image URL",
+          });
+          
+          finalUrl = await uploadUrlToImgBB(url);
+          
+          toast({
+            title: "Upload Success",
+            description: "Image uploaded to ImgBB successfully!",
+          });
         }
-        return undefined;
-      };
 
-      const media: MediaWithCaption = {
-        url: url.trim(),
-        caption: caption.trim(),
-        type: mediaType,
-        ...(mediaType === "video" && thumbnail.trim() && { thumbnail: thumbnail.trim() }),
-        ...(getMimeTypeFromDataURL(url) && { mimeType: getMimeTypeFromDataURL(url) })
-      };
+        const media: MediaWithCaption = {
+          url: finalUrl,
+          caption: caption.trim(),
+          type: mediaType,
+          ...(mediaType === "video" && thumbnail.trim() && { thumbnail: thumbnail.trim() }),
+        };
 
-      onSave(media);
+        onSave(media);
+        handleReset();
+      } catch (error) {
+        console.error('Save error:', error);
+        toast({
+          title: "Error",
+          description: error instanceof Error ? error.message : "Failed to process image",
+          variant: "destructive",
+        });
+      } finally {
+        setIsProcessing(false);
+      }
     } else {
       if (albumItems.length === 0) return;
       onSaveMultiple?.(albumItems);
+      handleReset();
     }
-    
-    handleReset();
   };
 
-  const addToAlbum = () => {
+  const addToAlbum = async () => {
     if (!url.trim()) return;
 
-    const media: MediaWithCaption = {
-      url: url.trim(),
-      caption: caption.trim(),
-      type: mediaType,
-      ...(mediaType === "video" && thumbnail.trim() && { thumbnail: thumbnail.trim() })
-    };
+    setIsProcessing(true);
+    
+    try {
+      let finalUrl = url.trim();
+      
+      // If it's an image URL (not data URL or video), upload to ImgBB
+      if (mediaType === 'image' && !url.startsWith('data:') && (url.startsWith('http://') || url.startsWith('https://'))) {
+        toast({
+          title: "Uploading to ImgBB...",
+          description: "Processing your image URL",
+        });
+        
+        finalUrl = await uploadUrlToImgBB(url);
+        
+        toast({
+          title: "Upload Success",
+          description: "Image uploaded to ImgBB!",
+        });
+      }
 
-    setAlbumItems([...albumItems, media]);
-    setUrl("");
-    setCaption("");
-    setThumbnail("");
+      const media: MediaWithCaption = {
+        url: finalUrl,
+        caption: caption.trim(),
+        type: mediaType,
+        ...(mediaType === "video" && thumbnail.trim() && { thumbnail: thumbnail.trim() })
+      };
+
+      setAlbumItems([...albumItems, media]);
+      setUrl("");
+      setCaption("");
+      setThumbnail("");
+    } catch (error) {
+      console.error('Add to album error:', error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to process image",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const removeFromAlbum = (index: number) => {
     setAlbumItems(albumItems.filter((_, i) => i !== index));
   };
 
-  const handleBulkAdd = () => {
+  const handleBulkAdd = async () => {
     const urls = bulkUrls.split('\n').filter(line => line.trim());
-    const newItems: MediaWithCaption[] = urls.map(url => ({
-      url: url.trim(),
-      caption: '',
-      type: mediaType
-    }));
-    setAlbumItems([...albumItems, ...newItems]);
-    setBulkUrls('');
+    if (urls.length === 0) return;
+    
+    setIsProcessing(true);
+    
+    try {
+      toast({
+        title: "Processing Bulk Upload",
+        description: `Uploading ${urls.length} image(s) to ImgBB...`,
+      });
+      
+      const newItems: MediaWithCaption[] = [];
+      
+      for (const url of urls) {
+        let finalUrl = url.trim();
+        
+        // Upload image URLs to ImgBB
+        if (mediaType === 'image' && (url.startsWith('http://') || url.startsWith('https://'))) {
+          try {
+            finalUrl = await uploadUrlToImgBB(url.trim());
+          } catch (error) {
+            console.error(`Failed to upload ${url}:`, error);
+            // Skip failed uploads
+            continue;
+          }
+        }
+        
+        newItems.push({
+          url: finalUrl,
+          caption: '',
+          type: mediaType
+        });
+      }
+      
+      setAlbumItems([...albumItems, ...newItems]);
+      setBulkUrls('');
+      
+      toast({
+        title: "Bulk Upload Complete",
+        description: `${newItems.length} image(s) uploaded successfully!`,
+      });
+    } catch (error) {
+      console.error('Bulk add error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to process some images",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleReset = () => {
