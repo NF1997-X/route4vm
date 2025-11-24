@@ -43,8 +43,6 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
   const [showSaveConfirm, setShowSaveConfirm] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const galleryRef = useRef<HTMLDivElement>(null);
-  const lgInstance = useRef<any>(null);
   
   // State for tracking edits
   const [originalData, setOriginalData] = useState({ info: "", qrCode: "", latitude: "", longitude: "", markerColor: "" });
@@ -64,53 +62,6 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
       setCurrentData(data);
     }
   }, [open, info, qrCode, latitude, longitude, markerColor]);
-  
-  // Initialize lightGallery
-  useEffect(() => {
-    const initLightGallery = async () => {
-      if (open && galleryRef.current && images.length > 0) {
-        // Destroy previous instance if exists
-        if (lgInstance.current) {
-          lgInstance.current.destroy();
-        }
-        
-        // Dynamic imports
-        const [lightGalleryModule, lgZoomModule, lgThumbnailModule] = await Promise.all([
-          import("lightgallery"),
-          import("lightgallery/plugins/zoom"),
-          import("lightgallery/plugins/thumbnail"),
-          import("lightgallery/css/lightgallery.css"),
-          import("lightgallery/css/lg-zoom.css"),
-          import("lightgallery/css/lg-thumbnail.css")
-        ]);
-
-        const lightGallery = lightGalleryModule.default;
-        const lgZoom = lgZoomModule.default;
-        const lgThumbnail = lgThumbnailModule.default;
-        
-        // Initialize new lightGallery instance
-        lgInstance.current = lightGallery(galleryRef.current, {
-          plugins: [lgZoom, lgThumbnail],
-          speed: 500,
-          download: false,
-          selector: 'a[data-src]',
-          thumbnail: true,
-          animateThumb: true,
-          showThumbByDefault: false,
-        });
-      }
-    };
-
-    initLightGallery();
-    
-    // Cleanup on unmount or when modal closes
-    return () => {
-      if (lgInstance.current) {
-        lgInstance.current.destroy();
-        lgInstance.current = null;
-      }
-    };
-  }, [open, images]);
   
   // Check if there are any changes
   const hasChanges = () => {
@@ -651,68 +602,6 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
                   )}
                 </Button>
               </div>
-            </div>
-          )}
-
-          {/* Image Gallery Section - MOVED TO BOTTOM */}
-          {images && images.length > 0 && (
-            <div className="bg-transparent backdrop-blur-sm rounded-xl p-4 space-y-3 shadow-sm">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-pink-500 dark:bg-pink-400 rounded-full"></div>
-                  <h4 className="font-semibold text-pink-600 dark:text-pink-400" style={{fontSize: '10px'}}>📸 Images ({images.length})</h4>
-                </div>
-                {editMode && onOpenImageModal && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setOpen(false);
-                      onOpenImageModal();
-                    }}
-                    className="text-xs h-7 px-2 bg-pink-100 hover:bg-pink-200 dark:bg-pink-900/30 dark:hover:bg-pink-900/50 text-pink-700 dark:text-pink-300"
-                  >
-                    Manage
-                  </Button>
-                )}
-              </div>
-              
-              {/* Image Grid with Lightbox */}
-              <div ref={galleryRef} className="grid grid-cols-3 gap-2">
-                {images.map((img, index) => (
-                  <a
-                    key={index}
-                    href="javascript:void(0)"
-                    data-src={img.url}
-                    data-lg-size="1600-2400"
-                    className="relative rounded-lg overflow-hidden border-2 border-pink-200 dark:border-pink-700 shadow-md hover:border-pink-400 dark:hover:border-pink-500 transition-all cursor-pointer group"
-                    data-sub-html={img.caption ? `<h4>${img.caption}</h4>` : ''}
-                  >
-                    <div className="aspect-square">
-                      <img
-                        src={img.url}
-                        alt={img.caption || `Image ${index + 1}`}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      />
-                    </div>
-                    {img.caption && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent text-white text-[8px] px-2 py-1">
-                        <p className="line-clamp-2">{img.caption}</p>
-                      </div>
-                    )}
-                    {/* Zoom icon overlay */}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
-                      </svg>
-                    </div>
-                  </a>
-                ))}
-              </div>
-              
-              <p className="text-muted-foreground text-[9px]">
-                Click any image to view in fullscreen lightbox
-              </p>
             </div>
           )}
 
