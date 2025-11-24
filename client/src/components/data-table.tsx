@@ -1138,9 +1138,9 @@ export function DataTable({
               return (
                 <div key={route} className="flex items-center gap-0.5 px-2 py-0.5 bg-transparent border border-transparent rounded-full text-gray-400 text-xs">
                   {isKL ? (
-                    <img src="/assets/kl-flag.png" alt="KL" className="w-4 h-4 object-cover" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 75%, 75% 75%, 75% 100%, 50% 85%, 25% 100%, 25% 75%, 0 75%)' }} />
+                    <img src="/assets/kl-flag.png" alt="KL" className="w-5 h-4 object-contain" />
                   ) : isSL ? (
-                    <img src="/assets/selangor-flag.png" alt="Selangor" className="w-4 h-4 object-cover" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 75%, 75% 75%, 75% 100%, 50% 85%, 25% 100%, 25% 75%, 0 75%)' }} />
+                    <img src="/assets/selangor-flag.png" alt="Selangor" className="w-5 h-4 object-contain" />
                   ) : (
                     <Filter className="w-2.5 h-2.5" />
                   )}
@@ -1317,7 +1317,7 @@ export function DataTable({
                               {visibleColumns.map((column) => (
                                 <TableCell
                                   key={column.id}
-                                  className="p-4 align-middle [&:has([role=checkbox])]:pr-0 px-4 py-4 table-cell-10px text-center text-[13px] bg-white/50 hover:bg-white/70 dark:bg-black/40 dark:hover:bg-black/50 backdrop-blur-md text-slate-700 dark:text-slate-200 font-semibold whitespace-nowrap table-zoom-in rounded-lg"
+                                  className="p-4 align-middle [&:has([role=checkbox])]:pr-0 px-4 py-4 table-cell-10px text-center text-[13px] bg-white/50 hover:bg-white/70 dark:bg-black/40 dark:hover:bg-black/50 backdrop-blur-md text-slate-700 dark:text-slate-200 font-semibold whitespace-nowrap table-zoom-in"
                                   style={{
                                     minWidth: "100px",
                                     ...(column.dataKey === "location" && {
