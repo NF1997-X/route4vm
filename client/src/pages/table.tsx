@@ -259,13 +259,13 @@ export default function TablePage() {
       }
 
       // Use defaults if nothing saved
-      const defaultVisibleColumnNames = ['No', 'Code', 'Location', 'Delivery'];
+      const defaultVisibleColumnNames = ['No', 'Code', 'Location', 'Delivery', 'Images'];
       const defaultVisibleColumns = columns
         .filter(col => defaultVisibleColumnNames.includes(col.name))
         .map(col => col.id);
       
       const latLngColumns = columns.filter(col => 
-        col.dataKey === 'latitude' || col.dataKey === 'longitude' || col.dataKey === 'images'
+        col.dataKey === 'latitude' || col.dataKey === 'longitude'
       ).map(col => col.id);
       
       setVisibleColumns(defaultVisibleColumns.length > 0 ? defaultVisibleColumns : columns.map(col => col.id).filter(id => !latLngColumns.includes(id)));
