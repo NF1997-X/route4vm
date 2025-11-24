@@ -1138,9 +1138,9 @@ export function DataTable({
               return (
                 <div key={route} className="flex items-center gap-0.5 px-2 py-0.5 bg-transparent border border-transparent rounded-full text-gray-400 text-xs">
                   {isKL ? (
-                    <img src="/assets/kl-flag.png" alt="KL" className="w-4 h-4 rounded" />
+                    <img src="/assets/kl-flag.png" alt="KL" className="w-4 h-4 object-cover" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 75%, 75% 75%, 75% 100%, 50% 85%, 25% 100%, 25% 75%, 0 75%)' }} />
                   ) : isSL ? (
-                    <img src="/assets/selangor-flag.png" alt="Selangor" className="w-4 h-4 rounded" />
+                    <img src="/assets/selangor-flag.png" alt="Selangor" className="w-4 h-4 object-cover" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 75%, 75% 75%, 75% 100%, 50% 85%, 25% 100%, 25% 75%, 0 75%)' }} />
                   ) : (
                     <Filter className="w-2.5 h-2.5" />
                   )}
