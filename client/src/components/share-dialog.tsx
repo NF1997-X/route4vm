@@ -185,10 +185,12 @@ export function ShareDialog({ open, onOpenChange, tableState }: ShareDialogProps
             <Button
               onClick={generateShareUrl}
               disabled={isGenerating}
-              className="w-full transition-all duration-300 hover:scale-[1.02] active:scale-95"
+              className="w-full transition-all duration-300 hover:scale-[1.02] active:scale-95 bg-transparent hover:bg-blue-500/10 border-2 border-blue-500/30 hover:border-blue-500/50"
               data-testid="button-generate-share-link"
             >
-              {isGenerating ? "Generating..." : "Generate Share Link"}
+              <span className="electric-text">
+                {isGenerating ? "Generating..." : "Generate Share Link"}
+              </span>
             </Button>
           ) : (
             <div className="space-y-4">
