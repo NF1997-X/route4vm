@@ -140,6 +140,13 @@ export function RouteOptimizationModal({
   const validRows = rowsToOptimize.filter(
     row => row.latitude && row.longitude && parseFloat(row.latitude) !== 0 && parseFloat(row.longitude) !== 0
   );
+  
+  // Find QL Kitchen row
+  const qlKitchen = rows.find(row => row.location === "QL Kitchen");
+  const hasQLKitchen = qlKitchen && qlKitchen.latitude && qlKitchen.longitude;
+  
+  // Calculate total rows excluding QL Kitchen if it exists
+  const totalRowsCount = rows.filter(row => row.location !== "QL Kitchen").length;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -157,17 +164,33 @@ export function RouteOptimizationModal({
         <div className="overflow-y-auto flex-1 -mx-6 px-6">
         {!optimizationResult ? (
           <div className="space-y-6 mt-4">
+            {hasQLKitchen && (
+              <div className="bg-green-50/50 dark:bg-green-950/30 p-4 rounded-lg border border-green-200 dark:border-green-800">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-green-900 dark:text-green-100 mb-1">
+                      Starting Point: QL Kitchen
+                    </h4>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      Route optimization will start from QL Kitchen and calculate the best path for all stops
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             <div className="bg-blue-50/50 dark:bg-blue-950/30 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
               <div className="flex items-start gap-3">
                 <Zap className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
                 <div>
                   <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-1">
-                    {validRows.length} stops ready to optimize
+                    {totalRowsCount} {totalRowsCount === 1 ? 'stop' : 'stops'} ready to optimize
                   </h4>
                   <p className="text-sm text-slate-500 dark:text-slate-400">
                     {selectedRowIds && selectedRowIds.length > 0
                       ? `Optimizing ${validRows.length} selected locations with valid coordinates`
-                      : `Optimizing all ${validRows.length} locations with valid coordinates`}
+                      : `Optimizing all delivery stops with valid coordinates`}
                   </p>
                 </div>
               </div>
