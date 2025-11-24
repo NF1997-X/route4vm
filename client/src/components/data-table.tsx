@@ -10,6 +10,7 @@ import {
 import { ColumnHeader } from "./column-header";
 import { EditableCell } from "./editable-cell";
 import { ImagePreview } from "./image-preview";
+import { ImageIconButton } from "./image-icon-button";
 import { InfoModal } from "./info-modal";
 import { SlidingDescription } from "./sliding-description";
 import { Button } from "@/components/ui/button";
@@ -1347,16 +1348,10 @@ export function DataTable({
                                 >
                                   <div className="w-[98%] mx-auto text-center">
                                   {column.dataKey === "images" ? (
-                                    <ImagePreview
+                                    <ImageIconButton
                                       images={row.images}
                                       rowId={row.id}
-                                      onAddImage={() =>
-                                        onSelectRowForImage(row.id)
-                                      }
-                                      editMode={editMode}
-                                      onAccessDenied={() =>
-                                        onSelectRowForImage("access-denied")
-                                      }
+                                      onClick={() => onSelectRowForImage(row.id)}
                                     />
                                   ) : column.dataKey === "info" ? (
                                     row.info && row.info.trim() ? (
