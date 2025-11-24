@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Info, ListChecks, QrCode, ExternalLink, CheckCircle, Save, X, FileText, Loader2, FolderOpen, Upload } from "lucide-react";
+import { Info, ListChecks, QrCode, ExternalLink, CheckCircle, Save, X, FileText, Loader2, FolderOpen } from "lucide-react";
 import { SiGooglemaps, SiWaze } from "react-icons/si";
 import { MiniMap } from "@/components/mini-map";
 import { SlidingDescription } from "@/components/sliding-description";

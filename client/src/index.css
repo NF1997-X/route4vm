@@ -33,7 +33,7 @@
 }
 
 .electric-text {
-  animation: electric 2s ease-in-out infinite;
+  animation: electric 2s ease-in-out infinite, shimmer 3s linear infinite;
   background: linear-gradient(90deg, #3b82f6, #60a5fa, #93c5fd, #60a5fa, #3b82f6);
   background-size: 200% auto;
   -webkit-background-clip: text;
@@ -49,10 +49,6 @@
   100% {
     background-position: -200% center;
   }
-}
-
-.electric-text {
-  animation: electric 2s ease-in-out infinite, shimmer 3s linear infinite;
 }
 
 html {
@@ -74,35 +70,51 @@ img, svg, video, canvas {
 /* Leaflet Map Styles */
 @import url('https://unpkg.com/leaflet@1.7.1/dist/leaflet.css');
 
-/* AGGRESSIVE FIX: Completely disable all dropdown/submenu animations */
+/* Smooth Dropdown/Menu Transitions - Optimized */
 [data-radix-dropdown-menu-content],
-[data-radix-dropdown-menu-sub-content],
 [data-radix-popper-content-wrapper],
 div[role="menu"] {
-  animation: none !important;
-  transition: none !important;
-  backface-visibility: hidden !important;
-  -webkit-backface-visibility: hidden !important;
+  animation-duration: 150ms !important;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: transform, opacity;
 }
 
-/* SIMPLE FIX: Just let Radix handle positioning naturally but disable animations */
 [data-radix-dropdown-menu-sub-content] {
-  animation: none !important;
-  transition: none !important;
+  animation-duration: 100ms !important;
+  animation-timing-function: ease-out !important;
 }
 
-/* Force visibility states only */
+/* Smooth visibility transitions */
 [data-radix-dropdown-menu-sub-content][data-state="open"],
 [data-radix-dropdown-menu-content][data-state="open"] {
-  opacity: 1 !important;
-  visibility: visible !important;
+  animation: dropdownSlideIn 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 [data-radix-dropdown-menu-sub-content][data-state="closed"],
 [data-radix-dropdown-menu-content][data-state="closed"] {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
+  animation: dropdownSlideOut 100ms ease-in;
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dropdownSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.96);
+  }
 }
 
 /* Add black outline to map markers */
