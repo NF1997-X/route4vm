@@ -1653,3 +1653,27 @@ html.dark tfoot tr th .footer-total-blue {
   transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+/* LightGallery Thumbnail Fixes */
+.lg-outer .lg-thumb-outer {
+  background-color: rgba(0, 0, 0, 0.85) !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.lg-outer .lg-thumb {
+  display: flex !important;
+  visibility: visible !important;
+}
+
+.lg-outer .lg-thumb-item {
+  border: 2px solid transparent !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+}
+
+.lg-outer .lg-thumb-item.active,
+.lg-outer .lg-thumb-item:hover {
+  border-color: #3b82f6 !important;
+}
