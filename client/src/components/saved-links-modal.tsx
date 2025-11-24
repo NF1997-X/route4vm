@@ -28,7 +28,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Trash2, Edit, ExternalLink, Copy, MoreVertical } from "lucide-react";
+import { Trash2, Edit, ExternalLink, Copy, MoreVertical, ChevronDown, ChevronUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { SavedShareLink } from "@shared/schema";
 
@@ -42,11 +42,19 @@ export function SavedLinksModal({ open, onOpenChange }: SavedLinksModalProps) {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedLink, setSelectedLink] = useState<SavedShareLink | null>(null);
   const [remark, setRemark] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
   const { toast } = useToast();
 
   const { data: savedLinks = [], isLoading } = useQuery<SavedShareLink[]>({
     queryKey: ["/api/saved-share-links"],
     enabled: open,
+  });
+
+  // Sort links by creation date (newest first)
+  const sortedLinks = [...savedLinks].sort((a, b) => {
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
+    return dateB - dateA;
   });
 
   const deleteMutation = useMutation({
@@ -172,13 +180,28 @@ export function SavedLinksModal({ open, onOpenChange }: SavedLinksModalProps) {
             <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-blue-500/5 via-transparent to-purple-500/5 dark:from-blue-400/10 dark:via-transparent dark:to-purple-400/10" />
           </div>
           <DialogHeader>
-            <DialogTitle>Saved Share Links</DialogTitle>
+            <DialogTitle className="flex items-center justify-between">
+              <span>Saved Share Links</span>
+              {savedLinks.length > 0 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="h-8 text-xs"
+                  title={isExpanded ? "Collapse list" : "Expand list"}
+                >
+                  {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </Button>
+              )}
+            </DialogTitle>
             <DialogDescription>
               Manage your saved share links. Add remarks to organize them better.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="max-h-[400px] overflow-y-auto pr-2">
+          <div className={`overflow-y-auto pr-2 transition-all duration-300 ${
+            isExpanded ? "max-h-[600px]" : "max-h-[400px]"
+          }`}>
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <p className="text-muted-foreground">Loading saved links...</p>
@@ -189,7 +212,7 @@ export function SavedLinksModal({ open, onOpenChange }: SavedLinksModalProps) {
               </div>
             ) : (
               <div className="space-y-3">
-                {savedLinks.map((link) => (
+                {sortedLinks.map((link) => (
                   <div
                     key={link.id}
                     className="p-4 rounded-2xl border border-white/20 dark:border-white/10 bg-white/20 dark:bg-black/20 backdrop-blur-xl hover:bg-white/30 dark:hover:bg-black/30 transition-all duration-300 hover:scale-[1.02] animate-in zoom-in-95"

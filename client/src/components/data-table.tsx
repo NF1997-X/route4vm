@@ -77,6 +77,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 
 // Simple mobile-friendly tooltip component
@@ -821,16 +827,37 @@ export function DataTable({
               <Route className="w-3 h-3 text-blue-600 dark:text-blue-400" />
             </Button>
             {!hideShareButton && (
-              <Button
-                onClick={onShareTable}
-                variant="outline"
-                size="sm"
-                className="w-8 h-8 p-0 pagination-button rounded-lg"
-                data-testid="button-share-table"
-                title="Share current table view"
-              >
-                <Share2 className="w-3 h-3 text-green-500 dark:text-green-400" />
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-8 h-8 p-0 pagination-button rounded-lg"
+                    data-testid="button-share-menu"
+                    title="Share & Links"
+                  >
+                    <Share2 className="w-3 h-3 text-green-500 dark:text-green-400" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem
+                    onClick={onShareTable}
+                    className="cursor-pointer"
+                    data-testid="menu-share-table"
+                  >
+                    <Share2 className="h-4 w-4 mr-2 text-green-500" />
+                    Share Table
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={onSavedLinks}
+                    className="cursor-pointer"
+                    data-testid="menu-saved-links"
+                  >
+                    <Bookmark className="h-4 w-4 mr-2 text-blue-500" />
+                    Saved Links
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </div>
         </div>
