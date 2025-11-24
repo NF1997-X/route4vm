@@ -42,7 +42,7 @@ export function SavedLinksModal({ open, onOpenChange }: SavedLinksModalProps) {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedLink, setSelectedLink] = useState<SavedShareLink | null>(null);
   const [remark, setRemark] = useState("");
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [expandedLinks, setExpandedLinks] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   const { data: savedLinks = [], isLoading } = useQuery<SavedShareLink[]>({
@@ -112,6 +112,18 @@ export function SavedLinksModal({ open, onOpenChange }: SavedLinksModalProps) {
     },
   });
 
+  const toggleLinkExpanded = (linkId: string) => {
+    setExpandedLinks(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(linkId)) {
+        newSet.delete(linkId);
+      } else {
+        newSet.add(linkId);
+      }
+      return newSet;
+    });
+  };
+
   const handleDelete = (link: SavedShareLink) => {
     setSelectedLink(link);
     setDeleteDialogOpen(true);
@@ -162,9 +174,17 @@ export function SavedLinksModal({ open, onOpenChange }: SavedLinksModalProps) {
     });
   };
 
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!newOpen) {
+      // Reset state when closing
+      setExpandedLinks(new Set());
+    }
+    onOpenChange(newOpen);
+  };
+
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent className="sm:max-w-[600px] animate-in zoom-in-95 duration-300 data-[state=closed]:animate-out data-[state=closed]:zoom-out-90 bg-white/70 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-200/60 dark:border-white/10 shadow-[0_20px_60px_0_rgba(0,0,0,0.25)] rounded-xl">
           {/* Enhanced Premium Frosted Glass Layer */}
           <div 
@@ -180,28 +200,13 @@ export function SavedLinksModal({ open, onOpenChange }: SavedLinksModalProps) {
             <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-blue-500/5 via-transparent to-purple-500/5 dark:from-blue-400/10 dark:via-transparent dark:to-purple-400/10" />
           </div>
           <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
-              <span>Saved Share Links</span>
-              {savedLinks.length > 0 && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsExpanded(!isExpanded)}
-                  className="h-8 text-xs"
-                  title={isExpanded ? "Collapse list" : "Expand list"}
-                >
-                  {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </Button>
-              )}
-            </DialogTitle>
+            <DialogTitle>Saved Share Links</DialogTitle>
             <DialogDescription>
               Manage your saved share links. Add remarks to organize them better.
             </DialogDescription>
           </DialogHeader>
 
-          <div className={`overflow-y-auto pr-2 transition-all duration-300 ${
-            isExpanded ? "max-h-[600px]" : "max-h-[400px]"
-          }`}>
+          <div className="max-h-[500px] overflow-y-auto pr-2">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <p className="text-muted-foreground">Loading saved links...</p>
@@ -212,77 +217,109 @@ export function SavedLinksModal({ open, onOpenChange }: SavedLinksModalProps) {
               </div>
             ) : (
               <div className="space-y-3">
-                {sortedLinks.map((link) => (
-                  <div
-                    key={link.id}
-                    className="p-4 rounded-2xl border border-white/20 dark:border-white/10 bg-white/20 dark:bg-black/20 backdrop-blur-xl hover:bg-white/30 dark:hover:bg-black/30 transition-all duration-300 hover:scale-[1.02] animate-in zoom-in-95"
-                    data-testid={`saved-link-${link.id}`}
-                  >
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">{link.remark || "Untitled Link"}</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Created: {formatDate(link.createdAt)}
-                        </p>
+                {sortedLinks.map((link) => {
+                  const isExpanded = expandedLinks.has(link.id);
+                  
+                  return (
+                    <div
+                      key={link.id}
+                      className="rounded-2xl border border-white/20 dark:border-white/10 bg-white/20 dark:bg-black/20 backdrop-blur-xl hover:bg-white/30 dark:hover:bg-black/30 transition-all duration-300 animate-in zoom-in-95"
+                      data-testid={`saved-link-${link.id}`}
+                    >
+                      {/* Collapsed view - shows remark and action buttons */}
+                      <div 
+                        className="p-4 cursor-pointer flex items-center justify-between gap-2"
+                        onClick={() => toggleLinkExpanded(link.id)}
+                      >
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                          {isExpanded ? (
+                            <ChevronUp className="h-4 w-4 text-muted-foreground shrink-0" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />
+                          )}
+                          <p className="text-sm font-medium truncate">{link.remark || "Untitled Link"}</p>
+                        </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-8 w-8 p-0 shrink-0 transition-all duration-300 hover:scale-110 active:scale-95"
+                              data-testid={`button-actions-${link.id}`}
+                              title="Actions"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-44">
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                copyToClipboard(link.url);
+                              }}
+                              className="cursor-pointer transition-all duration-200 hover:scale-[1.02]"
+                              data-testid={`menu-copy-${link.id}`}
+                            >
+                              <Copy className="h-4 w-4 mr-2" />
+                              Copy Link
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                window.open(link.url, "_blank");
+                              }}
+                              className="cursor-pointer transition-all duration-200 hover:scale-[1.02]"
+                              data-testid={`menu-open-${link.id}`}
+                            >
+                              <ExternalLink className="h-4 w-4 mr-2" />
+                              Open Link
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEdit(link);
+                              }}
+                              className="cursor-pointer transition-all duration-200 hover:scale-[1.02]"
+                              data-testid={`menu-edit-${link.id}`}
+                            >
+                              <Edit className="h-4 w-4 mr-2" />
+                              Edit Remark
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(link);
+                              }}
+                              className="cursor-pointer text-destructive focus:text-destructive transition-all duration-200 hover:scale-[1.02]"
+                              data-testid={`menu-delete-${link.id}`}
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete Link
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-8 w-8 p-0 shrink-0 transition-all duration-300 hover:scale-110 active:scale-95"
-                            data-testid={`button-actions-${link.id}`}
-                            title="Actions"
-                          >
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-44">
-                          <DropdownMenuItem
-                            onClick={() => copyToClipboard(link.url)}
-                            className="cursor-pointer transition-all duration-200 hover:scale-[1.02]"
-                            data-testid={`menu-copy-${link.id}`}
-                          >
-                            <Copy className="h-4 w-4 mr-2" />
-                            Copy Link
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => window.open(link.url, "_blank")}
-                            className="cursor-pointer transition-all duration-200 hover:scale-[1.02]"
-                            data-testid={`menu-open-${link.id}`}
-                          >
-                            <ExternalLink className="h-4 w-4 mr-2" />
-                            Open Link
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleEdit(link)}
-                            className="cursor-pointer transition-all duration-200 hover:scale-[1.02]"
-                            data-testid={`menu-edit-${link.id}`}
-                          >
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit Remark
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDelete(link)}
-                            className="cursor-pointer text-destructive focus:text-destructive transition-all duration-200 hover:scale-[1.02]"
-                            data-testid={`menu-delete-${link.id}`}
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete Link
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+
+                      {/* Expanded view - shows date and URL */}
+                      {isExpanded && (
+                        <div className="px-4 pb-4 space-y-3 border-t border-white/10 pt-3">
+                          <p className="text-xs text-muted-foreground">
+                            Created: {formatDate(link.createdAt)}
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              value={link.url}
+                              readOnly
+                              className="flex-1 h-8 text-xs"
+                              data-testid={`input-url-${link.id}`}
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Input
-                        value={link.url}
-                        readOnly
-                        className="flex-1 h-8 text-xs"
-                        data-testid={`input-url-${link.id}`}
-                      />
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
