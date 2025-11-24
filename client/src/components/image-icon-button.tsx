@@ -109,8 +109,33 @@ export function ImageIconButton({
     <div className="flex items-center justify-center" id={`lightgallery-icon-${rowId}`}>
       {hasImages ? (
         <>
-          {/* Hidden links for lightgallery */}
-          {images.map((media, index) => {
+          {/* First link is visible as button and triggers lightgallery */}
+          <a
+            href="javascript:void(0)"
+            data-src={images[0].url}
+            data-sub-html={images[0].caption}
+            data-video={images[0].type === 'video' ? JSON.stringify({ 
+              source: [{ 
+                src: images[0].url, 
+                type: images[0].mimeType || 'video/mp4'
+              }], 
+              attributes: { 
+                preload: 'metadata', 
+                controls: true,
+                controlsList: 'nodownload',
+                playsinline: true
+              } 
+            }) : undefined}
+            data-poster={images[0].type === 'video' && images[0].thumbnail ? images[0].thumbnail : undefined}
+            className="inline-flex items-center justify-center h-8 w-8 text-blue-500 hover:text-blue-600 cursor-pointer"
+            title={`${images.length} image(s)`}
+            data-testid={`image-button-${rowId}`}
+          >
+            <Image className="w-4 h-4" />
+          </a>
+          
+          {/* Remaining images hidden */}
+          {images.slice(1).map((media, index) => {
             const isVideo = media.type === 'video';
             const getMimeType = () => {
               if (media.mimeType) return media.mimeType;
@@ -139,7 +164,7 @@ export function ImageIconButton({
 
             return (
               <a
-                key={index}
+                key={index + 1}
                 href="javascript:void(0)"
                 data-src={media.url}
                 data-sub-html={media.caption}
@@ -149,16 +174,6 @@ export function ImageIconButton({
               />
             );
           })}
-          {/* Visible button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0 text-blue-500 hover:text-blue-600"
-            data-testid={`image-button-${rowId}`}
-            title={`${images.length} image(s)`}
-          >
-            <Image className="w-4 h-4" />
-          </Button>
         </>
       ) : (
         <div className="h-8 w-8 flex items-center justify-center text-gray-400">
