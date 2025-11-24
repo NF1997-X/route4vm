@@ -437,10 +437,10 @@ export default function TablePage() {
       .filter((col): col is TableColumn => col !== undefined)
       .filter(col => visibleColumns.includes(col.id));
 
-    // Hide latitude, longitude, tollPrice, and images columns unless in edit mode
+    // Hide latitude, longitude, and tollPrice columns unless in edit mode
     if (!editMode) {
       filteredColumns = filteredColumns.filter(col => 
-        col.dataKey !== 'latitude' && col.dataKey !== 'longitude' && col.dataKey !== 'tollPrice' && col.dataKey !== 'images'
+        col.dataKey !== 'latitude' && col.dataKey !== 'longitude' && col.dataKey !== 'tollPrice'
       );
     }
 
