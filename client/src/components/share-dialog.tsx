@@ -158,62 +158,52 @@ export function ShareDialog({ open, onOpenChange, tableState }: ShareDialogProps
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent 
-        className="w-[90vw] max-w-md sm:max-w-lg animate-in zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:zoom-out-90 duration-300 transition-all bg-white/70 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-200/60 dark:border-white/10 shadow-[0_20px_60px_0_rgba(0,0,0,0.25)] rounded-xl"
-        style={{
-          maxHeight: 'min(80vh, calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 40px))',
-          touchAction: 'pan-y',
-        }}
-      >
-        {/* iOS Frosted Glass Layer */}
+      <DialogContent className="sm:max-w-[500px] animate-in zoom-in-95 duration-300 data-[state=closed]:animate-out data-[state=closed]:zoom-out-90 bg-white/70 dark:bg-black/30 backdrop-blur-2xl border-2 border-gray-200/60 dark:border-white/10 shadow-[0_20px_60px_0_rgba(0,0,0,0.25)] rounded-xl">
+        {/* Enhanced Premium Frosted Glass Layer */}
         <div 
-          className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-br from-white/60 via-white/40 to-white/50 dark:from-black/40 dark:via-black/20 dark:to-black/30 border-0 shadow-inner" 
+          className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-br from-white/70 via-white/50 to-white/60 dark:from-black/50 dark:via-black/30 dark:to-black/40 border-0 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),inset_0_-1px_1px_rgba(0,0,0,0.1)]" 
           style={{
-            backdropFilter: 'blur(40px)',
-            WebkitBackdropFilter: 'blur(40px)',
+            backdropFilter: 'blur(40px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(40px) saturate(180%)',
           }}
-        />
-        
-        <DialogHeader 
-          className="relative z-10"
-          style={{ paddingTop: 'max(1.5rem, env(safe-area-inset-top))' }}
         >
-          <DialogTitle className="text-sm font-semibold">Share Table View</DialogTitle>
-          <DialogDescription className="text-sm">
+          {/* Subtle top shine effect */}
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
+          {/* Ambient glow */}
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-blue-500/5 via-transparent to-purple-500/5 dark:from-blue-400/10 dark:via-transparent dark:to-purple-400/10" />
+        </div>
+        
+        <DialogHeader>
+          <DialogTitle>Share Table View</DialogTitle>
+          <DialogDescription>
             Create a shareable link for the current table state including filters, sorting, and visible columns.
           </DialogDescription>
         </DialogHeader>
         
-        <div 
-          className="space-y-4 py-4 relative z-10"
-          style={{
-            WebkitOverflowScrolling: 'touch',
-            overscrollBehavior: 'contain',
-          }}
-        >
+        <div className="space-y-4 py-4">
           {!shareUrl ? (
             <Button
               onClick={generateShareUrl}
               disabled={isGenerating}
-              className="w-full bg-transparent text-blue-500 hover:bg-blue-500/10 border-transparent backdrop-blur-sm text-sm"
+              className="w-full transition-all duration-300 hover:scale-[1.02] active:scale-95"
               data-testid="button-generate-share-link"
             >
               {isGenerating ? "Generating..." : "Generate Share Link"}
             </Button>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <Input
                   value={shareUrl}
                   readOnly
-                  className="flex-1 bg-white/10 dark:bg-black/10 backdrop-blur-sm border-transparent text-sm"
+                  className="flex-1"
                   data-testid="input-share-url"
                 />
                 <Button
                   onClick={copyToClipboard}
                   size="sm"
                   variant="outline"
-                  className="shrink-0 bg-transparent border-transparent hover:bg-blue-500/10 backdrop-blur-sm"
+                  className="shrink-0 transition-all duration-300 hover:scale-110 active:scale-95"
                   data-testid="button-copy-share-link"
                   title="Copy to clipboard"
                 >
@@ -227,7 +217,7 @@ export function ShareDialog({ open, onOpenChange, tableState }: ShareDialogProps
                   onClick={saveShareLink}
                   size="sm"
                   variant={isSaved ? "default" : "outline"}
-                  className="shrink-0 bg-transparent border-transparent hover:bg-blue-500/10 backdrop-blur-sm"
+                  className="shrink-0 transition-all duration-300 hover:scale-110 active:scale-95"
                   disabled={isSaving || isSaved}
                   data-testid="button-save-share-link"
                   title={isSaved ? "Link saved" : "Save link"}
@@ -240,35 +230,34 @@ export function ShareDialog({ open, onOpenChange, tableState }: ShareDialogProps
                 </Button>
               </div>
               <div>
-                <label className="text-xs font-medium mb-1 block text-gray-700 dark:text-gray-300">
+                <label className="text-sm font-medium mb-2 block">
                   Remark (optional)
                 </label>
                 <Input
                   value={remark}
                   onChange={(e) => setRemark(e.target.value)}
                   placeholder="e.g., Weekend delivery route, KL 3 only..."
-                  className="bg-white/10 dark:bg-black/10 backdrop-blur-sm border-transparent text-sm"
+                  className="w-full"
                   data-testid="input-share-remark"
                 />
               </div>
-              <p className="text-sm text-muted-foreground">
-                Anyone with this link can view your table with the current filters and settings.
-              </p>
+              <div className="p-3 rounded-lg bg-blue-50/50 dark:bg-blue-900/20 border border-blue-200/50 dark:border-blue-800/50">
+                <p className="text-sm text-blue-700 dark:text-blue-300">
+                  Anyone with this link can view your table with the current filters and settings.
+                </p>
+              </div>
             </div>
           )}
         </div>
 
-        <DialogFooter 
-          className="relative z-10 sm:justify-center"
-          style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
-        >
+        <DialogFooter>
           <Button
             variant="outline"
             onClick={() => handleOpenChange(false)}
-            className="bg-transparent border-transparent text-red-500 hover:bg-red-500/10 backdrop-blur-sm text-sm w-full sm:w-auto"
+            className="transition-all duration-300 hover:scale-[1.02] active:scale-95"
             data-testid="button-cancel-share"
           >
-            Cancel
+            Close
           </Button>
         </DialogFooter>
       </DialogContent>
