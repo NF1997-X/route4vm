@@ -61,6 +61,7 @@ import {
   Power,
   Bookmark,
   ImageIcon,
+  Slash,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -1497,17 +1498,22 @@ export function DataTable({
                                       <GripVertical className="w-4 h-4" />
                                     </div>
                                     <div className="flex items-center gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
-                                    {/* Image gallery button - normal mode only */}
-                                    {!editMode && row.images && row.images.length > 0 && (
+                                    {/* Image button - normal mode */}
+                                    {!editMode && (
                                       <Button
                                         size="sm"
                                         variant="ghost"
                                         className="bg-transparent border-transparent hover:bg-transparent hover:border-transparent text-blue-400 dark:text-blue-300 hover:text-blue-500 dark:hover:text-blue-400"
-                                        onClick={() => onSelectRowForImage(row.id)}
+                                        onClick={() => row.images && row.images.length > 0 && onSelectRowForImage(row.id)}
                                         data-testid={`button-view-image-${row.id}`}
-                                        title="View images"
+                                        title={row.images && row.images.length > 0 ? "View images" : "No images"}
+                                        disabled={!row.images || row.images.length === 0}
                                       >
-                                        <ImageIcon className="w-4 h-4" />
+                                        {row.images && row.images.length > 0 ? (
+                                          <ImageIcon className="w-4 h-4" />
+                                        ) : (
+                                          <Slash className="w-4 h-4 opacity-50" />
+                                        )}
                                       </Button>
                                     )}
                                     {editMode && (
