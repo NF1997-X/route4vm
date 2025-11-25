@@ -247,11 +247,16 @@ export function ImageUploadModal({
   };
 
   const handleDelete = (index: number) => {
-    setImages(images.filter((_, i) => i !== index));
+    const updatedImages = images.filter((_, i) => i !== index);
+    setImages(updatedImages);
     if (editingIndex === index) {
       setEditingIndex(null);
       setEditCaption("");
     }
+    toast({
+      title: "Image Removed",
+      description: "Image deleted successfully.",
+    });
   };
 
   const handleSaveAll = () => {
@@ -308,7 +313,7 @@ export function ImageUploadModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <ImageIcon className="w-5 h-5" />
@@ -381,10 +386,10 @@ export function ImageUploadModal({
               <TabsContent value="file" className="mt-4">
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-12 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 transition-all"
+                  className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-8 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 transition-all"
                 >
-                  <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <Upload className="w-10 h-10 mx-auto mb-3 text-gray-400" />
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Click to upload or drag and drop
                   </p>
                   <p className="text-xs text-gray-500">
@@ -479,72 +484,106 @@ export function ImageUploadModal({
             </div>
           )}
 
-          {/* Current Images Grid */}
+          {/* Current Images - Horizontal Card Layout */}
           {images.length > 0 && (
             <div className="space-y-3 border-t border-gray-200 dark:border-gray-700 pt-6">
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                  <ImageIcon className="w-4 h-4" />
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-base text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                  <ImageIcon className="w-5 h-5" />
                   Selected Images ({images.length}/{maxImages})
                 </h3>
-                {images.length > 0 && (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => setImages([])}
-                    className="text-red-600 dark:text-red-400 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20"
-                  >
-                    <Trash2 className="w-4 h-4 mr-1" />
-                    Clear All
-                  </Button>
-                )}
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              
+              <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
                 {images.map((image, index) => (
                   <div 
                     key={index}
-                    className="relative group border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-900 hover:shadow-lg transition-shadow"
+                    className="flex gap-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 hover:shadow-md transition-shadow"
                   >
-                    <img 
-                      src={image.url} 
-                      alt={image.caption || `Image ${index + 1}`}
-                      className="w-full h-40 object-cover"
-                    />
-                    
-                    {/* Image Actions Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                      <Button
-                        size="sm"
-                        onClick={() => handleEdit(index)}
-                        className="h-9 px-3 bg-white/90 hover:bg-white text-gray-900 shadow-lg"
-                      >
-                        <Edit2 className="w-4 h-4 mr-1" />
-                        Edit
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={() => handleDelete(index)}
-                        className="h-9 px-3 bg-red-600 hover:bg-red-700 text-white shadow-lg"
-                      >
-                        <Trash2 className="w-4 h-4 mr-1" />
-                        Delete
-                      </Button>
+                    {/* Image Thumbnail */}
+                    <div className="flex-shrink-0">
+                      <img 
+                        src={image.url} 
+                        alt={image.caption || `Image ${index + 1}`}
+                        className="w-32 h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
+                      />
                     </div>
+                    
+                    {/* Image Details */}
+                    <div className="flex-1 flex flex-col justify-between min-w-0">
+                      {/* Title Section */}
+                      <div className="space-y-3">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Title</span>
+                            {editingIndex !== index && (
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleEdit(index);
+                                }}
+                                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
+                              >
+                                <Edit2 className="w-3 h-3 text-gray-400 hover:text-blue-600" />
+                              </button>
+                            )}
+                          </div>
+                          {editingIndex === index ? (
+                            <Input
+                              value={editCaption}
+                              onChange={(e) => setEditCaption(e.target.value)}
+                              placeholder="Enter image title..."
+                              className="text-sm"
+                              autoFocus
+                            />
+                          ) : (
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                              {image.caption || "No title"}
+                            </p>
+                          )}
+                        </div>
 
-                    {/* Caption */}
-                    {editingIndex === index ? (
-                      <div className="p-2 space-y-2">
-                        <Textarea
-                          value={editCaption}
-                          onChange={(e) => setEditCaption(e.target.value)}
-                          placeholder="Enter caption..."
-                          className="text-xs min-h-[60px]"
-                        />
-                        <div className="flex gap-2">
+                        {/* Description Section */}
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Description</span>
+                            {editingIndex !== index && (
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleEdit(index);
+                                }}
+                                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
+                              >
+                                <Edit2 className="w-3 h-3 text-gray-400 hover:text-blue-600" />
+                              </button>
+                            )}
+                          </div>
+                          {editingIndex === index ? (
+                            <Textarea
+                              value={editCaption}
+                              onChange={(e) => setEditCaption(e.target.value)}
+                              placeholder="Enter description..."
+                              className="text-sm min-h-[60px]"
+                            />
+                          ) : (
+                            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                              {image.caption || "No description"}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Action Buttons - Bottom of card */}
+                      {editingIndex === index ? (
+                        <div className="flex gap-2 mt-3">
                           <Button
                             size="sm"
-                            onClick={handleSaveEdit}
-                            className="flex-1 h-7 text-xs"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleSaveEdit();
+                            }}
+                            className="bg-green-600 hover:bg-green-700 text-white"
                           >
                             <Save className="w-3 h-3 mr-1" />
                             Save
@@ -552,23 +591,54 @@ export function ImageUploadModal({
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.preventDefault();
                               setEditingIndex(null);
                               setEditCaption("");
                             }}
-                            className="flex-1 h-7 text-xs"
                           >
                             Cancel
                           </Button>
                         </div>
-                      </div>
-                    ) : (
-                      <div className="p-2">
-                        <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
-                          {image.caption || "No caption"}
-                        </p>
-                      </div>
-                    )}
+                      ) : (
+                        <div className="flex gap-2 mt-3">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleEdit(index);
+                            }}
+                            className="flex-1"
+                          >
+                            <Edit2 className="w-3 h-3 mr-1" />
+                            Edit
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1"
+                          >
+                            <ImageIcon className="w-3 h-3 mr-1" />
+                            Select
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleDelete(index);
+                            }}
+                            className="flex-1 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20"
+                          >
+                            <Trash2 className="w-3 h-3 mr-1" />
+                            Delete
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

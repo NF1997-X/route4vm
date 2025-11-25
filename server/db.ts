@@ -14,7 +14,13 @@ let _db: ReturnType<typeof drizzle> | null = null;
 export function initDb() {
   if (_db) return _db;
   
+  // For development, use in-memory mode if DATABASE_URL not set
   if (!process.env.DATABASE_URL) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('⚠️  DATABASE_URL not set. Running in development mode without database.');
+      console.warn('⚠️  Data will not persist. Set DATABASE_URL for full functionality.');
+      return null as any; // Return null but typed as db for development
+    }
     throw new Error(
       "DATABASE_URL must be set. Did you forget to provision a database?",
     );

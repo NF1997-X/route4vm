@@ -35,7 +35,9 @@ export default function CustomTableList() {
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [editingTable, setEditingTable] = useState<CustomTable | null>(null);
+  const [deletingTable, setDeletingTable] = useState<CustomTable | null>(null);
   const [tableName, setTableName] = useState("");
   const [tableDescription, setTableDescription] = useState("");
   const [shareUrl, setShareUrl] = useState("");
@@ -93,7 +95,7 @@ export default function CustomTableList() {
       setTableDescription("");
       setSelectedRows(new Set());
       toast({
-        title: "Custom table created!",
+        title: "✅ Custom Table Created!",
         description: "Your custom table has been created successfully.",
       });
     },
@@ -127,7 +129,7 @@ export default function CustomTableList() {
       setTableDescription("");
       setSelectedRows(new Set());
       toast({
-        title: "Custom table updated!",
+        title: "✅ Table Updated!",
         description: "Your custom table has been updated successfully.",
       });
     },
@@ -150,19 +152,32 @@ export default function CustomTableList() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/custom-tables"] });
+      setIsDeleteDialogOpen(false);
+      setDeletingTable(null);
       toast({
-        title: "Table deleted",
-        description: "Custom table has been deleted.",
+        title: "✅ Table Deleted",
+        description: "Custom table has been deleted successfully.",
       });
     },
     onError: () => {
       toast({
-        title: "Error",
-        description: "Failed to delete custom table.",
+        title: "❌ Error",
+        description: "Failed to delete custom table. Please try again.",
         variant: "destructive",
       });
     },
   });
+
+  const handleDeleteClick = (table: CustomTable) => {
+    setDeletingTable(table);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (deletingTable) {
+      deleteTableMutation.mutate(deletingTable.id);
+    }
+  };
 
   const toggleRowSelection = (rowId: string) => {
     const newSelection = new Set(selectedRows);
@@ -256,8 +271,8 @@ export default function CustomTableList() {
       setCopiedId(customTable.id);
       setShareUrl(url);
       toast({
-        title: "Link copied!",
-        description: "Share link copied to clipboard.",
+        title: "📋 Link Copied!",
+        description: "Share link copied to clipboard successfully.",
       });
       setTimeout(() => setCopiedId(""), 2000);
     } catch (error) {
@@ -497,7 +512,7 @@ export default function CustomTableList() {
                             Edit Locations
                           </DropdownMenuItem>
                           <DropdownMenuItem 
-                            onClick={() => deleteTableMutation.mutate(table.id)}
+                            onClick={() => handleDeleteClick(table)}
                             className="text-red-500 focus:text-red-600"
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
@@ -675,6 +690,54 @@ export default function CustomTableList() {
               className="bg-green-600 hover:bg-green-700 text-white"
             >
               {updateTableMutation.isPending ? "Updating..." : "Update Table"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="bg-white/90 dark:bg-black/30 backdrop-blur-2xl border-2 border-red-300 dark:border-red-900/50 shadow-xl rounded-xl">
+          <div 
+            className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-br from-red-50/60 via-white/40 to-red-50/50 dark:from-red-950/40 dark:via-black/20 dark:to-red-950/30 border-0 shadow-inner" 
+            style={{
+              backdropFilter: 'blur(40px)',
+              WebkitBackdropFilter: 'blur(40px)',
+            }}
+          />
+          <DialogHeader className="relative z-10">
+            <DialogTitle className="flex items-center gap-2 text-red-600 dark:text-red-400">
+              <Trash2 className="w-5 h-5" />
+              Delete Custom Table?
+            </DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete <strong>"{deletingTable?.name}"</strong>? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4 relative z-10">
+            <div className="p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-lg">
+              <p className="text-sm text-red-800 dark:text-red-300">
+                ⚠️ This will permanently delete the table and all its configuration.
+              </p>
+            </div>
+          </div>
+          <DialogFooter className="relative z-10">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDeleteDialogOpen(false);
+                setDeletingTable(null);
+              }}
+              className="bg-transparent border-transparent hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={confirmDelete}
+              disabled={deleteTableMutation.isPending}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {deleteTableMutation.isPending ? "Deleting..." : "Delete Table"}
             </Button>
           </DialogFooter>
         </DialogContent>

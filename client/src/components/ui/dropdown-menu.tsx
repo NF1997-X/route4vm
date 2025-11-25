@@ -26,10 +26,10 @@ const DropdownMenuSubTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       "flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none",
-      "transition-colors duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
+      "transition-colors duration-150 ease-out",
       "focus:bg-accent data-[state=open]:bg-accent",
       "[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
-      "[&_svg:last-child]:transition-transform [&_svg:last-child]:duration-150 [&_svg:last-child]:ease-[cubic-bezier(0.16,1,0.3,1)]",
+      "[&_svg:last-child]:transition-transform [&_svg:last-child]:duration-150 [&_svg:last-child]:ease-out",
       "data-[state=open]:[&_svg:last-child]:rotate-90",
       inset && "pl-8",
       className
@@ -57,7 +57,7 @@ const DropdownMenuSubContent = React.forwardRef<
       "data-[side=bottom]:slide-in-from-top-1 data-[side=left]:slide-in-from-right-1",
       "data-[side=right]:slide-in-from-left-1 data-[side=top]:slide-in-from-bottom-1",
       "data-[state=open]:duration-150 data-[state=closed]:duration-100",
-      "data-[state=open]:ease-[cubic-bezier(0.16,1,0.3,1)] data-[state=closed]:ease-[cubic-bezier(0.16,1,0.3,1)]",
+      "data-[state=open]:ease-out data-[state=closed]:ease-in",
       className
     )}
     {...props}
@@ -82,7 +82,7 @@ const DropdownMenuContent = React.forwardRef<
         "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2",
         "data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
         "data-[state=open]:duration-150 data-[state=closed]:duration-100",
-        "data-[state=open]:ease-[cubic-bezier(0.16,1,0.3,1)] data-[state=closed]:ease-[cubic-bezier(0.16,1,0.3,1)]",
+        "data-[state=open]:ease-out data-[state=closed]:ease-in",
         "origin-[--radix-dropdown-menu-content-transform-origin]",
         className
       )}
@@ -102,7 +102,7 @@ const DropdownMenuItem = React.forwardRef<
     ref={ref}
     className={cn(
       "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none",
-      "transition-colors duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
+      "transition-colors duration-150 ease-out",
       "focus:bg-accent focus:text-accent-foreground",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       "[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",

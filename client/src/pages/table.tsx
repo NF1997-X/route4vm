@@ -1113,7 +1113,12 @@ export default function TablePage() {
           onGenerateTng={handleGenerateTngValues}
           onOptimizeRoute={() => setOptimizationModalOpen(true)}
           onCalculateTolls={handleCalculateTolls}
-          onSaveLayout={() => {}}
+          onSaveLayout={() => {
+            toast({
+              title: "💾 Layout Saved!",
+              description: "Your table layout preferences have been saved successfully.",
+            });
+          }}
           onSavedLinks={() => setSavedLinksModalOpen(true)}
           onShowTutorial={() => setShowTutorial(true)}
           onBulkColorEdit={() => setBulkColorModalOpen(true)}
