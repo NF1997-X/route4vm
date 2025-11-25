@@ -1369,7 +1369,12 @@ export function DataTable({
                                   data-testid={`cell-${row.id}-${column.dataKey}`}
                                 >
                                   <div className="w-[98%] mx-auto text-center">
-                                  {column.dataKey === "info" ? (
+                                  {column.dataKey === "images" ? (
+                                    <ImageIconButton
+                                      images={row.images}
+                                      rowId={row.id}
+                                    />
+                                  ) : column.dataKey === "info" ? (
                                     row.info && row.info.trim() ? (
                                       <InfoModal
                                         info={row.info}
@@ -1513,11 +1518,6 @@ export function DataTable({
                                     )}
                                     {editMode && (
                                       <>
-                                      {/* Image preview - edit mode only */}
-                                      <ImageIconButton
-                                        images={row.images}
-                                        rowId={row.id}
-                                      />
                                       {/* Manage Image button - edit mode only */}
                                       <Button
                                         size="sm"
