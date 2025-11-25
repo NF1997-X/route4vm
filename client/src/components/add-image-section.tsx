@@ -12,9 +12,10 @@ interface AddImageSectionProps {
   location?: string;
   onClose: () => void;
   onAddImage: UseMutationResult<any, Error, { rowId: string; imageUrl: string; caption?: string }, unknown>;
+  allMedia?: MediaWithCaption[]; // Optional: all available media for selection
 }
 
-export function AddImageSection({ rowId, location, onClose, onAddImage }: AddImageSectionProps) {
+export function AddImageSection({ rowId, location, onClose, onAddImage, allMedia = [] }: AddImageSectionProps) {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const { toast } = useToast();
 
@@ -86,6 +87,7 @@ export function AddImageSection({ rowId, location, onClose, onAddImage }: AddIma
         open={uploadModalOpen}
         onOpenChange={setUploadModalOpen}
         onSave={handleSaveImages}
+        allMedia={allMedia}
       />
     </>
   );

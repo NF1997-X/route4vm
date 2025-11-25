@@ -1139,7 +1139,7 @@ export function DataTable({
                 <button 
                   key={route} 
                   onClick={() => toggleRouteFilter(route)}
-                  className="flex items-center gap-1 px-2 py-1 bg-blue-100/80 dark:bg-blue-900/40 hover:bg-blue-200/90 dark:hover:bg-blue-800/50 border border-blue-300/50 dark:border-blue-700/50 rounded-full transition-all cursor-pointer active:scale-95"
+                  className="flex items-center gap-1 px-2 py-1 bg-transparent hover:bg-blue-500/10 border border-transparent hover:border-blue-500/20 rounded-full transition-all cursor-pointer active:scale-95"
                   aria-label={`Remove route filter: ${route}`}
                 >
                   {isKL ? (
@@ -1157,7 +1157,7 @@ export function DataTable({
               <button 
                 key={delivery} 
                 onClick={() => toggleDeliveryFilter(delivery)}
-                className="flex items-center gap-1 px-2 py-1 bg-green-100/80 dark:bg-green-900/40 hover:bg-green-200/90 dark:hover:bg-green-800/50 border border-green-300/50 dark:border-green-700/50 rounded-full transition-all cursor-pointer active:scale-95"
+                className="flex items-center gap-1 px-2 py-1 bg-transparent hover:bg-green-500/10 border border-transparent hover:border-green-500/20 rounded-full transition-all cursor-pointer active:scale-95"
                 aria-label={`Remove delivery filter: ${delivery}`}
               >
                 <Filter className="w-2.5 h-2.5" />

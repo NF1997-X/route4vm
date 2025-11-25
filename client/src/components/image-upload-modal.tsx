@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, Link, Image as ImageIcon, X, Edit2, Trash2, Save, Loader2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Upload, Link, Image as ImageIcon, X, Edit2, Trash2, Save, Loader2, FolderOpen, Camera } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { MediaWithCaption } from "@shared/schema";
 
@@ -14,6 +16,7 @@ interface ImageUploadModalProps {
   existingImages?: MediaWithCaption[];
   onSave: (images: MediaWithCaption[]) => void;
   maxImages?: number;
+  allMedia?: MediaWithCaption[]; // All media from library
 }
 
 export function ImageUploadModal({ 
@@ -21,7 +24,8 @@ export function ImageUploadModal({
   onOpenChange, 
   existingImages = [], 
   onSave,
-  maxImages = 10 
+  maxImages = 10,
+  allMedia = []
 }: ImageUploadModalProps) {
   const [images, setImages] = useState<MediaWithCaption[]>(existingImages);
   const [uploadMethod, setUploadMethod] = useState<"url" | "file">("url");
@@ -29,6 +33,8 @@ export function ImageUploadModal({
   const [isUploading, setIsUploading] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editCaption, setEditCaption] = useState("");
+  const [useMediaLibrary, setUseMediaLibrary] = useState(false);
+  const [selectedMediaIds, setSelectedMediaIds] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -103,6 +109,7 @@ export function ImageUploadModal({
       const imgbbUrl = await uploadUrlToImgBB(urlInput.trim());
       
       const newImage: MediaWithCaption = {
+        id: crypto.randomUUID(), // Generate unique ID
         url: imgbbUrl,
         caption: "",
         type: "image"
@@ -155,6 +162,7 @@ export function ImageUploadModal({
       for (const file of filesToUpload) {
         const imgbbUrl = await uploadToImgBB(file);
         uploadedImages.push({
+          id: crypto.randomUUID(), // Generate unique ID
           url: imgbbUrl,
           caption: file.name.replace(/\.[^/.]+$/, ""),
           type: "image"
@@ -261,9 +269,46 @@ export function ImageUploadModal({
     setEditingIndex(null);
   };
 
+  const toggleMediaSelection = (mediaId: string) => {
+    const newSelected = new Set(selectedMediaIds);
+    if (newSelected.has(mediaId)) {
+      newSelected.delete(mediaId);
+    } else {
+      if (images.length + newSelected.size >= maxImages) {
+        toast({
+          title: "Maximum images reached",
+          description: `You can only add up to ${maxImages} images.`,
+          variant: "destructive",
+        });
+        return;
+      }
+      newSelected.add(mediaId);
+    }
+    setSelectedMediaIds(newSelected);
+  };
+
+  const handleAddFromLibrary = () => {
+    const selectedMedia = allMedia.filter(media => selectedMediaIds.has(media.id));
+    const newImages = [...images, ...selectedMedia];
+    if (newImages.length > maxImages) {
+      toast({
+        title: "Too many images",
+        description: `Maximum ${maxImages} images allowed.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    setImages(newImages);
+    setSelectedMediaIds(new Set());
+    toast({
+      title: "Success",
+      description: `Added ${selectedMedia.length} image(s) from library.`,
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <ImageIcon className="w-5 h-5" />
@@ -275,75 +320,190 @@ export function ImageUploadModal({
         </DialogHeader>
 
         <div className="space-y-6">
+          {/* Media Source Switch */}
+          <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20">
+            <div className="flex items-center gap-3">
+              {useMediaLibrary ? (
+                <FolderOpen className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+              ) : (
+                <Camera className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              )}
+              <div>
+                <Label htmlFor="media-switch" className="text-sm font-semibold cursor-pointer">
+                  {useMediaLibrary ? "Browse Media Library" : "Upload New Images"}
+                </Label>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {useMediaLibrary ? "Select from existing media" : "Upload from URL or device"}
+                </p>
+              </div>
+            </div>
+            <Switch
+              id="media-switch"
+              checked={useMediaLibrary}
+              onCheckedChange={setUseMediaLibrary}
+            />
+          </div>
+
           {/* Upload Section */}
-          <Tabs value={uploadMethod} onValueChange={(v) => setUploadMethod(v as "url" | "file")}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="url" className="flex items-center gap-2">
-                <Link className="w-4 h-4" />
-                URL Upload
-              </TabsTrigger>
-              <TabsTrigger value="file" className="flex items-center gap-2">
-                <Upload className="w-4 h-4" />
-                Device Upload
-              </TabsTrigger>
-            </TabsList>
+          {!useMediaLibrary ? (
+            <Tabs value={uploadMethod} onValueChange={(v) => setUploadMethod(v as "url" | "file")}>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="url" className="flex items-center gap-2">
+                  <Link className="w-4 h-4" />
+                  URL Upload
+                </TabsTrigger>
+                <TabsTrigger value="file" className="flex items-center gap-2">
+                  <Upload className="w-4 h-4" />
+                  Device Upload
+                </TabsTrigger>
+              </TabsList>
 
-            <TabsContent value="url" className="space-y-3 mt-4">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Paste image URL here..."
-                  value={urlInput}
-                  onChange={(e) => setUrlInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleUrlUpload()}
-                  disabled={isUploading || images.length >= maxImages}
-                  className="flex-1"
-                />
-                <Button 
-                  onClick={handleUrlUpload}
-                  disabled={isUploading || !urlInput.trim() || images.length >= maxImages}
-                  className="bg-blue-500 hover:bg-blue-600"
+              <TabsContent value="url" className="space-y-3 mt-4">
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Paste image URL here..."
+                    value={urlInput}
+                    onChange={(e) => setUrlInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleUrlUpload()}
+                    disabled={isUploading || images.length >= maxImages}
+                    className="flex-1"
+                  />
+                  <Button 
+                    onClick={handleUrlUpload}
+                    disabled={isUploading || !urlInput.trim() || images.length >= maxImages}
+                    className="bg-blue-500 hover:bg-blue-600"
+                  >
+                    {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Upload"}
+                  </Button>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="file" className="mt-4">
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-12 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 transition-all"
                 >
-                  {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Upload"}
-                </Button>
+                  <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Click to upload or drag and drop
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    PNG, JPG, GIF up to 10MB • Multiple files supported
+                  </p>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleFileSelect}
+                    disabled={isUploading || images.length >= maxImages}
+                    className="hidden"
+                  />
+                </div>
+              </TabsContent>
+            </Tabs>
+          ) : (
+            /* Media Library Section */
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                  <FolderOpen className="w-4 h-4" />
+                  Media Library ({allMedia.length} items)
+                </h3>
+                {selectedMediaIds.size > 0 && (
+                  <Button
+                    onClick={handleAddFromLibrary}
+                    size="sm"
+                    className="bg-purple-600 hover:bg-purple-700"
+                  >
+                    Add Selected ({selectedMediaIds.size})
+                  </Button>
+                )}
               </div>
-            </TabsContent>
+              
+              {allMedia.length === 0 ? (
+                <div className="text-center py-12 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl">
+                  <FolderOpen className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                  <p className="text-sm text-gray-500">No media in library</p>
+                  <p className="text-xs text-gray-400 mt-1">Upload images first to build your library</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-h-[400px] overflow-y-auto p-2">
+                  {allMedia.map((media) => {
+                    const isSelected = selectedMediaIds.has(media.id);
+                    const isAlreadyAdded = images.some(img => img.id === media.id);
+                    
+                    return (
+                      <div
+                        key={media.id}
+                        onClick={() => !isAlreadyAdded && toggleMediaSelection(media.id)}
+                        className={`relative group rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                          isSelected 
+                            ? 'border-purple-500 ring-2 ring-purple-500/50' 
+                            : isAlreadyAdded 
+                            ? 'border-gray-300 dark:border-gray-600 opacity-50 cursor-not-allowed'
+                            : 'border-transparent hover:border-purple-400'
+                        }`}
+                      >
+                        <div className="aspect-square">
+                          <img
+                            src={media.url}
+                            alt={media.caption || 'Media'}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        {isSelected && (
+                          <div className="absolute inset-0 bg-purple-600/20 flex items-center justify-center">
+                            <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                          </div>
+                        )}
+                        {isAlreadyAdded && (
+                          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                            <p className="text-white text-xs font-medium">Already Added</p>
+                          </div>
+                        )}
+                        {media.caption && (
+                          <div className="absolute bottom-0 left-0 right-0 bg-black/70 px-2 py-1">
+                            <p className="text-white text-xs truncate">{media.caption}</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
 
-            <TabsContent value="file" className="mt-4">
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-2xl p-12 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 transition-all"
-              >
-                <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Click to upload or drag and drop
-                </p>
-                <p className="text-xs text-gray-500">
-                  PNG, JPG, GIF up to 10MB • Multiple files supported
-                </p>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleFileSelect}
-                  disabled={isUploading || images.length >= maxImages}
-                  className="hidden"
-                />
-              </div>
-            </TabsContent>
-          </Tabs>
-
-          {/* Images Grid */}
+          {/* Current Images Grid */}
           {images.length > 0 && (
-            <div className="space-y-3">
-              <h3 className="font-semibold text-sm text-gray-700 dark:text-gray-300">
-                Uploaded Images ({images.length})
-              </h3>
+            <div className="space-y-3 border-t border-gray-200 dark:border-gray-700 pt-6">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                  <ImageIcon className="w-4 h-4" />
+                  Selected Images ({images.length}/{maxImages})
+                </h3>
+                {images.length > 0 && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setImages([])}
+                    className="text-red-600 dark:text-red-400 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20"
+                  >
+                    <Trash2 className="w-4 h-4 mr-1" />
+                    Clear All
+                  </Button>
+                )}
+              </div>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {images.map((image, index) => (
                   <div 
                     key={index}
-                    className="relative group border rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-900"
+                    className="relative group border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-900 hover:shadow-lg transition-shadow"
                   >
                     <img 
                       src={image.url} 
@@ -352,22 +512,22 @@ export function ImageUploadModal({
                     />
                     
                     {/* Image Actions Overlay */}
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                       <Button
                         size="sm"
-                        variant="secondary"
                         onClick={() => handleEdit(index)}
-                        className="h-8 w-8 p-0"
+                        className="h-9 px-3 bg-white/90 hover:bg-white text-gray-900 shadow-lg"
                       >
-                        <Edit2 className="w-4 h-4" />
+                        <Edit2 className="w-4 h-4 mr-1" />
+                        Edit
                       </Button>
                       <Button
                         size="sm"
-                        variant="destructive"
                         onClick={() => handleDelete(index)}
-                        className="h-8 w-8 p-0"
+                        className="h-9 px-3 bg-red-600 hover:bg-red-700 text-white shadow-lg"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4 mr-1" />
+                        Delete
                       </Button>
                     </div>
 
@@ -416,17 +576,32 @@ export function ImageUploadModal({
           )}
 
           {/* Action Buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t">
-            <Button variant="outline" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleSaveAll}
-              disabled={images.length === 0}
-              className="bg-green-500 hover:bg-green-600"
-            >
-              Save All ({images.length})
-            </Button>
+          <div className="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              {images.length === 0 ? (
+                "No images selected"
+              ) : (
+                `${images.length} image${images.length > 1 ? 's' : ''} ready to save`
+              )}
+            </div>
+            <div className="flex gap-3">
+              <Button 
+                variant="outline" 
+                onClick={handleCancel}
+                className="border-gray-300 dark:border-gray-600"
+              >
+                <X className="w-4 h-4 mr-1" />
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleSaveAll}
+                disabled={images.length === 0}
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                Save All ({images.length})
+              </Button>
+            </div>
           </div>
         </div>
       </DialogContent>

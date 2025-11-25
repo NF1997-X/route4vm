@@ -15,6 +15,7 @@ interface ImageEditSectionProps {
   onAddImage: UseMutationResult<any, Error, { rowId: string; imageUrl: string; caption?: string }, unknown>;
   onUpdateImage: UseMutationResult<any, Error, { rowId: string; imageIndex: number; imageUrl?: string; caption?: string }, unknown>;
   onDeleteImage: UseMutationResult<any, Error, { rowId: string; imageIndex?: number }, unknown>;
+  allMedia?: MediaWithCaption[]; // Optional: all available media for selection
 }
 
 export function ImageEditSection({ 
@@ -24,13 +25,15 @@ export function ImageEditSection({
   onClose, 
   onAddImage, 
   onUpdateImage, 
-  onDeleteImage 
+  onDeleteImage,
+  allMedia = []
 }: ImageEditSectionProps) {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const { toast } = useToast();
 
   // Convert existing images to MediaWithCaption format
   const existingImages: MediaWithCaption[] = images.map(img => ({
+    id: img.id || crypto.randomUUID(), // Generate ID if not exists
     url: img.url,
     caption: img.caption || "",
     type: "image" as const
@@ -112,6 +115,7 @@ export function ImageEditSection({
         onOpenChange={setUploadModalOpen}
         existingImages={existingImages}
         onSave={handleSaveImages}
+        allMedia={allMedia}
       />
     </>
   );

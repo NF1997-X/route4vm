@@ -211,35 +211,36 @@ export function ColumnCustomizationModal({
         </div>
 
         <DialogFooter className="flex justify-center">
-          <div className="flex gap-2">
+          <div className="flex gap-3 items-center">
             <Button
               variant="outline"
               onClick={handleReset}
               size="sm"
-              className="w-8 h-8 p-0"
+              className="bg-transparent border-transparent hover:bg-transparent hover:border-transparent text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1.5"
               data-testid="button-reset-columns"
-              title="Reset columns"
             >
               <RotateCcw className="w-4 h-4" />
+              <span className="text-xs font-medium">Reset</span>
             </Button>
             <Button
               variant="outline"
               onClick={() => onOpenChange(false)}
               size="sm"
-              className="w-8 h-8 p-0"
+              className="bg-transparent border-transparent hover:bg-transparent hover:border-transparent text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 flex items-center gap-1.5"
               data-testid="button-cancel-customize"
-              title="Cancel"
             >
               <X className="w-4 h-4" />
+              <span className="text-xs font-medium">Cancel</span>
             </Button>
             <Button 
               onClick={handleApply} 
               size="sm" 
-              className={`w-8 h-8 p-0 transition-all duration-200 ${hasChanges() ? 'bg-transparent border border-border/50 text-green-500 hover:text-green-400 hover:bg-green-500/10' : 'bg-transparent border border-border/50 text-muted-foreground hover:text-foreground hover:bg-background/50'}`} 
-              data-testid="button-apply-customize" 
-              title="Apply changes"
+              className="bg-transparent border-transparent hover:bg-transparent hover:border-transparent text-green-500 hover:text-green-600 dark:text-green-400 dark:hover:text-green-300 flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed" 
+              data-testid="button-apply-customize"
+              disabled={!hasChanges()}
             >
               <CheckCheck className="w-4 h-4" />
+              <span className="text-xs font-medium">Apply</span>
             </Button>
           </div>
         </DialogFooter>

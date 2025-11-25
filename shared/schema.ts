@@ -5,6 +5,7 @@ import { z } from "zod";
 
 // Media type with caption and type support (images and videos)
 export const mediaSchema = z.object({
+  id: z.string().optional(), // Optional ID for media library identification
   url: z.string(),
   caption: z.string().optional().default(""),
   type: z.enum(["image", "video"]).default("image"),
