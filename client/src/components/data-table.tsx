@@ -1297,7 +1297,7 @@ export function DataTable({
                                   // Main page (NOT shared view): only dim if power off (inactive)
                                   if (!isSharedView) {
                                     if (row.active === false) {
-                                      return "bg-gray-300/50 dark:bg-gray-800/50 opacity-40";
+                                      return "bg-gray-400/60 dark:bg-gray-700/60 opacity-50";
                                     } else {
                                       return "bg-white/30 dark:bg-black/20 backdrop-blur-sm";
                                     }
@@ -1306,7 +1306,7 @@ export function DataTable({
                                   // Shared view & custom table: apply schedule-based styling
                                   const status = getScheduleStatus(row);
                                   if (status === 'inactive') {
-                                    return "bg-gray-300/50 dark:bg-gray-800/50 opacity-40";
+                                    return "bg-gray-400/60 dark:bg-gray-700/60 opacity-50";
                                   } else if (status === 'off-schedule') {
                                     return "bg-white/30 dark:bg-black/20 backdrop-blur-sm opacity-60";
                                   } else {
@@ -1496,24 +1496,6 @@ export function DataTable({
                                       <GripVertical className="w-4 h-4" />
                                     </div>
                                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                    {/* Image button - normal mode */}
-                                    {!editMode && (
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        className="bg-transparent border-transparent hover:bg-transparent hover:border-transparent text-blue-400 dark:text-blue-300 hover:text-blue-500 dark:hover:text-blue-400"
-                                        onClick={() => row.images && row.images.length > 0 && onSelectRowForImage(row.id)}
-                                        data-testid={`button-view-image-${row.id}`}
-                                        title={row.images && row.images.length > 0 ? "View images" : "No images"}
-                                        disabled={!row.images || row.images.length === 0}
-                                      >
-                                        {row.images && row.images.length > 0 ? (
-                                          <ImageIcon className="w-4 h-4" />
-                                        ) : (
-                                          <Slash className="w-4 h-4 opacity-50" />
-                                        )}
-                                      </Button>
-                                    )}
                                     {editMode && (
                                       <>
                                       {/* Manage Image button - edit mode only */}
