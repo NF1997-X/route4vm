@@ -1252,14 +1252,12 @@ export function DataTable({
                             className={`skeleton-row fade-in-stagger odd:bg-white dark:odd:bg-gray-900/50 even:bg-blue-50/50 dark:even:bg-blue-900/20 backdrop-blur-sm hover:bg-muted/60 table-cell-unique-transition`}
                           >
                             {/* Actions column */}
-                            <td className="p-3 w-16">
-                              <div className="flex gap-3 justify-center">
-                                <div className="skeleton w-8 h-8 rounded-md bg-gradient-to-r from-gray-500/20 to-slate-500/20 animate-pulse" />
-                                <div className="skeleton w-8 h-8 rounded-md bg-gradient-to-r from-blue-500/20 to-purple-500/20 animate-pulse" style={{animationDelay: "0.1s"}} />
-                                <div className="skeleton w-8 h-8 rounded-md bg-gradient-to-r from-green-500/20 to-blue-500/20 animate-pulse" style={{animationDelay: "0.2s"}} />
-                                <div className="skeleton w-8 h-8 rounded-md bg-gradient-to-r from-yellow-500/20 to-green-500/20 animate-pulse" style={{animationDelay: "0.3s"}} />
-                                <div className="skeleton w-8 h-8 rounded-md bg-gradient-to-r from-red-500/20 to-yellow-500/20 animate-pulse" style={{animationDelay: "0.4s"}} />
-                                <div className="skeleton w-8 h-8 rounded-md bg-gradient-to-r from-green-500/20 to-emerald-500/20 animate-pulse" style={{animationDelay: "0.5s"}} />
+                            <td className="p-3 w-12">
+                              <div className="flex gap-1 justify-center opacity-30">
+                                <div className="skeleton w-6 h-6 rounded-md bg-gradient-to-r from-gray-500/20 to-slate-500/20 animate-pulse" />
+                                <div className="skeleton w-6 h-6 rounded-md bg-gradient-to-r from-blue-500/20 to-purple-500/20 animate-pulse" style={{animationDelay: "0.1s"}} />
+                                <div className="skeleton w-6 h-6 rounded-md bg-gradient-to-r from-green-500/20 to-blue-500/20 animate-pulse" style={{animationDelay: "0.2s"}} />
+                                <div className="skeleton w-6 h-6 rounded-md bg-gradient-to-r from-yellow-500/20 to-green-500/20 animate-pulse" style={{animationDelay: "0.3s"}} />
                               </div>
                             </td>
 
@@ -1482,11 +1480,11 @@ export function DataTable({
                                 </TableCell>
                               ))}
                               <TableCell
-                                className="px-4 py-2 text-sm text-center text-foreground"
+                                className="px-2 py-2 text-sm text-center text-foreground"
                                 style={{ textAlign: "center" }}
                               >
                                 <div className="flex flex-col items-center gap-1">
-                                  <div className="flex items-center gap-3">
+                                  <div className="flex items-center gap-1">
                                     <div
                                       {...provided.dragHandleProps}
                                       className={`p-2 rounded ${
@@ -1497,7 +1495,7 @@ export function DataTable({
                                     >
                                       <GripVertical className="w-4 h-4" />
                                     </div>
-                                    <div className="flex items-center gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
+                                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                     {/* Image button - normal mode */}
                                     {!editMode && (
                                       <Button
