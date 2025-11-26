@@ -53,21 +53,20 @@ export function Navigation({ editMode, onEditModeRequest, onShowCustomization, o
         <div className="flex h-16 items-center justify-between text-[12px]">
           {/* Logo/Brand */}
           <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-3 group cursor-pointer">
-              <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 shadow-lg shadow-blue-500/30 dark:shadow-blue-500/40 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-blue-500/40 group-hover:scale-105">
+            <div className="flex items-center space-x-2.5 group cursor-pointer">
+              <div className="relative flex h-10 w-10 items-center justify-center rounded-[14px] overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200">
                 <img 
                   src="/assets/Logofm.png" 
                   alt="Logo" 
                   className="h-full w-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
               </div>
               <div className="flex flex-col gap-0.5 leading-tight">
-                <span className="font-semibold text-gray-900 dark:text-white leading-none tracking-tight transition-colors" style={{ fontSize: '13px' }}>
-                  {editMode ? "Edit Mode" : "Route Management"}
+                <span className="font-bold bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 dark:from-gray-100 dark:via-gray-200 dark:to-gray-100 bg-clip-text text-transparent leading-none tracking-tight transition-all" style={{ fontSize: '13px', letterSpacing: '-0.02em' }}>
+                  {editMode ? "Edit Mode" : "Route Manager"}
                 </span>
-                <span className="text-gray-500 dark:text-gray-400 leading-none tracking-wide" style={{ fontSize: '10px' }}>
-                  All in one data informations
+                <span className="text-gray-500 dark:text-gray-400 leading-none font-medium" style={{ fontSize: '10px', letterSpacing: '-0.01em' }}>
+                  Data Management
                 </span>
               </div>
             </div>
@@ -78,12 +77,12 @@ export function Navigation({ editMode, onEditModeRequest, onShowCustomization, o
             variant="outline"
             size="sm"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="relative bg-white/90 dark:bg-black/90 backdrop-blur-xl border border-blue-200/50 dark:border-blue-500/30 shadow-lg shadow-blue-500/10 dark:shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/20 dark:hover:shadow-blue-500/30 hover:border-blue-400/60 dark:hover:border-blue-400/50 hover:bg-white dark:hover:bg-black/95 h-10 px-4 rounded-full transition-all duration-300 ease-out group"
+            className="relative bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200/60 dark:border-gray-700/50 shadow-md hover:shadow-lg hover:border-gray-300/70 dark:hover:border-gray-600/60 hover:bg-white dark:hover:bg-gray-900 h-10 px-4 rounded-[14px] transition-all duration-200 ease-out group"
             data-testid="button-main-menu"
             title="Menu"
           >
-            <LayoutGrid className="w-4 h-4 text-blue-600 dark:text-blue-400 transition-transform duration-300 group-hover:rotate-90" />
-            <span className="hidden md:inline ml-2 text-xs font-medium text-gray-700 dark:text-gray-200">Menu</span>
+            <LayoutGrid className="w-4 h-4 text-gray-700 dark:text-gray-200 transition-transform duration-200 group-hover:scale-110" />
+            <span className="hidden md:inline ml-2 text-xs font-semibold text-gray-700 dark:text-gray-200">Menu</span>
           </Button>
         </div>
       </div>

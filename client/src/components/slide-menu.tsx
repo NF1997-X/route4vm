@@ -95,8 +95,8 @@ export function SlideMenu({
         }}
       />
       
-      {/* Menu Panel */}
-      <div className="fixed top-16 right-4 z-50 w-[calc(100vw-2rem)] sm:w-[320px] max-w-[320px] bg-white/95 dark:bg-black/95 backdrop-blur-3xl border border-blue-200/40 dark:border-blue-500/30 shadow-[0_24px_80px_0_rgba(59,130,246,0.15)] dark:shadow-[0_24px_80px_0_rgba(59,130,246,0.35)] rounded-3xl overflow-hidden">
+      {/* Menu Panel - Premium iOS Style */}
+      <div className="fixed top-16 right-4 z-50 w-[calc(100vw-2rem)] sm:w-[360px] max-w-[360px] bg-white/98 dark:bg-gray-900/98 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.6)] rounded-[24px] overflow-hidden">
         <div className="relative h-[70vh] max-h-[600px] overflow-hidden">
           {/* Main Menu */}
           <div 
@@ -104,44 +104,50 @@ export function SlideMenu({
               currentView === 'main' ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
-            <div className="p-2 h-full overflow-y-auto">
+            <div className="p-4 h-full overflow-y-auto space-y-1">
               {/* VM Route */}
               <button
                 onClick={() => handleSubmenuClick('vm-route')}
-                className="w-full flex items-center justify-between cursor-pointer rounded-xl px-3 py-2.5 hover:bg-blue-50/80 dark:hover:bg-blue-950/40 transition-all duration-200"
+                className="w-full flex items-center justify-between cursor-pointer rounded-[16px] px-4 py-3.5 hover:bg-gray-50 dark:hover:bg-gray-800/40 active:scale-[0.97] transition-all duration-150 group"
               >
                 <div className="flex items-center">
-                  <Edit2 className="w-4 h-4 mr-3 text-indigo-600 dark:text-indigo-400" />
-                  <span className="text-xs font-medium text-gray-700 dark:text-gray-200">VM Route</span>
+                  <div className="w-9 h-9 rounded-[12px] bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 flex items-center justify-center mr-3 shadow-sm group-hover:shadow-md transition-shadow">
+                    <Edit2 className="w-4.5 h-4.5 text-white" />
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">VM Route</span>
                 </div>
-                <span className="text-gray-400 dark:text-gray-500">›</span>
+                <span className="text-gray-400 dark:text-gray-500 text-xl font-light">›</span>
               </button>
 
               {/* Settings */}
               <button
                 onClick={() => handleSubmenuClick('settings')}
-                className="w-full flex items-center justify-between cursor-pointer rounded-xl px-3 py-2.5 hover:bg-gray-100/80 dark:hover:bg-gray-800/40 transition-all duration-200"
+                className="w-full flex items-center justify-between cursor-pointer rounded-[16px] px-4 py-3.5 hover:bg-gray-50 dark:hover:bg-gray-800/40 active:scale-[0.97] transition-all duration-150 group"
               >
                 <div className="flex items-center">
-                  <Settings className="w-4 h-4 mr-3 text-gray-600 dark:text-gray-400" />
-                  <span className="text-xs font-medium text-gray-700 dark:text-gray-200">Settings</span>
+                  <div className="w-9 h-9 rounded-[12px] bg-gradient-to-br from-gray-500 via-gray-600 to-gray-700 flex items-center justify-center mr-3 shadow-sm group-hover:shadow-md transition-shadow">
+                    <Settings className="w-4.5 h-4.5 text-white" />
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">Settings</span>
                 </div>
-                <span className="text-gray-400 dark:text-gray-500">›</span>
+                <span className="text-gray-400 dark:text-gray-500 text-xl font-light">›</span>
               </button>
 
-              <div className="my-1.5 h-px bg-gradient-to-r from-transparent via-gray-300/60 dark:via-gray-600/40 to-transparent" />
+              <div className="my-3 h-[0.5px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent" />
 
               {/* Edit Mode Options */}
               {editMode && (
                 <button
                   onClick={() => handleSubmenuClick('edit-actions')}
-                  className="w-full flex items-center justify-between cursor-pointer rounded-xl px-3 py-2.5 hover:bg-blue-50/80 dark:hover:bg-blue-950/40 transition-all duration-200"
+                  className="w-full flex items-center justify-between cursor-pointer rounded-[16px] px-4 py-3.5 hover:bg-gray-50 dark:hover:bg-gray-800/40 active:scale-[0.97] transition-all duration-150 group"
                 >
                   <div className="flex items-center">
-                    <Database className="w-4 h-4 mr-3 text-blue-600 dark:text-blue-400" />
-                    <span className="text-xs font-medium text-gray-700 dark:text-gray-200">Edit Actions</span>
+                    <div className="w-9 h-9 rounded-[12px] bg-gradient-to-br from-cyan-500 via-cyan-600 to-blue-600 flex items-center justify-center mr-3 shadow-sm group-hover:shadow-md transition-shadow">
+                      <Database className="w-4.5 h-4.5 text-white" />
+                    </div>
+                    <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">Edit Actions</span>
                   </div>
-                  <span className="text-gray-400 dark:text-gray-500">›</span>
+                  <span className="text-gray-400 dark:text-gray-500 text-xl font-light">›</span>
                 </button>
               )}
 
@@ -150,26 +156,32 @@ export function SlideMenu({
                 <>
                   <button
                     onClick={() => handleItemClick(onSaveData!)}
-                    className="w-full flex items-center cursor-pointer rounded-xl px-3 py-2.5 hover:bg-green-50/80 dark:hover:bg-green-950/40 transition-all duration-200"
+                    className="w-full flex items-center cursor-pointer rounded-2xl px-4 py-3.5 hover:bg-green-50 dark:hover:bg-green-950/50 active:scale-[0.98] transition-all duration-200 mb-1"
                   >
-                    <Save className="w-4 h-4 mr-3 text-green-600 dark:text-green-400" />
-                    <span className="text-xs font-medium text-gray-700 dark:text-gray-200">Save Changes</span>
+                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mr-3">
+                      <Save className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">Save Changes</span>
                   </button>
                   <button
                     onClick={() => handleItemClick(onEditModeRequest!)}
-                    className="w-full flex items-center cursor-pointer rounded-xl px-3 py-2.5 hover:bg-red-50/80 dark:hover:bg-red-950/40 transition-all duration-200"
+                    className="w-full flex items-center cursor-pointer rounded-2xl px-4 py-3.5 hover:bg-red-50 dark:hover:bg-red-950/50 active:scale-[0.98] transition-all duration-200 mb-1"
                   >
-                    <DoorOpen className="w-4 h-4 mr-3 text-red-600 dark:text-red-400" />
-                    <span className="text-xs font-medium text-gray-700 dark:text-gray-200">Exit Edit Mode</span>
+                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center mr-3">
+                      <DoorOpen className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">Exit Edit Mode</span>
                   </button>
                 </>
               ) : (
                 <button
                   onClick={() => handleItemClick(onEditModeRequest!)}
-                  className="w-full flex items-center cursor-pointer rounded-xl px-3 py-2.5 hover:bg-blue-50/80 dark:hover:bg-blue-950/40 transition-all duration-200"
+                  className="w-full flex items-center cursor-pointer rounded-2xl px-4 py-3.5 hover:bg-blue-50 dark:hover:bg-blue-950/50 active:scale-[0.98] transition-all duration-200 mb-1"
                 >
-                  <DoorOpen className="w-4 h-4 mr-3 text-blue-600 dark:text-blue-400" />
-                  <span className="text-xs font-medium text-gray-700 dark:text-gray-200">Enter Edit Mode</span>
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mr-3">
+                    <DoorOpen className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">Enter Edit Mode</span>
                 </button>
               )}
             </div>
