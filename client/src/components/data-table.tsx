@@ -1177,7 +1177,7 @@ export function DataTable({
       <div className="overflow-x-auto w-full">
         <DragDropContext onDragEnd={handleDragEnd}>
           <Table className="min-w-full overflow-hidden">
-            <TableHeader className="table-header-glass sticky top-0 z-20 bg-gradient-to-r from-white/90 via-gray-50/80 to-white/90 dark:from-black/95 dark:via-gray-900/80 dark:to-black/95 backdrop-blur-xl shadow-xl border-b-2 border-gray-200/50 dark:border-white/10">
+            <TableHeader className="table-header-glass sticky top-0 z-20 bg-gradient-to-r from-white/90 via-gray-50/80 to-white/90 dark:from-black/95 dark:via-gray-900/80 dark:to-black/95 backdrop-blur-xl shadow-xl">
               <Droppable
                 droppableId="columns"
                 direction="horizontal"
@@ -1198,7 +1198,7 @@ export function DataTable({
                           <TableHead
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className="px-4 py-4 text-center table-header-footer-12px font-semibold text-gray-700 dark:text-white/95 tracking-wider sticky top-0 bg-gradient-to-b from-white/70 via-gray-50/50 to-transparent dark:from-black/80 dark:via-black/60 dark:to-transparent backdrop-blur-lg shadow-lg whitespace-nowrap"
+                            className="px-4 py-4 text-center table-header-footer-12px font-semibold text-gray-700 dark:text-white/95 tracking-wider sticky top-0 bg-gradient-to-b from-white/70 via-gray-50/50 to-transparent dark:from-black/80 dark:via-black/60 dark:to-transparent backdrop-blur-lg shadow-lg whitespace-nowrap border border-gray-200/30 dark:border-white/10"
                             style={{
                               textAlign: "center",
                               textDecoration: "normal",
@@ -1222,7 +1222,7 @@ export function DataTable({
                       </Draggable>
                     ))}
                     <TableHead
-                      className="px-4 py-4 text-center table-header-footer-12px font-bold tracking-wider sticky top-0 bg-gradient-to-b from-white/70 via-gray-50/50 to-transparent dark:from-black/80 dark:via-black/60 dark:to-transparent backdrop-blur-lg shadow-lg whitespace-nowrap"
+                      className="px-4 py-4 text-center table-header-footer-12px font-bold tracking-wider sticky top-0 bg-gradient-to-b from-white/70 via-gray-50/50 to-transparent dark:from-black/80 dark:via-black/60 dark:to-transparent backdrop-blur-lg shadow-lg whitespace-nowrap border border-gray-200/30 dark:border-white/10"
                       style={{
                         textAlign: "center",
                         textDecoration: "normal",
