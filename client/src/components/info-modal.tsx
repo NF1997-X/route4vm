@@ -710,11 +710,14 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
                     data-testid={`button-qrcode-${rowId}`}
                   >
                     {qrScanning ? (
-                      <span className="text-[7px] font-semibold text-purple-600 dark:text-purple-400 whitespace-nowrap">
-                        Scanning{scanningDots}
-                      </span>
+                      <>
+                        <div className="absolute inset-0 bg-purple-500/20 animate-pulse"></div>
+                        <span className="relative text-[7px] font-semibold text-purple-600 dark:text-purple-400 whitespace-nowrap animate-pulse">
+                          Scanning{scanningDots}
+                        </span>
+                      </>
                     ) : (
-                      <QrCode className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                      <QrCode className="w-5 h-5 text-purple-600 dark:text-purple-400 animate-bounce" />
                     )}
                   </Button>
                 </div>
