@@ -1249,7 +1249,11 @@ export function DataTable({
                         (_, index) => (
                           <tr
                             key={`skeleton-${index}`}
-                            className={`skeleton-row fade-in-stagger odd:bg-white dark:odd:bg-gray-900/50 even:bg-blue-50/50 dark:even:bg-blue-900/20 backdrop-blur-sm hover:bg-muted/60 table-cell-unique-transition`}
+                            className={`skeleton-row border-b border-black/40 dark:border-white/5 shadow-md dark:shadow-none ${
+                              index % 2 === 0 
+                                ? 'bg-white/80 dark:bg-gray-900/50' 
+                                : 'bg-blue-50/50 dark:bg-blue-900/20'
+                            } transition-opacity duration-200`}
                           >
                             {/* Actions column */}
                             <td className="p-3 w-12">
@@ -1299,7 +1303,7 @@ export function DataTable({
                                     if (row.active === false) {
                                       return "bg-gray-400/60 dark:bg-gray-700/60 opacity-50";
                                     } else {
-                                      return "bg-white/30 dark:bg-black/20 backdrop-blur-sm";
+                                      return "bg-white/60 dark:bg-black/20";
                                     }
                                   }
                                   
@@ -1308,12 +1312,12 @@ export function DataTable({
                                   if (status === 'inactive') {
                                     return "bg-gray-400/60 dark:bg-gray-700/60 opacity-50";
                                   } else if (status === 'off-schedule') {
-                                    return "bg-white/30 dark:bg-black/20 backdrop-blur-sm opacity-60";
+                                    return "bg-white/60 dark:bg-black/20 opacity-60";
                                   } else {
-                                    return "bg-white/30 dark:bg-black/20 backdrop-blur-sm";
+                                    return "bg-white/60 dark:bg-black/20";
                                   }
                                 })()
-                              } hover:bg-blue-50/40 hover:shadow-xl dark:hover:shadow-[0_2px_12px_rgba(59,130,246,0.25)] hover:scale-[1.01] table-cell-unique-transition ${
+                              } hover:bg-blue-50/50 hover:shadow-xl dark:hover:bg-blue-950/20 dark:hover:shadow-[0_2px_12px_rgba(59,130,246,0.25)] transition-all duration-200 ${
                                 snapshot.isDragging ? "drag-elevate" : ""
                               }`}
                               data-testid={`table-row-${row.id}`}
@@ -1321,7 +1325,7 @@ export function DataTable({
                               {visibleColumns.map((column) => (
                                 <TableCell
                                   key={column.id}
-                                  className="p-4 align-middle [&:has([role=checkbox])]:pr-0 px-4 py-4 table-cell-10px text-center text-[13px] bg-white/50 hover:bg-white/70 dark:bg-black/40 dark:hover:bg-black/50 backdrop-blur-md text-slate-700 dark:text-slate-200 font-semibold whitespace-nowrap table-zoom-in"
+                                  className="p-4 align-middle [&:has([role=checkbox])]:pr-0 px-4 py-4 table-cell-10px text-center text-[13px] text-slate-700 dark:text-slate-200 font-semibold whitespace-nowrap"
                                   style={{
                                     minWidth: "100px",
                                     ...(column.dataKey === "location" && {
