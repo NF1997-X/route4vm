@@ -45,6 +45,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showActionsMenu, setShowActionsMenu] = useState(false);
   const [qrScanning, setQrScanning] = useState(false);
+  const [scanningDots, setScanningDots] = useState("");
   
   // State for tracking edits
   const [originalData, setOriginalData] = useState({ info: "", qrCode: "", latitude: "", longitude: "", markerColor: "" });
@@ -64,6 +65,25 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
       setCurrentData(data);
     }
   }, [open, info, qrCode, latitude, longitude, markerColor]);
+  
+  // Animate scanning dots
+  useEffect(() => {
+    if (!qrScanning) {
+      setScanningDots("");
+      return;
+    }
+    
+    const interval = setInterval(() => {
+      setScanningDots(prev => {
+        if (prev === "") return ".";
+        if (prev === ".") return "..";
+        if (prev === "..") return "...";
+        return "";
+      });
+    }, 400);
+    
+    return () => clearInterval(interval);
+  }, [qrScanning]);
   
   // Check if there are any changes
   const hasChanges = () => {
@@ -690,12 +710,9 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
                     data-testid={`button-qrcode-${rowId}`}
                   >
                     {qrScanning ? (
-                      <>
-                        <span className="text-[8px] font-medium text-purple-600 dark:text-purple-400 animate-pulse">
-                          Scanning...
-                        </span>
-                        <div className="absolute inset-0 bg-purple-500/20 animate-pulse" />
-                      </>
+                      <span className="text-[7px] font-semibold text-purple-600 dark:text-purple-400 whitespace-nowrap">
+                        Scanning{scanningDots}
+                      </span>
                     ) : (
                       <QrCode className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                     )}
