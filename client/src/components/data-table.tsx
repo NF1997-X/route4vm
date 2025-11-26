@@ -1251,7 +1251,7 @@ export function DataTable({
                         (_, index) => (
                           <tr
                             key={`skeleton-${index}`}
-                            className={`skeleton-row border-b border-black/40 dark:border-white/5 shadow-md dark:shadow-none ${
+                            className={`skeleton-row border-b border-gray-200/20 dark:border-white/5 shadow-md dark:shadow-none ${
                               index % 2 === 0 
                                 ? 'bg-white/80 dark:bg-gray-900/50' 
                                 : 'bg-blue-50/50 dark:bg-blue-900/20'
@@ -1502,63 +1502,6 @@ export function DataTable({
                                       <GripVertical className="w-4 h-4" />
                                     </div>
                                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                    {editMode && (
-                                      <>
-                                      {/* Manage Image button - edit mode only */}
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        className={`bg-transparent border-transparent hover:bg-transparent hover:border-transparent text-blue-400 dark:text-blue-300 hover:text-blue-500 dark:hover:text-blue-400 ${
-                                          onUpdateRow.isPending &&
-                                          onUpdateRow.variables?.id === row.id
-                                            ? "opacity-50"
-                                            : ""
-                                        }`}
-                                        onClick={() => onSelectRowForImage(row.id)}
-                                        disabled={
-                                          onUpdateRow.isPending &&
-                                          onUpdateRow.variables?.id === row.id
-                                        }
-                                        data-testid={`button-add-image-${row.id}`}
-                                        title="Manage images"
-                                      >
-                                        <PlusCircle className="w-4 h-4" />
-                                      </Button>
-                                      {/* Delete button */}
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        className={`bg-transparent border-transparent hover:bg-transparent hover:border-transparent ${!editMode ? "opacity-50 cursor-not-allowed" : "text-blue-400 dark:text-blue-300 hover:text-blue-500 dark:hover:text-blue-400"} ${
-                                          onDeleteRow.isPending &&
-                                          onDeleteRow.variables === row.id
-                                            ? "mutation-loading"
-                                            : ""
-                                        }`}
-                                        onClick={() =>
-                                          editMode &&
-                                          handleDeleteClick(row.id)
-                                        }
-                                        disabled={
-                                          !editMode ||
-                                          (onDeleteRow.isPending &&
-                                            onDeleteRow.variables === row.id)
-                                        }
-                                        data-testid={`button-delete-row-${row.id}`}
-                                        title={
-                                          !editMode
-                                            ? "Enable edit mode to delete rows"
-                                            : "Delete row"
-                                        }
-                                      >
-                                        {onDeleteRow.isPending &&
-                                        onDeleteRow.variables === row.id ? (
-                                          <InlineLoading type="particles" />
-                                        ) : (
-                                          <Trash className="w-4 h-4" />
-                                        )}
-                                      </Button>
-                                      </>
-                                    )}
                                     <InfoModal
                                       info={row.info || ""}
                                       rowId={row.id}
@@ -1580,7 +1523,7 @@ export function DataTable({
                                       onOpenImageModal={() => onSelectRowForImage(row.id)}
                                       editMode={editMode}
                                       allRows={rows}
-                                      iconType={editMode ? "filetext" : "info"}
+                                      iconType="info"
                                     />
                                     {editMode ? (
                                       <Select
