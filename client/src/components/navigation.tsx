@@ -102,7 +102,7 @@ export function Navigation({ editMode, onEditModeRequest, onShowCustomization, o
             <DropdownMenuContent 
               align="end"
               sideOffset={12}
-              className="min-w-[280px] bg-white/95 dark:bg-black/95 backdrop-blur-3xl border border-blue-200/40 dark:border-blue-500/30 shadow-[0_24px_80px_0_rgba(59,130,246,0.15)] dark:shadow-[0_24px_80px_0_rgba(59,130,246,0.35)] rounded-3xl overflow-hidden p-2 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+              className="w-[calc(100vw-2rem)] sm:w-auto min-w-[280px] max-w-[320px] bg-white/95 dark:bg-black/95 backdrop-blur-3xl border border-blue-200/40 dark:border-blue-500/30 shadow-[0_24px_80px_0_rgba(59,130,246,0.15)] dark:shadow-[0_24px_80px_0_rgba(59,130,246,0.35)] rounded-3xl overflow-hidden p-2 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
             >
               {/* VM Route Submenu */}
               <DropdownMenuSub>
@@ -115,7 +115,7 @@ export function Navigation({ editMode, onEditModeRequest, onShowCustomization, o
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent 
-                    className="min-w-[280px] bg-white/98 dark:bg-black/98 backdrop-blur-3xl border border-blue-200/40 dark:border-blue-500/30 shadow-[0_24px_80px_0_rgba(59,130,246,0.2)] dark:shadow-[0_24px_80px_0_rgba(59,130,246,0.4)] rounded-3xl overflow-hidden p-2"
+                    className="w-[calc(100vw-2rem)] sm:w-auto min-w-[280px] max-w-[320px] bg-white/98 dark:bg-black/98 backdrop-blur-3xl border border-blue-200/40 dark:border-blue-500/30 shadow-[0_24px_80px_0_rgba(59,130,246,0.2)] dark:shadow-[0_24px_80px_0_rgba(59,130,246,0.4)] rounded-3xl overflow-hidden p-2"
                     sideOffset={8}
                     alignOffset={-8}
                   >
@@ -171,7 +171,7 @@ export function Navigation({ editMode, onEditModeRequest, onShowCustomization, o
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent 
-                    className="min-w-[280px] bg-white/98 dark:bg-black/98 backdrop-blur-3xl border border-blue-200/40 dark:border-blue-500/30 shadow-[0_24px_80px_0_rgba(59,130,246,0.2)] dark:shadow-[0_24px_80px_0_rgba(59,130,246,0.4)] rounded-3xl overflow-hidden p-2"
+                    className="w-[calc(100vw-2rem)] sm:w-auto min-w-[280px] max-w-[320px] bg-white/98 dark:bg-black/98 backdrop-blur-3xl border border-blue-200/40 dark:border-blue-500/30 shadow-[0_24px_80px_0_rgba(59,130,246,0.2)] dark:shadow-[0_24px_80px_0_rgba(59,130,246,0.4)] rounded-3xl overflow-hidden p-2"
                     sideOffset={8}
                     alignOffset={-8}
                   >
@@ -219,7 +219,7 @@ export function Navigation({ editMode, onEditModeRequest, onShowCustomization, o
                     </DropdownMenuSubTrigger>
                     <DropdownMenuPortal>
                       <DropdownMenuSubContent 
-                        className="min-w-[280px] bg-white/98 dark:bg-black/98 backdrop-blur-3xl border border-blue-200/40 dark:border-blue-500/30 shadow-[0_24px_80px_0_rgba(59,130,246,0.2)] dark:shadow-[0_24px_80px_0_rgba(59,130,246,0.4)] rounded-3xl overflow-hidden p-2"
+                        className="w-[calc(100vw-2rem)] sm:w-auto min-w-[280px] max-w-[320px] bg-white/98 dark:bg-black/98 backdrop-blur-3xl border border-blue-200/40 dark:border-blue-500/30 shadow-[0_24px_80px_0_rgba(59,130,246,0.2)] dark:shadow-[0_24px_80px_0_rgba(59,130,246,0.4)] rounded-3xl overflow-hidden p-2"
                         sideOffset={8}
                         alignOffset={-8}
                       >
