@@ -118,7 +118,7 @@ export function Footer({ editMode = false }: FooterProps) {
 
   const handleConfirmNavigate = () => {
     if (companyUrl) {
-      window.open(companyUrl, '_blank', 'noopener,noreferrer');
+      window.open(companyUrl, '_self');
       setConfirmDialogOpen(false);
     }
   };

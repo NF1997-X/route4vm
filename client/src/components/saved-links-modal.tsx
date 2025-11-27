@@ -267,7 +267,7 @@ export function SavedLinksModal({ open, onOpenChange }: SavedLinksModalProps) {
                             <DropdownMenuItem
                               onClick={(e) => {
                                 e.stopPropagation();
-                                window.open(link.url, "_blank");
+                                window.open(link.url, "_self");
                               }}
                               className="cursor-pointer transition-all duration-200 hover:scale-[1.02]"
                               data-testid={`menu-open-${link.id}`}
