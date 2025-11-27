@@ -1198,7 +1198,7 @@ export function DataTable({
                           <TableHead
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className="px-4 py-4 text-center table-header-footer-12px font-semibold text-gray-700 dark:text-white/95 tracking-wider sticky top-0 bg-gradient-to-b from-white/80 to-gray-50/70 dark:from-black/85 dark:to-gray-900/75 backdrop-blur-lg whitespace-nowrap border border-gray-200/30 dark:border-white/10"
+                            className="px-4 py-4 text-center table-header-footer-12px font-semibold text-gray-700 dark:text-white/95 tracking-wider sticky top-0 bg-gradient-to-b from-white/80 to-gray-50/70 dark:from-black/85 dark:to-gray-900/75 backdrop-blur-lg whitespace-nowrap border-b-2 border-blue-100 dark:border-blue-900/50 transition-colors duration-300"
                             style={{
                               textAlign: "center",
                               textDecoration: "normal",
@@ -1222,7 +1222,7 @@ export function DataTable({
                       </Draggable>
                     ))}
                     <TableHead
-                      className="px-4 py-4 text-center table-header-footer-12px font-bold tracking-wider sticky top-0 bg-gradient-to-b from-white/80 to-gray-50/70 dark:from-black/85 dark:to-gray-900/75 backdrop-blur-lg whitespace-nowrap border border-gray-200/30 dark:border-white/10"
+                      className="px-4 py-4 text-center table-header-footer-12px font-bold tracking-wider sticky top-0 bg-gradient-to-b from-white/80 to-gray-50/70 dark:from-black/85 dark:to-gray-900/75 backdrop-blur-lg whitespace-nowrap border-b-2 border-blue-100 dark:border-blue-900/50 transition-colors duration-300"
                       style={{
                         textAlign: "center",
                         textDecoration: "normal",
