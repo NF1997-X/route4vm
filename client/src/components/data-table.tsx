@@ -775,7 +775,7 @@ export function DataTable({
 
   return (
     <div
-      className="glass-table border-none shadow-2xl table-container my-10 rounded-xl overflow-hidden"
+      className="ios-glass-table border-none shadow-2xl table-container my-10 rounded-xl overflow-hidden"
       data-testid="data-table"
     >
       {/* Single Row: Filter/Sort/Search + Action Buttons */}

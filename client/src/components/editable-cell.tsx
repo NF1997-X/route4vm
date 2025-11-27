@@ -104,7 +104,7 @@ export function EditableCell({ value, type, onSave, options, dataKey }: Editable
         onBlur={handleSave}
         onKeyDown={handleKeyDown}
         placeholder={getPlaceholder()}
-        className="w-full h-6 px-2 py-1 text-sm cell-editing glass-input border-none"
+        className="w-full h-6 px-2 py-1 text-sm cell-editing ios-glass-input border-none"
         data-testid="input-editable-cell"
       />
     );
