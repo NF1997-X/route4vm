@@ -257,39 +257,39 @@ textarea {
 }
 
 .ocean {
-  /* Ocean Theme - inspired by Ht.git */
-  --background: hsl(210, 55%, 8%);
-  --foreground: hsl(199, 89%, 94%);
-  --card: hsl(210, 50%, 12%);
-  --card-foreground: hsl(199, 89%, 94%);
-  --popover: hsl(210, 50%, 12%);
-  --popover-foreground: hsl(199, 89%, 94%);
-  --primary: hsl(207, 90%, 68%);
-  --primary-foreground: hsl(210, 55%, 8%);
-  --secondary: hsl(210, 50%, 15%);
-  --secondary-foreground: hsl(199, 89%, 94%);
-  --muted: hsl(210, 50%, 18%);
-  --muted-foreground: hsl(207, 60%, 70%);
-  --accent: hsl(210, 50%, 20%);
-  --accent-foreground: hsl(199, 89%, 94%);
-  --destructive: hsl(0, 70%, 50%);
-  --destructive-foreground: hsl(199, 89%, 94%);
-  --border: hsl(207, 50%, 25%);
-  --input: hsl(210, 50%, 15%);
-  --ring: hsl(207, 90%, 68%);
-  --chart-1: hsl(207, 90%, 68%);
-  --chart-2: hsl(199, 89%, 48%);
-  --chart-3: hsl(173, 58%, 39%);
-  --chart-4: hsl(142, 71%, 45%);
-  --chart-5: hsl(79, 70%, 43%);
-  --sidebar: hsl(210, 60%, 10%);
-  --sidebar-foreground: hsl(199, 89%, 94%);
-  --sidebar-primary: hsl(207, 90%, 68%);
-  --sidebar-primary-foreground: hsl(210, 55%, 8%);
-  --sidebar-accent: hsl(210, 50%, 20%);
-  --sidebar-accent-foreground: hsl(199, 89%, 94%);
-  --sidebar-border: hsl(207, 50%, 25%);
-  --sidebar-ring: hsl(207, 90%, 68%);
+  /* Ocean Theme - Deep Sea Blue with Vibrant Accents */
+  --background: hsl(210, 60%, 6%);
+  --foreground: hsl(195, 100%, 95%);
+  --card: hsl(210, 55%, 10%);
+  --card-foreground: hsl(195, 100%, 95%);
+  --popover: hsl(210, 55%, 11%);
+  --popover-foreground: hsl(195, 100%, 95%);
+  --primary: hsl(200, 100%, 60%);
+  --primary-foreground: hsl(210, 60%, 8%);
+  --secondary: hsl(210, 50%, 16%);
+  --secondary-foreground: hsl(195, 100%, 95%);
+  --muted: hsl(210, 45%, 20%);
+  --muted-foreground: hsl(195, 80%, 75%);
+  --accent: hsl(200, 95%, 22%);
+  --accent-foreground: hsl(195, 100%, 95%);
+  --destructive: hsl(0, 75%, 55%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --border: hsl(207, 45%, 28%);
+  --input: hsl(210, 50%, 16%);
+  --ring: hsl(200, 100%, 60%);
+  --chart-1: hsl(200, 100%, 60%);
+  --chart-2: hsl(180, 95%, 55%);
+  --chart-3: hsl(160, 80%, 50%);
+  --chart-4: hsl(140, 75%, 48%);
+  --chart-5: hsl(85, 75%, 50%);
+  --sidebar: hsl(210, 65%, 8%);
+  --sidebar-foreground: hsl(195, 100%, 95%);
+  --sidebar-primary: hsl(200, 100%, 60%);
+  --sidebar-primary-foreground: hsl(210, 60%, 8%);
+  --sidebar-accent: hsl(200, 95%, 22%);
+  --sidebar-accent-foreground: hsl(195, 100%, 95%);
+  --sidebar-border: hsl(207, 45%, 28%);
+  --sidebar-ring: hsl(200, 100%, 60%);
 }
 
 /* Keep dark class for backward compatibility */
