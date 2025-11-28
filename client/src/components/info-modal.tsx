@@ -701,7 +701,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
                 <div className="flex items-center justify-center animate-in slide-in-from-right-10 duration-300" style={{animationDelay: '100ms'}}>
                   <Button
                     variant="ghost"
-                    className="h-10 w-10 p-0 bg-transparent hover:bg-purple-500/10 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 rounded-xl disabled:opacity-50 border border-purple-500/30 relative overflow-hidden"
+                    className="h-10 w-10 p-0 bg-transparent hover:bg-purple-500/10 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 rounded-xl disabled:opacity-50 border border-purple-500/30 relative overflow-hidden pagination-button"
                     onClick={() => {
                       handleQrCodeClick();
                       setShowActionsMenu(false);
@@ -717,7 +717,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
                         </span>
                       </>
                     ) : (
-                      <QrCode className="w-5 h-5 text-purple-600 dark:text-purple-400 animate-bounce" />
+                      <QrCode className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                     )}
                   </Button>
                 </div>
