@@ -1180,7 +1180,7 @@ export function DataTable({
                       </Draggable>
                     ))}
                     <TableHead
-                      className="px-4 py-4 text-center table-header-footer-12px font-bold tracking-wider sticky top-0 bg-gradient-to-b from-white/80 to-gray-50/70 dark:from-black/85 dark:to-gray-900/75 backdrop-blur-lg whitespace-nowrap border-b-2 border-blue-100 dark:border-blue-900/50 transition-colors duration-300"
+                      className="px-1 py-4 text-center table-header-footer-12px font-bold tracking-wider sticky top-0 bg-gradient-to-b from-white/80 to-gray-50/70 dark:from-black/85 dark:to-gray-900/75 backdrop-blur-lg whitespace-nowrap border-b-2 border-blue-100 dark:border-blue-900/50 transition-colors duration-300"
                       style={{
                         textAlign: "center",
                         textDecoration: "normal",
@@ -1444,7 +1444,7 @@ export function DataTable({
                                 </TableCell>
                               ))}
                               <TableCell
-                                className="px-2 py-2 text-sm text-center text-foreground"
+                                className="px-1 py-2 text-sm text-center text-foreground"
                                 style={{ textAlign: "center" }}
                               >
                                 <div className="flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -1720,7 +1720,7 @@ export function DataTable({
                     )}
                   </TableCell>
                 ))}
-                <TableCell className="px-4 py-4 text-center table-header-footer-12px font-semibold tracking-wide sticky bottom-0 whitespace-nowrap" style={{ textAlign: "center", fontSize: '10px' }}>
+                <TableCell className="px-1 py-4 text-center table-header-footer-12px font-semibold tracking-wide sticky bottom-0 whitespace-nowrap" style={{ textAlign: "center", fontSize: '10px' }}>
                   <span className="font-semibold bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text text-transparent">—</span>
                 </TableCell>
               </TableRow>
