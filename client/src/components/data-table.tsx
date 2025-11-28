@@ -779,7 +779,7 @@ export function DataTable({
       data-testid="data-table"
     >
       {/* Single Row: Filter/Sort/Search + Action Buttons */}
-      <div className="flex justify-between items-center px-6 py-5 border-b border-border/20 bg-gradient-to-r from-blue-500/5 via-transparent to-blue-500/5 dark:from-blue-500/5 dark:via-transparent dark:to-blue-500/5 backdrop-blur-sm">
+      <div className="flex justify-between items-center px-6 py-5 border-b border-border/40 bg-gradient-to-r from-blue-500/5 via-transparent to-blue-500/5 dark:from-blue-500/5 dark:via-transparent dark:to-blue-500/5 backdrop-blur-sm">
         <div className="flex items-center gap-2 flex-shrink-0">
           {/* Sort Popover */}
           <Popover>
@@ -1737,7 +1737,7 @@ export function DataTable({
                 {/* Left: Entries per page selector with showing text */}
                 <div className="flex items-center gap-2 text-[10px] font-medium text-muted-foreground">
                   <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
-                    <SelectTrigger className="h-8 w-8 p-0 text-[10px] pagination-button rounded-lg [&>svg]:hidden">
+                    <SelectTrigger className="h-8 w-8 p-0 text-[10px] pagination-button rounded-lg [&>svg]:hidden flex items-center justify-center">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -1794,7 +1794,7 @@ export function DataTable({
                             variant="outline"
                             size="xs"
                             onClick={() => goToPage(pageNum)}
-                            className={`pagination-button page-number ${
+                            className={`pagination-button page-number min-w-[32px] h-8 ${
                               isCurrentPage ? "active" : ""
                             }`}
                             data-testid={`button-page-${pageNum}`}
@@ -1836,7 +1836,7 @@ export function DataTable({
                           variant="outline"
                           size="xs"
                           onClick={() => goToPage(pageNum)}
-                          className={`pagination-button page-number ${
+                          className={`pagination-button page-number min-w-[32px] h-8 ${
                             isCurrentPage ? "active" : ""
                           }`}
                           data-testid={`button-page-${pageNum}`}
