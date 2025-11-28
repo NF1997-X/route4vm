@@ -1180,11 +1180,14 @@ export function DataTable({
                       </Draggable>
                     ))}
                     <TableHead
-                      className="px-1 py-4 text-center table-header-footer-12px font-bold tracking-wider sticky top-0 bg-gradient-to-b from-white/80 to-gray-50/70 dark:from-black/85 dark:to-gray-900/75 backdrop-blur-lg whitespace-nowrap border-b-2 border-blue-100 dark:border-blue-900/50 transition-colors duration-300"
+                      className="p-0 text-center table-header-footer-12px font-bold tracking-wider sticky top-0 bg-gradient-to-b from-white/80 to-gray-50/70 dark:from-black/85 dark:to-gray-900/75 backdrop-blur-lg whitespace-nowrap border-b-2 border-blue-100 dark:border-blue-900/50 transition-colors duration-300"
                       style={{
                         textAlign: "center",
                         textDecoration: "normal",
                         fontSize: "10px",
+                        width: "140px",
+                        minWidth: "140px",
+                        maxWidth: "140px"
                       }}
                     >
                       <span className="bg-gradient-to-r from-red-600 to-rose-600 dark:from-red-400 dark:to-rose-400 bg-clip-text text-transparent">
@@ -1444,8 +1447,8 @@ export function DataTable({
                                 </TableCell>
                               ))}
                               <TableCell
-                                className="px-1 py-2 text-sm text-center text-foreground"
-                                style={{ textAlign: "center" }}
+                                className="p-0 text-sm text-center text-foreground"
+                                style={{ textAlign: "center", width: "140px", minWidth: "140px", maxWidth: "140px" }}
                               >
                                 <div className="flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                     {editMode ? (
@@ -1720,7 +1723,7 @@ export function DataTable({
                     )}
                   </TableCell>
                 ))}
-                <TableCell className="px-1 py-4 text-center table-header-footer-12px font-semibold tracking-wide sticky bottom-0 whitespace-nowrap" style={{ textAlign: "center", fontSize: '10px' }}>
+                <TableCell className="p-0 text-center table-header-footer-12px font-semibold tracking-wide sticky bottom-0 whitespace-nowrap" style={{ textAlign: "center", fontSize: '10px', width: "140px", minWidth: "140px", maxWidth: "140px" }}>
                   <span className="font-semibold bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text text-transparent">—</span>
                 </TableCell>
               </TableRow>
