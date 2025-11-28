@@ -1158,7 +1158,7 @@ export default function TablePage() {
                 opts={{ loop: sortedPages.length > 1 }}
                 setApi={setCarouselApi}
               >
-                <div className="overflow-hidden rounded-xl border border-blue-200 dark:border-blue-500/30 bg-gradient-to-r from-blue-50/80 to-white/80 dark:from-blue-950/40 dark:to-gray-900/40 backdrop-blur-sm shadow-lg transition-all duration-500">
+                <div className="overflow-hidden rounded-xl border border-blue-200 dark:border-blue-500/30 ocean:border-cyan-500/40 bg-gradient-to-r from-blue-50/80 to-white/80 dark:from-blue-950/40 dark:to-gray-900/40 ocean:from-cyan-950/50 ocean:to-blue-950/50 backdrop-blur-sm shadow-lg transition-all duration-500">
                   <CarouselContent>
                   {sortedPages.map((page, index) => {
                     const isCurrentSlide = index === currentSlideIndex;
@@ -1177,7 +1177,7 @@ export default function TablePage() {
                     >
                       {/* Header Bar */}
                       <div 
-                        className="flex items-center justify-between px-6 py-3 cursor-pointer hover:bg-blue-100/50 dark:hover:bg-blue-900/30 transition-colors duration-300 text-sm"
+                        className="flex items-center justify-between px-6 py-3 cursor-pointer hover:bg-blue-100/50 dark:hover:bg-blue-900/30 ocean:hover:bg-cyan-900/30 transition-colors duration-300 text-sm"
                         onClick={() => setIsHeaderExpanded(!isHeaderExpanded)}
                       >
                         <div className="flex items-center gap-3 flex-1">
