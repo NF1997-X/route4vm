@@ -913,7 +913,7 @@ export function DataTable({
                 >
                   <Filter className="w-4 h-4" />
                   {(filterValue.length > 0 || deliveryFilterValue.length > 0) && (
-                    <span className="absolute -top-2.5 -right-2.5 bg-gradient-to-r from-red-500 to-rose-500 dark:from-red-400 dark:to-rose-400 text-white text-[9px] font-bold rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center shadow-lg border-2 border-white dark:border-gray-900 z-50">
+                    <span className="absolute -top-2.5 -right-2.5 bg-gradient-to-r from-red-500 to-rose-500 dark:from-red-400 dark:to-rose-400 text-white text-[9px] font-bold rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center shadow-[0_4px_12px_rgba(239,68,68,0.6),0_2px_6px_rgba(239,68,68,0.4)] dark:shadow-[0_4px_12px_rgba(248,113,113,0.6),0_2px_6px_rgba(248,113,113,0.4)] border-2 border-white dark:border-gray-900 z-50">
                       {filterValue.length + deliveryFilterValue.length}
                     </span>
                   )}
@@ -1115,7 +1115,7 @@ export function DataTable({
             {/* Clear All button */}
             <button 
               onClick={onClearAllFilters}
-              className="flex items-center gap-1 px-2 py-1 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 rounded-full transition-all cursor-pointer active:scale-95"
+              className="flex items-center gap-1 px-2 py-1 bg-transparent hover:bg-red-500/10 border border-transparent hover:border-transparent rounded-full transition-all cursor-pointer active:scale-95"
               data-testid="clear-all-filters"
               aria-label="Clear all filters"
             >
