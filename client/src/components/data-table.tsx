@@ -913,7 +913,7 @@ export function DataTable({
                 >
                   <Filter className="w-4 h-4" />
                   {(filterValue.length > 0 || deliveryFilterValue.length > 0) && (
-                    <span className="absolute -top-2.5 -right-2.5 bg-gradient-to-r from-red-500 to-rose-500 dark:from-red-400 dark:to-rose-400 text-white text-[9px] font-bold rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center shadow-[0_4px_12px_rgba(239,68,68,0.6),0_2px_6px_rgba(239,68,68,0.4)] dark:shadow-[0_4px_12px_rgba(248,113,113,0.6),0_2px_6px_rgba(248,113,113,0.4)] border-2 border-white dark:border-gray-900 z-50">
+                    <span className="absolute -top-3 -right-3 bg-gradient-to-r from-red-500 to-rose-500 dark:from-red-400 dark:to-rose-400 text-white text-[9px] font-bold rounded-full min-w-[20px] h-[20px] px-1.5 flex items-center justify-center shadow-[0_8px_16px_rgba(0,0,0,0.3),0_4px_8px_rgba(239,68,68,0.5)] dark:shadow-[0_8px_16px_rgba(0,0,0,0.6),0_4px_8px_rgba(248,113,113,0.5)] border-[3px] border-white dark:border-gray-900 z-50 transform translate-y-[-2px]">
                       {filterValue.length + deliveryFilterValue.length}
                     </span>
                   )}
