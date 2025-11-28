@@ -1135,7 +1135,7 @@ export function DataTable({
       <div className="overflow-x-auto w-full">
         <DragDropContext onDragEnd={handleDragEnd}>
           <Table className="min-w-full overflow-hidden">
-            <TableHeader className="sticky top-0 z-20">
+            <TableHeader className="sticky top-0 z-20 [&_tr]:border-0">
               <Droppable
                 droppableId="columns"
                 direction="horizontal"
@@ -1145,7 +1145,7 @@ export function DataTable({
                   <TableRow
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className="premium-table-footer"
+                    className="premium-table-footer border-0"
                   >
                     {visibleColumns.map((column, index) => (
                       <Draggable
@@ -1205,7 +1205,7 @@ export function DataTable({
                 <TableBody
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className="pt-2 motion-layer zoom-in"
+                  className="pt-4 motion-layer zoom-in"
                   key={`page-${currentPage}`}
                 >
                   {isLoading
@@ -1732,28 +1732,6 @@ export function DataTable({
           {/* Pagination Controls */}
           {!disablePagination && (
             <div className="flex flex-col items-center justify-center gap-2 px-4 py-2 border-t border-blue-200 dark:border-blue-500/20 transition-smooth-fast">
-              {/* Entries Selector */}
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span className="font-medium">Entries per page:</span>
-                <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
-                  <SelectTrigger className="h-7 w-16 text-xs pagination-button">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="8">8</SelectItem>
-                    <SelectItem value="16">16</SelectItem>
-                    <SelectItem value="24">24</SelectItem>
-                    <SelectItem value="32">32</SelectItem>
-                    <SelectItem value="48">48</SelectItem>
-                    <SelectItem value="999999">
-                      <div className="flex items-center gap-1">
-                        <Infinity className="w-3 h-3" />
-                        <span>All</span>
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
               
               <div className="flex items-center justify-center gap-1.5 w-full">
                 {/* Show First button only when total pages > 5 and not showing page 1 */}
@@ -1857,8 +1835,32 @@ export function DataTable({
                 )}
               </div>
 
-              <div className="text-[10px] font-medium text-muted-foreground whitespace-nowrap">
-                {currentPage} of {totalPages}
+              {/* Bottom Row: Entries per page + Page count */}
+              <div className="flex items-center justify-center gap-4 text-[10px] font-medium text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <span>Entries per page:</span>
+                  <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
+                    <SelectTrigger className="h-6 w-14 text-[10px] pagination-button">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="8">8</SelectItem>
+                      <SelectItem value="16">16</SelectItem>
+                      <SelectItem value="24">24</SelectItem>
+                      <SelectItem value="32">32</SelectItem>
+                      <SelectItem value="48">48</SelectItem>
+                      <SelectItem value="999999">
+                        <div className="flex items-center gap-1">
+                          <Infinity className="w-3 h-3" />
+                          <span>All</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <span className="whitespace-nowrap">
+                  {currentPage} of {totalPages}
+                </span>
               </div>
             </div>
           )}
