@@ -1135,7 +1135,7 @@ export function DataTable({
       <div className="overflow-x-auto w-full">
         <DragDropContext onDragEnd={handleDragEnd}>
           <Table className="min-w-full overflow-hidden">
-            <TableHeader className="sticky top-0 z-20 [&_tr]:border-0 shadow-lg">
+            <TableHeader className="sticky top-0 z-20 [&_tr]:border-b [&_tr]:border-border/20 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)]">
               <Droppable
                 droppableId="columns"
                 direction="horizontal"
@@ -1680,8 +1680,8 @@ export function DataTable({
                 </TableBody>
               )}
             </Droppable>
-            <tfoot className="sticky bottom-0 z-20 shadow-lg">
-              <TableRow className="premium-table-footer">
+            <tfoot className="sticky bottom-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-1px_rgba(0,0,0,0.06)]">
+              <TableRow className="premium-table-footer border-t border-border/20">
                 {visibleColumns.map((column, index) => (
                   <TableCell
                     key={column.id}
@@ -1731,13 +1731,13 @@ export function DataTable({
 
           {/* Pagination Controls */}
           {!disablePagination && (
-            <div className="flex flex-col items-center justify-center gap-2 px-4 py-2 border-t border-blue-200 dark:border-blue-500/20 transition-smooth-fast">
+            <div className="flex flex-col items-center justify-center gap-2 px-6 py-5 border-t border-border/20 bg-gradient-to-r from-blue-500/5 via-transparent to-blue-500/5 dark:from-blue-500/5 dark:via-transparent dark:to-blue-500/5 backdrop-blur-sm">
               
               <div className="flex items-center justify-between gap-1.5 w-full">
                 {/* Left: Entries per page selector with showing text */}
                 <div className="flex items-center gap-2 text-[10px] font-medium text-muted-foreground">
                   <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
-                    <SelectTrigger className="h-8 w-8 p-0 text-[10px] pagination-button rounded-lg">
+                    <SelectTrigger className="h-8 w-8 p-0 text-[10px] pagination-button rounded-lg [&>svg]:hidden">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
