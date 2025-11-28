@@ -476,7 +476,7 @@ export default function CustomTableList() {
                     </div>
                     <div className="flex gap-2">
                       <Button
-                        onClick={() => window.open(`/custom/${table.shareId}`, "_self")}
+                        onClick={() => window.open(`/custom/${table.shareId}`, "_blank")}
                         size="sm"
                         variant="outline"
                         className="bg-transparent border-transparent hover:bg-blue-500/10"

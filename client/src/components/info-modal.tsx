@@ -110,7 +110,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
   const handleConfirmEditClick = () => {
     const formattedCode = formatCode(code);
     const editUrl = `https://fmvending.web.app/refill-service/M${formattedCode}`;
-    window.open(editUrl, '_self');
+    window.open(editUrl, '_blank');
     setShowChecklistConfirm(false);
   };
 
@@ -122,7 +122,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
   const handleConfirmDirectionClick = () => {
     if (latitude && longitude && !isNaN(parseFloat(latitude)) && !isNaN(parseFloat(longitude))) {
       const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
-      window.open(directionsUrl, '_self');
+      window.open(directionsUrl, '_blank');
     }
     setShowNavigationConfirm(false);
   };
@@ -135,7 +135,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
   const handleConfirmWazeClick = () => {
     if (latitude && longitude && !isNaN(parseFloat(latitude)) && !isNaN(parseFloat(longitude))) {
       const wazeUrl = `https://waze.com/ul?ll=${latitude},${longitude}&navigate=yes`;
-      window.open(wazeUrl, '_self');
+      window.open(wazeUrl, '_blank');
     }
     setShowNavigationConfirm(false);
   };
@@ -193,7 +193,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
         }
       }
       
-      window.open(targetUrl, '_self');
+      window.open(targetUrl, '_blank');
     }
     setShowConfirmDialog(false);
     setScannedResult("");
@@ -215,7 +215,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
 
   const handleConfirmUrlOpen = () => {
     if (urlToOpen) {
-      window.open(urlToOpen, '_self');
+      window.open(urlToOpen, '_blank');
     }
     setShowUrlConfirm(false);
     setUrlToOpen("");

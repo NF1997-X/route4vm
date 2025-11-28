@@ -88,7 +88,7 @@ export function ImagePreview({ images, rowId, onAddImage, editMode, onAccessDeni
             const target = e.target as HTMLElement;
             const link = target.closest('a[data-src]') as HTMLAnchorElement;
             if (link) {
-              window.open(link.dataset.src, '_self');
+              window.open(link.dataset.src, '_blank');
             }
           };
           
@@ -141,7 +141,7 @@ export function ImagePreview({ images, rowId, onAddImage, editMode, onAccessDeni
               // Fallback handler if LightGallery isn't working
               if (!lightGallery) {
                 e.preventDefault();
-                window.open(images[0].url, '_self');
+                window.open(images[0].url, '_blank');
               }
             }}
           >

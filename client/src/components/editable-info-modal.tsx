@@ -279,7 +279,7 @@ export function EditableInfoModal({
                     if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
                       targetUrl = 'https://' + targetUrl;
                     }
-                    window.open(targetUrl, '_self');
+                    window.open(targetUrl, '_blank');
                   }}
                   title="Open URL in new tab"
                   data-testid={`button-test-url-${rowId}`}
