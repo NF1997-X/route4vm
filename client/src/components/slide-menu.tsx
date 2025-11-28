@@ -275,17 +275,20 @@ export function SlideMenu({
                   <span className="text-[11px] font-medium text-gray-700 dark:text-gray-200">Light</span>
                 </button>
                 
-                <button
-                  onClick={() => handleItemClick(() => onSetTheme?.('ocean'))}
-                  className={`flex-1 flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-lg transition-all ${
-                    theme === 'ocean' 
-                      ? 'bg-blue-900/30 ring-2 ring-blue-500' 
-                      : 'bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800'
-                  }`}
-                >
-                  <Waves className="w-4 h-4 text-gray-700 dark:text-gray-200" />
-                  <span className="text-[11px] font-medium text-gray-700 dark:text-gray-200">Ocean</span>
-                </button>
+                {/* Ocean theme - only show in edit mode */}
+                {editMode && (
+                  <button
+                    onClick={() => handleItemClick(() => onSetTheme?.('ocean'))}
+                    className={`flex-1 flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-lg transition-all ${
+                      theme === 'ocean' 
+                        ? 'bg-blue-900/30 ring-2 ring-blue-500' 
+                        : 'bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800'
+                    }`}
+                  >
+                    <Waves className="w-4 h-4 text-gray-700 dark:text-gray-200" />
+                    <span className="text-[11px] font-medium text-gray-700 dark:text-gray-200">Ocean</span>
+                  </button>
+                )}
               </div>
             </div>
 

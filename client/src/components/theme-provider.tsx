@@ -25,6 +25,18 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     root.classList.add(theme);
     
     localStorage.setItem('theme', theme);
+    
+    // Update browser tab/address bar color
+    const themeColors = {
+      dark: '#000000',
+      light: '#f5f5f7',
+      ocean: '#0a0f1a'
+    };
+    
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', themeColors[theme]);
+    }
   }, [theme]);
 
   return (
