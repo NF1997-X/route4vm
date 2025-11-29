@@ -293,7 +293,7 @@ export default function CustomTableList() {
             {/* Logo/Brand */}
             <div className="flex items-center space-x-2">
               <div className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg overflow-hidden">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg overflow-hidden">
                   <img 
                     src="/assets/Logofm.png" 
                     alt="Logo" 
@@ -301,8 +301,8 @@ export default function CustomTableList() {
                   />
                 </div>
                 <div className="flex flex-col gap-0 leading-tight">
-                  <span className="font-bold text-slate-600 dark:text-slate-300 leading-none" style={{ fontSize: '12px' }}>Custom Tables</span>
-                  <span className="text-slate-400 dark:text-slate-500 leading-none my-0.5" style={{ fontSize: '9px' }}>Create table , select list and share </span>
+                  <span className="font-bold text-slate-600 dark:text-slate-300 leading-none" style={{ fontSize: '10px' }}>Custom Tables</span>
+                  <span className="text-slate-400 dark:text-slate-500 leading-none my-0.5" style={{ fontSize: '9px' }}>Create table , select list and share </span>
                 </div>
               </div>
             </div>
@@ -310,9 +310,9 @@ export default function CustomTableList() {
             {/* Back Button */}
             <Button
               onClick={() => setLocation("/")}
-              variant="outline"
+              variant="ghost"
               size="sm"
-              className="btn-glass w-8 h-8 md:w-auto md:h-9 p-0 md:px-3 pagination-button group transition-all duration-300 ease-out hover:scale-110 hover:shadow-lg hover:shadow-blue-500/20 active:scale-95 active:shadow-none"
+              className="w-8 h-8 md:w-auto md:h-9 p-0 md:px-3 group transition-all duration-300 ease-out hover:scale-110 hover:bg-transparent active:scale-95"
               title="Back"
             >
               <ArrowLeft className="w-4 h-4 text-blue-600 dark:text-blue-400 transition-all duration-300" />

@@ -342,7 +342,7 @@ export default function CustomTableView() {
                     className="h-full w-full object-cover"
                   />
                 </div>
-                <span className="font-bold text-slate-600 dark:text-slate-300 text-[12px]">
+                <span className="font-bold text-slate-600 dark:text-slate-300 text-[10px]">
                   {customTable.name}
                 </span>
               </div>

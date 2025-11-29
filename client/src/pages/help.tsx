@@ -30,7 +30,7 @@ export default function HelpPage() {
             {/* Logo/Brand */}
             <div className="flex items-center space-x-2">
               <div className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg overflow-hidden">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg overflow-hidden">
                   <img 
                     src="/assets/Logofm.png" 
                     alt="Logo" 
@@ -38,7 +38,7 @@ export default function HelpPage() {
                   />
                 </div>
                 <div className="flex flex-col gap-0 leading-tight">
-                  <span className="font-bold text-slate-600 dark:text-slate-300 leading-none" style={{ fontSize: '12px' }}>
+                  <span className="font-bold text-slate-600 dark:text-slate-300 leading-none" style={{ fontSize: '10px' }}>
                     User Guide
                   </span>
                   <span className="text-slate-400 dark:text-slate-500 leading-none my-0.5" style={{ fontSize: '9px' }}>
@@ -50,9 +50,14 @@ export default function HelpPage() {
 
             {/* Back Button */}
             <Link href="/">
-              <Button variant="outline" size="sm" className="gap-2 h-9">
-                <Home className="h-4 w-4" />
-                <span className="hidden sm:inline">Back</span>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="w-8 h-8 md:w-auto md:h-9 p-0 md:px-3 group transition-all duration-300 ease-out hover:scale-110 hover:bg-transparent active:scale-95"
+                title="Back"
+              >
+                <Home className="w-4 h-4 text-blue-600 dark:text-blue-400 transition-all duration-300" />
+                <span className="hidden md:inline ml-2 text-xs transition-all duration-300">Back</span>
               </Button>
             </Link>
           </div>

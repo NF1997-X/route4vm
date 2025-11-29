@@ -775,11 +775,11 @@ export function DataTable({
 
   return (
     <div
-      className="ios-glass-table border-none shadow-2xl table-container my-10 rounded-xl overflow-hidden"
+      className="ios-glass-table border border-black/30 dark:border-white/10 shadow-2xl table-container my-10 rounded-xl overflow-hidden"
       data-testid="data-table"
     >
       {/* Single Row: Filter/Sort/Search + Action Buttons */}
-      <div className="flex justify-between items-center px-6 py-5 border-b border-border/40 bg-gradient-to-r from-blue-500/5 via-transparent to-blue-500/5 dark:from-blue-500/5 dark:via-transparent dark:to-blue-500/5 ocean:from-cyan-500/8 ocean:via-transparent ocean:to-cyan-500/8 backdrop-blur-sm">
+      <div className="flex justify-between items-center px-6 py-3 border-b border-black/30 dark:border-white/10 bg-gradient-to-r from-blue-500/5 via-transparent to-blue-500/5 dark:from-blue-500/5 dark:via-transparent dark:to-blue-500/5 ocean:from-cyan-500/8 ocean:via-transparent ocean:to-cyan-500/8 backdrop-blur-sm">
         <div className="flex items-center gap-2 flex-shrink-0">
           {/* Sort Popover */}
           <Popover>
@@ -999,7 +999,7 @@ export function DataTable({
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => onSearchTermChange?.(e.target.value)}
-              className="pl-7 pr-7 h-8 bg-transparent text-foreground placeholder:text-muted-foreground border-2 border-primary/20 hover:border-primary/30 hover:bg-primary/5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:border-primary/40 focus-visible:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-50 transition-colors text-sm"
+              className="pl-7 pr-7 h-8 bg-transparent text-foreground placeholder:text-muted-foreground border-2 border-primary/20 hover:border-primary/30 hover:bg-primary/5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:border-primary/40 focus-visible:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-50 transition-colors text-xs"
               data-testid="search-input"
             />
             {searchTerm && (
@@ -1151,7 +1151,7 @@ export function DataTable({
                           <TableHead
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className="px-4 py-4 text-center table-header-footer-12px font-semibold tracking-wide sticky top-0 whitespace-nowrap border-transparent"
+                            className="px-3 py-2 text-center table-header-footer-12px font-semibold tracking-wide sticky top-0 whitespace-nowrap border-transparent"
                             style={{
                               textAlign: "center",
                               textDecoration: "normal",
@@ -1283,7 +1283,7 @@ export function DataTable({
                               {visibleColumns.map((column) => (
                                 <TableCell
                                   key={column.id}
-                                  className="p-4 align-middle [&:has([role=checkbox])]:pr-0 px-4 py-4 table-cell-10px text-center text-[13px] text-slate-700 dark:text-slate-200 font-semibold whitespace-nowrap"
+                                  className="p-2 align-middle [&:has([role=checkbox])]:pr-0 px-3 py-2 table-cell-10px text-center text-[13px] text-slate-700 dark:text-slate-200 font-semibold whitespace-nowrap"
                                   style={{
                                     minWidth: "100px",
                                     ...(column.dataKey === "location" && {
@@ -1679,7 +1679,7 @@ export function DataTable({
                 {visibleColumns.map((column, index) => (
                   <TableCell
                     key={column.id}
-                    className="px-4 py-4 text-center table-header-footer-12px font-semibold tracking-wide sticky bottom-0 whitespace-nowrap"
+                    className="px-3 py-2 text-center table-header-footer-12px font-semibold tracking-wide sticky bottom-0 whitespace-nowrap"
                     style={{
                       textAlign: "center",
                       fontSize: "10px",

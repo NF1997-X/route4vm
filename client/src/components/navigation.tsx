@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { LayoutGrid } from "lucide-react";
-import { SlideMenu } from "./slide-menu";
+import { Sun, Moon, Waves, ListChecks, Bookmark, Plus, Rows, Layout, Palette, Route as RouteIcon, Receipt, Sparkles, BookOpen, Link2, Table2, Save, DoorOpen } from "lucide-react";
+import { useLocation } from "wouter";
 
 interface NavigationProps {
   editMode?: boolean;
@@ -15,103 +15,243 @@ interface NavigationProps {
   onCalculateTolls?: () => void;
   onSaveLayout?: () => void;
   onSavedLinks?: () => void;
-  onShowTutorial?: () => void;
   onBulkColorEdit?: () => void;
   isAuthenticated?: boolean;
   theme?: string;
   onSetTheme?: (theme: 'dark' | 'light' | 'ocean') => void;
 }
 
-export function Navigation({ editMode, onEditModeRequest, onShowCustomization, onAddRow, onSaveData, onGenerateTng, onAddColumn, onOptimizeRoute, onCalculateTolls, onSaveLayout, onSavedLinks, onShowTutorial, onBulkColorEdit, isAuthenticated, theme, onSetTheme }: NavigationProps) {
-  const [currentTime, setCurrentTime] = useState(new Date());
+export function Navigation({ editMode, onEditModeRequest, onShowCustomization, onAddRow, onSaveData, onGenerateTng, onAddColumn, onOptimizeRoute, onCalculateTolls, onSaveLayout, onSavedLinks, onBulkColorEdit, isAuthenticated, theme, onSetTheme }: NavigationProps) {
   const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const formatDateTime = (date: Date) => {
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    };
-    return date.toLocaleString('en-US', options);
-  };
+  const [, navigate] = useLocation();
 
   return (
     <>
-      {/* Content fade overlay - hides content when scrolling near nav */}
-      <div className="fixed top-0 left-0 right-0 h-24 z-40 pointer-events-none bg-gradient-to-b from-background via-background/80 to-transparent" />
-      
-      <nav className="fixed top-0 left-0 right-0 z-50 w-full border-b-2 border-blue-500/50 dark:border-blue-400/50 ocean:border-cyan-500/50 bg-gradient-to-r from-blue-500/10 via-blue-600/10 to-blue-700/10 dark:from-blue-500/20 dark:via-blue-600/20 dark:to-blue-700/20 ocean:from-cyan-500/15 ocean:via-cyan-600/15 ocean:to-blue-600/15 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-lg shadow-blue-500/20 ocean:shadow-cyan-500/20">
-        <div className="container mx-auto px-2 md:px-4">
-        <div className="flex h-16 items-center justify-between text-[12px]">
-          {/* Logo/Brand */}
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2.5 group cursor-pointer">
-              <div className="relative flex h-10 w-10 items-center justify-center rounded-[14px] overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-black/95 backdrop-blur-xl border-b border-black/10 dark:border-white/10 transition-all duration-300">
+        <div className="max-w-full mx-auto px-6">
+          <div className="flex h-16 items-center justify-between">
+            {/* Logo */}
+            <div className="flex items-center space-x-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg overflow-hidden shadow-md">
                 <img 
                   src="/assets/Logofm.png" 
                   alt="Logo" 
                   className="h-full w-full object-cover"
                 />
               </div>
-              <div className="flex flex-col gap-0.5 leading-tight">
-                <span className="font-bold bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 dark:from-gray-100 dark:via-gray-200 dark:to-gray-100 bg-clip-text text-transparent leading-none tracking-tight transition-all" style={{ fontSize: '13px', letterSpacing: '-0.02em' }}>
-                  {editMode ? "Edit Mode" : "Route Manager"}
-                </span>
-                <span className="text-gray-500 dark:text-gray-400 leading-none font-medium" style={{ fontSize: '10px', letterSpacing: '-0.01em' }}>
-                  Data Management
-                </span>
+              <div className="text-black dark:text-white font-bold text-[10px] tracking-tight">
+                {editMode ? "Edit Mode" : "Route Management"}
               </div>
             </div>
+
+            {/* Right Side: Theme Switcher + Menu */}
+            <div className="flex items-center gap-4">
+              {/* Theme Switcher */}
+              <div className="flex gap-2 p-1 bg-black/5 dark:bg-white/5 rounded-xl border border-black/10 dark:border-white/10">
+                <button
+                  onClick={() => onSetTheme?.('dark')}
+                  className={`p-2 rounded-lg transition-all ${theme === 'dark' ? 'bg-black/20 dark:bg-white/20 text-black dark:text-white' : 'text-black/60 dark:text-white/60 hover:bg-black/10 dark:hover:bg-white/10 hover:text-black/90 dark:hover:text-white/90'}`}
+                  title="Dark Mode"
+                >
+                  <Moon className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => onSetTheme?.('light')}
+                  className={`p-2 rounded-lg transition-all ${theme === 'light' ? 'bg-black/20 dark:bg-white/20 text-black dark:text-white' : 'text-black/60 dark:text-white/60 hover:bg-black/10 dark:hover:bg-white/10 hover:text-black/90 dark:hover:text-white/90'}`}
+                  title="Light Mode"
+                >
+                  <Sun className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => onSetTheme?.('ocean')}
+                  className={`p-2 rounded-lg transition-all ${theme === 'ocean' ? 'bg-black/20 dark:bg-white/20 text-black dark:text-white' : 'text-black/60 dark:text-white/60 hover:bg-black/10 dark:hover:bg-white/10 hover:text-black/90 dark:hover:text-white/90'}`}
+                  title="Ocean Mode"
+                >
+                  <Waves className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Menu Toggle */}
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="flex flex-col gap-1.5 p-2 transition-all"
+              >
+                <span className={`block w-6 h-0.5 bg-black dark:bg-white rounded transition-all ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+                <span className={`block w-6 h-0.5 bg-black dark:bg-white rounded transition-all ${menuOpen ? 'opacity-0' : ''}`}></span>
+                <span className={`block w-6 h-0.5 bg-black dark:bg-white rounded transition-all ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+              </button>
+            </div>
           </div>
-
-          {/* Navigation - Single Menu Button */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="relative bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200/60 dark:border-gray-700/50 shadow-md hover:shadow-lg hover:border-gray-300/70 dark:hover:border-gray-600/60 hover:bg-white dark:hover:bg-gray-900 h-10 px-4 rounded-[14px] transition-all duration-200 ease-out group"
-            data-testid="button-main-menu"
-            title="Menu"
-          >
-            <LayoutGrid className="w-4 h-4 text-gray-700 dark:text-gray-200 transition-transform duration-200 group-hover:scale-110" />
-            <span className="hidden md:inline ml-2 text-xs font-semibold text-gray-700 dark:text-gray-200">Menu</span>
-          </Button>
         </div>
-      </div>
 
-      {/* Slide Menu */}
-      <SlideMenu
-        open={menuOpen}
-        onOpenChange={setMenuOpen}
-        editMode={editMode}
-        onEditModeRequest={onEditModeRequest}
-        onShowCustomization={onShowCustomization}
-        onAddRow={onAddRow}
-        onSaveData={onSaveData}
-        onGenerateTng={onGenerateTng}
-        onAddColumn={onAddColumn}
-        onOptimizeRoute={onOptimizeRoute}
-        onCalculateTolls={onCalculateTolls}
-        onSaveLayout={onSaveLayout}
-        onSavedLinks={onSavedLinks}
-        onShowTutorial={onShowTutorial}
-        onBulkColorEdit={onBulkColorEdit}
-        theme={theme}
-        onSetTheme={onSetTheme}
-      />
-    </nav>
+        {/* Dropdown Menu */}
+        {menuOpen && (
+          <div className="absolute top-full right-6 mt-3 w-56 bg-white dark:bg-black/95 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-xl p-2 shadow-xl max-h-[500px] overflow-y-auto">
+            {/* Primary Actions */}
+            {editMode ? (
+              <>
+                <button
+                  onClick={() => { onSaveData?.(); setMenuOpen(false); }}
+                  className="w-full text-left px-4 py-3 text-green-600 dark:text-green-400 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm font-medium flex items-center gap-3"
+                >
+                  <Save className="w-4 h-4" />
+                  Save Changes
+                </button>
+                <div className="h-px bg-black/10 dark:bg-white/10 my-1" />
+                <button
+                  onClick={() => { onEditModeRequest?.(); setMenuOpen(false); }}
+                  className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm font-medium flex items-center gap-3"
+                >
+                  <DoorOpen className="w-4 h-4" />
+                  Exit Edit Mode
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => { onEditModeRequest?.(); setMenuOpen(false); }}
+                className="w-full text-left px-4 py-3 text-blue-600 dark:text-blue-400 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm font-medium flex items-center gap-3"
+              >
+                <DoorOpen className="w-4 h-4" />
+                Enter Edit Mode
+              </button>
+            )}
+
+            <div className="h-px bg-black/10 dark:bg-white/10 my-1" />
+
+            {/* VM Route Actions */}
+            {editMode && (
+              <>
+                <button
+                  onClick={() => { navigate('/share/tzqe9a'); setMenuOpen(false); }}
+                  className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm flex items-center gap-3"
+                >
+                  <Link2 className="w-4 h-4" />
+                  Share Link
+                </button>
+                <button
+                  onClick={() => { navigate('/custom/8m2v27'); setMenuOpen(false); }}
+                  className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm flex items-center gap-3"
+                >
+                  <Table2 className="w-4 h-4" />
+                  Custom Page
+                </button>
+                <div className="h-px bg-black/10 dark:bg-white/10 my-1" />
+              </>
+            )}
+
+            <button
+              onClick={() => { navigate('/custom-tables'); setMenuOpen(false); }}
+              className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm flex items-center gap-3"
+            >
+              <ListChecks className="w-4 h-4" />
+              All Custom Tables
+            </button>
+
+            <button
+              onClick={() => { onSavedLinks?.(); setMenuOpen(false); }}
+              className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm flex items-center gap-3"
+            >
+              <Bookmark className="w-4 h-4" />
+              Saved Links
+            </button>
+
+            {/* Edit Actions */}
+            {editMode && (
+              <>
+                <div className="h-px bg-black/10 dark:bg-white/10 my-1" />
+                
+                <button
+                  onClick={() => { onAddRow?.(); setMenuOpen(false); }}
+                  className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm flex items-center gap-3"
+                >
+                  <Rows className="w-4 h-4" />
+                  Add Row
+                </button>
+
+                {onAddColumn && (
+                  <button
+                    onClick={() => {
+                      const addColumnButton = document.querySelector('[data-testid="button-add-column"]') as HTMLButtonElement;
+                      if (addColumnButton) addColumnButton.click();
+                      setMenuOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm flex items-center gap-3"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add Column
+                  </button>
+                )}
+
+                <button
+                  onClick={() => { onShowCustomization?.(); setMenuOpen(false); }}
+                  className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm flex items-center gap-3"
+                >
+                  <Layout className="w-4 h-4" />
+                  Customize Columns
+                </button>
+
+                <button
+                  onClick={() => { onBulkColorEdit?.(); setMenuOpen(false); }}
+                  className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm flex items-center gap-3"
+                >
+                  <Palette className="w-4 h-4" />
+                  Bulk Color Edit
+                </button>
+
+                {onOptimizeRoute && (
+                  <button
+                    onClick={() => { onOptimizeRoute(); setMenuOpen(false); }}
+                    className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm flex items-center gap-3"
+                  >
+                    <RouteIcon className="w-4 h-4" />
+                    Optimize Route
+                  </button>
+                )}
+
+                {onCalculateTolls && (
+                  <button
+                    onClick={() => { onCalculateTolls(); setMenuOpen(false); }}
+                    className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm flex items-center gap-3"
+                  >
+                    <Receipt className="w-4 h-4" />
+                    Calculate Tolls
+                  </button>
+                )}
+
+                {onGenerateTng && (
+                  <button
+                    onClick={() => { onGenerateTng(); setMenuOpen(false); }}
+                    className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm flex items-center gap-3"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    Generate TNG
+                  </button>
+                )}
+
+                {onSaveLayout && (
+                  <button
+                    onClick={() => { onSaveLayout(); setMenuOpen(false); }}
+                    className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm flex items-center gap-3"
+                  >
+                    <Layout className="w-4 h-4" />
+                    Save Layout
+                  </button>
+                )}
+              </>
+            )}
+
+            <div className="h-px bg-black/10 dark:bg-white/10 my-1" />
+
+            <button
+              onClick={() => { navigate('/help'); setMenuOpen(false); }}
+              className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm flex items-center gap-3"
+            >
+              <BookOpen className="w-4 h-4" />
+              User Guide
+            </button>
+          </div>
+        )}
+      </nav>
     </>
   );
 }

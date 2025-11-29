@@ -16,12 +16,14 @@ export function ColumnHeader({ column, dragHandleProps, onDelete, isAuthenticate
   const isCoreColumn = coreColumnDataKeys.includes(column.dataKey);
   
   return (
-    <div className="flex items-center justify-center w-full relative">
-      <div className="text-center px-3 py-1.5">
-        <span className="block font-bold tracking-wide" style={{fontSize: '11px'}}>{column.name}</span>
+    <div className="flex items-center justify-center w-full relative group">
+      <div className="text-center px-3 py-1.5 relative">
+        {/* Smart gradient underline */}
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <span className="block font-bold tracking-wide bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-400 dark:to-blue-300 bg-clip-text text-transparent" style={{fontSize: '11px'}}>{column.name}</span>
       </div>
       {!isCoreColumn && (
-        <div className="absolute right-0 flex items-center gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
+        <div className="absolute right-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <Button
             size="sm"
             variant="ghost"

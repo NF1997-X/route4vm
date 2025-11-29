@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useTableData } from "@/hooks/use-table-data";
 import { DataTable } from "@/components/data-table";
-import { ImageManagementModal } from "@/components/image-management-modal";
+import { ImageManagementModalSimple } from "@/components/image-management-modal-simple";
 import { ColumnCustomizationModal } from "@/components/column-customization-modal";
 import { PasswordPrompt } from "@/components/password-prompt";
 import { Navigation } from "@/components/navigation";
@@ -9,7 +9,6 @@ import { LoadingOverlay } from "@/components/skeleton-loader";
 import { RouteOptimizationModal } from "@/components/route-optimization-modal";
 import { ShareDialog } from "@/components/share-dialog";
 import { SavedLinksModal } from "@/components/saved-links-modal";
-import { Tutorial } from "@/components/tutorial";
 import { Footer } from "@/components/footer";
 import { BulkColorModal } from "@/components/bulk-color-modal";
 import { Button } from "@/components/ui/button";
@@ -75,7 +74,6 @@ export default function TablePage() {
   const [previousSlideIndex, setPreviousSlideIndex] = useState<number | null>(null);
   const [showDeletePageConfirmation, setShowDeletePageConfirmation] = useState(false);
   const [pageToDelete, setPageToDelete] = useState<Page | null>(null);
-  const [showTutorial, setShowTutorial] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [bulkColorModalOpen, setBulkColorModalOpen] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
@@ -1120,7 +1118,6 @@ export default function TablePage() {
             });
           }}
           onSavedLinks={() => setSavedLinksModalOpen(true)}
-          onShowTutorial={() => setShowTutorial(true)}
           onBulkColorEdit={() => setBulkColorModalOpen(true)}
           onAddColumn={async (columnData) => {
             try {
@@ -1149,7 +1146,7 @@ export default function TablePage() {
         />
       </div>
       <main className="pt-[72px] animate-in slide-in-from-bottom-4 fade-in duration-700 delay-150">
-        <div className="container mx-auto px-4 py-8 max-w-3xl" data-testid="table-page">
+        <div className="container mx-auto px-4 py-8 max-w-7xl" data-testid="table-page">
           {/* Header Section - Carousel with Pages */}
           <div className="mb-8 relative animate-in fade-in slide-in-from-top-2 duration-600 delay-300">
             {sortedPages.length > 0 ? (
@@ -1515,7 +1512,7 @@ export default function TablePage() {
           if (!selectedRow) return null;
           
           return (
-            <ImageManagementModal
+            <ImageManagementModalSimple
               open={imageModalOpen}
               onOpenChange={(open) => {
                 setImageModalOpen(open);
@@ -1831,14 +1828,6 @@ export default function TablePage() {
         isPending={bulkUpdateColorMutation.isPending}
         currentRows={rows}
       />
-
-      {/* Tutorial - Controlled from Navigation Help button */}
-      {showTutorial && (
-        <Tutorial 
-          editMode={editMode} 
-          onClose={() => setShowTutorial(false)}
-        />
-      )}
 
         </div>
       </main>

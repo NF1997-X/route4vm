@@ -185,12 +185,10 @@ export function ShareDialog({ open, onOpenChange, tableState }: ShareDialogProps
             <Button
               onClick={generateShareUrl}
               disabled={isGenerating}
-              className="w-full transition-all duration-300 hover:scale-[1.02] active:scale-95 bg-transparent hover:bg-blue-500/10 border-2 border-blue-500/30 hover:border-blue-500/50"
+              className="w-full transition-all duration-300 hover:scale-[1.02] active:scale-95 bg-transparent hover:bg-blue-500/10 border-2 border-blue-500/30 hover:border-blue-500/50 text-black dark:text-gray-300"
               data-testid="button-generate-share-link"
             >
-              <span className="electric-text">
-                {isGenerating ? "Generating..." : "Generate Share Link"}
-              </span>
+              {isGenerating ? "Generating..." : "Generate Share Link"}
             </Button>
           ) : (
             <div className="space-y-4">
@@ -256,7 +254,7 @@ export function ShareDialog({ open, onOpenChange, tableState }: ShareDialogProps
           <Button
             variant="outline"
             onClick={() => handleOpenChange(false)}
-            className="transition-all duration-300 hover:scale-[1.02] active:scale-95"
+            className="transition-all duration-300 hover:scale-[1.02] active:scale-95 text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-red-400 border-red-300 dark:border-red-500/50"
             data-testid="button-cancel-share"
           >
             Close
