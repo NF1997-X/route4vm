@@ -62,13 +62,15 @@ export function Navigation({ editMode, onEditModeRequest, onShowCustomization, o
                 >
                   <Sun className="w-4 h-4" />
                 </button>
-                <button
-                  onClick={() => onSetTheme?.('ocean')}
-                  className={`p-2 rounded-lg transition-all ${theme === 'ocean' ? 'bg-black/20 dark:bg-white/20 text-black dark:text-white' : 'text-black/60 dark:text-white/60 hover:bg-black/10 dark:hover:bg-white/10 hover:text-black/90 dark:hover:text-white/90'}`}
-                  title="Ocean Mode"
-                >
-                  <Waves className="w-4 h-4" />
-                </button>
+                {isEditMode && (
+                  <button
+                    onClick={() => onSetTheme?.('ocean')}
+                    className={`p-2 rounded-lg transition-all ${theme === 'ocean' ? 'bg-black/20 dark:bg-white/20 text-black dark:text-white' : 'text-black/60 dark:text-white/60 hover:bg-black/10 dark:hover:bg-white/10 hover:text-black/90 dark:hover:text-white/90'}`}
+                    title="Ocean Mode"
+                  >
+                    <Waves className="w-4 h-4" />
+                  </button>
+                )}
               </div>
 
               {/* Menu Toggle */}

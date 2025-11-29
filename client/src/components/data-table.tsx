@@ -782,7 +782,6 @@ export function DataTable({
       <div className="flex justify-between items-center px-6 py-3 border-b border-black/30 dark:border-white/10 bg-gradient-to-r from-blue-500/5 via-transparent to-blue-500/5 dark:from-blue-500/5 dark:via-transparent dark:to-blue-500/5 ocean:from-cyan-500/8 ocean:via-transparent ocean:to-cyan-500/8 backdrop-blur-sm">
         <div className="flex items-center gap-2 flex-shrink-0">
           {/* Sort Popover */}
-          {(isEditMode || !document.documentElement.classList.contains('ocean')) && (
           <Popover>
             <PopoverTrigger asChild>
               <Button 
@@ -901,10 +900,8 @@ export function DataTable({
               </div>
             </PopoverContent>
           </Popover>
-          )}
           
           {/* Combined Filter Section */}
-          {(isEditMode || !document.documentElement.classList.contains('ocean')) && (
           <div className="w-auto">
             <Popover>
               <PopoverTrigger asChild>
@@ -992,7 +989,6 @@ export function DataTable({
             </PopoverContent>
           </Popover>
           </div>
-          )}
         </div>
         
         {/* Middle: Search Input */}
@@ -1022,7 +1018,7 @@ export function DataTable({
         {/* Right Side: Action Buttons */}
         {!isSharedView && (
           <div className="flex items-center gap-2 ml-auto flex-shrink-0">
-            {onShowCustomization && (isEditMode || !document.documentElement.classList.contains('ocean')) && (
+            {onShowCustomization && (
               <Button
                 onClick={onShowCustomization}
                 variant="outline"
@@ -1037,7 +1033,7 @@ export function DataTable({
                 <span className="hidden sm:inline ml-1.5">Customize</span>
               </Button>
             )}
-            {onOptimizeRoute && (isEditMode || !document.documentElement.classList.contains('ocean')) && (
+            {onOptimizeRoute && (
               <Button
                 onClick={onOptimizeRoute}
                 variant="outline"
@@ -1050,7 +1046,7 @@ export function DataTable({
                 <span className="hidden sm:inline ml-1.5">Optimize</span>
               </Button>
             )}
-            {onShareTable && !hideShareButton && (isEditMode || !document.documentElement.classList.contains('ocean')) && (
+            {onShareTable && !hideShareButton && (
               <Button
                 onClick={onShareTable}
                 variant="outline"
