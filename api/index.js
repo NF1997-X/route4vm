@@ -558,6 +558,7 @@ var DatabaseStorage = class {
               "KL 5",
               "KL 6",
               "KL 7",
+              "KL 8",
               "SL 1",
               "SL 2",
               "SL 3"
