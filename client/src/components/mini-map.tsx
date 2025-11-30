@@ -256,12 +256,23 @@ export const MiniMap = memo(function MiniMap({
     // Calculate center and zoom from rendered locations - memoized for performance
     const center = useMemo((): [number, number] => {
       if (renderedLocations.length === 0) return [3.139003, 101.686855];
+      
+      // In fullscreen mode with current location, center on current location
+      if (isFullscreen && currentLocation) {
+        return [currentLocation.latitude, currentLocation.longitude];
+      }
+      
       const avgLat = renderedLocations.reduce((sum, loc) => sum + loc.latitude, 0) / renderedLocations.length;
       const avgLng = renderedLocations.reduce((sum, loc) => sum + loc.longitude, 0) / renderedLocations.length;
       return [avgLat, avgLng];
-    }, [renderedLocations]);
+    }, [renderedLocations, isFullscreen, currentLocation]);
 
     const zoom = useMemo((): number => {
+      // In fullscreen mode with current location, zoom to current marker
+      if (isFullscreen && currentLocation && renderedLocations.length > 1) {
+        return 15;
+      }
+      
       if (renderedLocations.length <= 1) return 15;
       const lats = renderedLocations.map((loc) => loc.latitude);
       const lngs = renderedLocations.map((loc) => loc.longitude);
@@ -274,7 +285,7 @@ export const MiniMap = memo(function MiniMap({
       if (maxRange > 0.5) return 13;
       if (maxRange > 0.1) return 14;
       return 15;
-    }, [renderedLocations]);
+    }, [renderedLocations, isFullscreen, currentLocation]);
 
     return (
     <MapContainer
