@@ -392,9 +392,7 @@ export function DataTable({
     setCurrentPage(Math.max(1, Math.min(page, totalPages)));
   };
   const handleDragEnd = (result: any) => {
-    // Prevent action if no destination or dropped in same position
     if (!result.destination) return;
-    if (result.source.index === result.destination.index) return;
 
     const { source, destination, type } = result;
 
@@ -405,11 +403,6 @@ export function DataTable({
 
       const columnIds = newColumnOrder.map((col) => col.id);
       onReorderColumns.mutate(columnIds);
-      
-      // Provide haptic feedback on mobile
-      if ('vibrate' in navigator) {
-        navigator.vibrate(10);
-      }
     } else if (type === "row") {
       const newRowOrder = Array.from(rows);
       const [reorderedRow] = newRowOrder.splice(source.index, 1);
@@ -417,11 +410,6 @@ export function DataTable({
 
       const rowIds = newRowOrder.map((row) => row.id);
       onReorderRows.mutate(rowIds);
-      
-      // Provide haptic feedback on mobile
-      if ('vibrate' in navigator) {
-        navigator.vibrate(10);
-      }
     }
   };
 

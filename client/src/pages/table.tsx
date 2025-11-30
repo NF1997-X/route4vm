@@ -484,42 +484,12 @@ export default function TablePage() {
     // Get warehouse row (QL Kitchen) 
     const warehouseRow = rows.find(row => row.location === "QL Kitchen");
     
-    // Apply normal filtering with enhanced search
+    // Apply normal filtering
     const normalFilteredRows = rows.filter((row) => {
-      const matchesSearch = searchTerm === "" || (() => {
-        const lowerSearchTerm = searchTerm.toLowerCase().trim();
-        const searchWords = lowerSearchTerm.split(/\s+/);
-        
-        // Priority fields for weighted search
-        const priorityFields = [
-          row.location,
-          row.code,
-          row.route,
-          row.info
-        ].filter(Boolean);
-        
-        const secondaryFields = Object.values(row).filter(
-          v => !priorityFields.includes(v)
+      const matchesSearch = searchTerm === "" || 
+        Object.values(row).some(value => 
+          String(value).toLowerCase().includes(searchTerm.toLowerCase())
         );
-        
-        // Check if all search words match in priority fields (higher relevance)
-        const matchesPriorityFields = searchWords.every(word =>
-          priorityFields.some(value =>
-            String(value).toLowerCase().includes(word)
-          )
-        );
-        
-        if (matchesPriorityFields) return true;
-        
-        // Check if all search words match anywhere in the row
-        const matchesAnyField = searchWords.every(word =>
-          [...priorityFields, ...secondaryFields].some(value =>
-            String(value).toLowerCase().includes(word)
-          )
-        );
-        
-        return matchesAnyField;
-      })();
       
       // Route filter: Show only selected routes (if any selected)
       const matchesFilter = filterValue.length === 0 || 
@@ -537,28 +507,11 @@ export default function TablePage() {
       // Remove warehouse row from normal filtered results if it exists
       const nonWarehouseRows = normalFilteredRows.filter(row => row.location !== "QL Kitchen");
       
-      // Check if warehouse row matches search criteria with enhanced search
-      const warehouseMatchesSearch = searchTerm === "" || (() => {
-        const lowerSearchTerm = searchTerm.toLowerCase().trim();
-        const searchWords = lowerSearchTerm.split(/\s+/);
-        
-        const priorityFields = [
-          warehouseRow.location,
-          warehouseRow.code,
-          warehouseRow.route,
-          warehouseRow.info
-        ].filter(Boolean);
-        
-        const secondaryFields = Object.values(warehouseRow).filter(
-          v => !priorityFields.includes(v)
+      // Check if warehouse row matches search criteria
+      const warehouseMatchesSearch = searchTerm === "" || 
+        Object.values(warehouseRow).some(value => 
+          String(value).toLowerCase().includes(searchTerm.toLowerCase())
         );
-        
-        return searchWords.every(word =>
-          [...priorityFields, ...secondaryFields].some(value =>
-            String(value).toLowerCase().includes(word)
-          )
-        );
-      })();
       
       // Add warehouse row at the beginning if it matches search
       if (warehouseMatchesSearch) {
