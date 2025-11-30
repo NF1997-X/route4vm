@@ -63,6 +63,9 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
       };
       setOriginalData(data);
       setCurrentData(data);
+    } else {
+      // Close actions menu when modal closes
+      setShowActionsMenu(false);
     }
   }, [open, info, qrCode, latitude, longitude, markerColor]);
   
@@ -653,7 +656,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
           
           {/* Sliding Actions Menu - Apple Style */}
           <div 
-            className={`absolute left-0 right-0 bottom-0 bg-white/95 dark:bg-gray-950/95 backdrop-blur-2xl border-t border-gray-200/60 dark:border-gray-800/60 transition-all duration-300 ease-out rounded-t-3xl ${
+            className={`absolute left-0 right-0 bottom-0 bg-white/95 dark:bg-gray-950/95 backdrop-blur-2xl border-t border-gray-200/60 dark:border-gray-800/60 transition-all duration-500 ease-in-out rounded-t-3xl ${
               showActionsMenu 
                 ? 'translate-x-0 opacity-100' 
                 : 'translate-x-full opacity-0 pointer-events-none'
@@ -686,10 +689,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
                   <Button
                     variant="ghost"
                     className="h-10 w-10 p-0 bg-transparent hover:bg-green-500/10 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 rounded-xl border border-green-500/30"
-                    onClick={() => {
-                      handleEditClick();
-                      setShowActionsMenu(false);
-                    }}
+                    onClick={handleEditClick}
                     data-testid={`button-edit-${rowId}`}
                   >
                     <ListChecks className="w-5 h-5 text-green-600 dark:text-green-400" />
@@ -701,20 +701,20 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
                 <div className="flex items-center justify-center animate-in slide-in-from-right-10 duration-300" style={{animationDelay: '100ms'}}>
                   <Button
                     variant="ghost"
-                    className="h-10 w-10 p-0 bg-transparent hover:bg-purple-500/10 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 rounded-xl disabled:opacity-50 border border-purple-500/30 relative overflow-hidden pagination-button"
-                    onClick={() => {
-                      handleQrCodeClick();
-                      setShowActionsMenu(false);
-                    }}
+                    className="h-10 w-10 p-0 bg-transparent hover:bg-purple-500/10 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 rounded-xl disabled:opacity-50 border border-purple-500/30 relative overflow-hidden"
+                    onClick={handleQrCodeClick}
                     disabled={isScanning || qrScanning}
                     data-testid={`button-qrcode-${rowId}`}
                   >
                     {qrScanning ? (
                       <>
-                        <div className="absolute inset-0 bg-purple-500/20 animate-pulse"></div>
-                        <span className="relative text-[7px] font-semibold text-purple-600 dark:text-purple-400 whitespace-nowrap animate-pulse">
-                          Scanning{scanningDots}
-                        </span>
+                        <div className="absolute inset-0 bg-transparent animate-pulse"></div>
+                        <div className="relative flex flex-col items-center justify-center gap-0.5">
+                          <Loader2 className="w-4 h-4 text-purple-600 dark:text-purple-400 animate-spin" />
+                          <span className="text-[6px] font-semibold text-purple-600 dark:text-purple-400 whitespace-nowrap leading-none">
+                            Scan
+                          </span>
+                        </div>
                       </>
                     ) : (
                       <QrCode className="w-5 h-5 text-purple-600 dark:text-purple-400" />
@@ -737,10 +737,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
                     <Button
                       variant="ghost"
                       className="h-10 w-10 p-0 bg-transparent hover:bg-cyan-500/10 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 rounded-xl border border-cyan-500/30"
-                      onClick={() => {
-                        handleUrlClick(url);
-                        setShowActionsMenu(false);
-                      }}
+                      onClick={() => handleUrlClick(url)}
                       data-testid={`button-open-url-${rowId}`}
                     >
                       <ExternalLink className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
@@ -755,10 +752,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
                     <Button
                       variant="ghost"
                       className="h-10 w-10 p-0 bg-transparent hover:bg-red-500/10 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 rounded-xl border border-red-500/30"
-                      onClick={() => {
-                        handleDirectionClick();
-                        setShowActionsMenu(false);
-                      }}
+                      onClick={handleDirectionClick}
                       data-testid={`button-direction-${rowId}`}
                     >
                       <SiGooglemaps className="w-5 h-5 text-red-600 dark:text-red-400" />
@@ -769,10 +763,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
                     <Button
                       variant="ghost"
                       className="h-10 w-10 p-0 bg-transparent hover:bg-sky-500/10 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 rounded-xl border border-sky-500/30"
-                      onClick={() => {
-                        handleWazeClick();
-                        setShowActionsMenu(false);
-                      }}
+                      onClick={handleWazeClick}
                       data-testid={`button-waze-${rowId}`}
                     >
                       <SiWaze className="w-5 h-5 text-sky-600 dark:text-sky-400" />
@@ -878,7 +869,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
             </Button>
             <Button 
               onClick={handleConfirmEditClick}
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-transparent hover:bg-green-600/10 text-green-600 dark:text-green-400 border border-green-600/50"
               data-testid="button-confirm-checklist"
             >
               <ListChecks className="w-4 h-4 mr-2" />
@@ -934,7 +925,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
             </Button>
             <Button 
               onClick={navigationType === 'google' ? handleConfirmDirectionClick : handleConfirmWazeClick}
-              className={navigationType === 'google' ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'}
+              className="bg-transparent hover:bg-blue-600/10 text-blue-600 dark:text-blue-400 border border-blue-600/50"
               data-testid="button-confirm-navigation"
             >
               {navigationType === 'google' ? (
@@ -989,7 +980,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
             </Button>
             <Button 
               onClick={handleConfirmUrlOpen}
-              className="bg-cyan-600 hover:bg-cyan-700"
+              className="bg-transparent hover:bg-cyan-600/10 text-cyan-600 dark:text-cyan-400 border border-cyan-600/50"
               data-testid="button-confirm-url"
             >
               <ExternalLink className="w-4 h-4 mr-2" />
@@ -1050,7 +1041,7 @@ export function InfoModal({ info, rowId, code, route, location, latitude, longit
             </Button>
             <Button 
               onClick={handleConfirmSave}
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-transparent hover:bg-green-600/10 text-green-600 dark:text-green-400 border border-green-600/50"
               data-testid="button-confirm-save"
             >
               <Save className="w-4 h-4 mr-2" />
