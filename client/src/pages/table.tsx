@@ -1894,7 +1894,7 @@ export default function TablePage() {
       <RouteOptimizationModal
         open={optimizationModalOpen}
         onOpenChange={setOptimizationModalOpen}
-        rows={rows}
+        rows={rowsWithDistances}
       />
 
       {/* Share Dialog */}

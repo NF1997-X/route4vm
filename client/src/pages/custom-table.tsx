@@ -112,9 +112,9 @@ export default function CustomTableView() {
       filtered = filtered.filter(row => !deliveryFilters.includes(row.delivery));
     }
 
-    // Use all columns as visible, but hide latitude, longitude, and tollPrice (not in edit mode)
+    // Use all columns as visible, but hide latitude, longitude, tollPrice, and images (not in edit mode)
     const visibleCols = columns.filter(col => 
-      col.dataKey !== 'latitude' && col.dataKey !== 'longitude' && col.dataKey !== 'tollPrice'
+      col.dataKey !== 'latitude' && col.dataKey !== 'longitude' && col.dataKey !== 'tollPrice' && col.dataKey !== 'images'
     );
 
     return { 

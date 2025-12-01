@@ -141,9 +141,9 @@ export default function SharedTablePage() {
       visibleCols = orderedCols;
     }
 
-    // Hide latitude, longitude, and tollPrice columns (not in edit mode)
+    // Hide latitude, longitude, tollPrice, and images columns (not in edit mode)
     visibleCols = visibleCols.filter(col => 
-      col.dataKey !== 'latitude' && col.dataKey !== 'longitude' && col.dataKey !== 'tollPrice'
+      col.dataKey !== 'latitude' && col.dataKey !== 'longitude' && col.dataKey !== 'tollPrice' && col.dataKey !== 'images'
     );
 
     return { 
