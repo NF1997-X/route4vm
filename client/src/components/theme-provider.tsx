@@ -28,8 +28,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     
     // Update browser tab/address bar color
     const themeColors = {
-      dark: '#000000',
-      light: '#f5f5f7'
+      dark: '#000000',  // Hitam untuk dark mode
+      light: '#ffffff'  // Putih untuk light mode
     };
     
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
