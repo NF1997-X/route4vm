@@ -8,7 +8,6 @@ import TablePage from "@/pages/table";
 import SharedTablePage from "@/pages/shared-table";
 import CustomTableList from "@/pages/custom-table-list";
 import CustomTableView from "@/pages/custom-table";
-import HelpPage from "@/pages/help";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -26,9 +25,6 @@ function Router() {
         </Route>
         <Route path="/custom/:shareId">
           {() => <CustomTableView />}
-        </Route>
-        <Route path="/help">
-          {() => <HelpPage />}
         </Route>
         <Route component={NotFound} />
       </Switch>

@@ -11,7 +11,7 @@ import { LoadingOverlay } from "@/components/skeleton-loader";
 import { RouteOptimizationModal } from "@/components/route-optimization-modal";
 import { ShareDialog } from "@/components/share-dialog";
 import { SavedLinksModal } from "@/components/saved-links-modal";
-import { Tutorial } from "@/components/tutorial";
+import { HelpChatbot } from "@/components/help-chatbot";
 import { Footer } from "@/components/footer";
 import { BulkColorModal } from "@/components/bulk-color-modal";
 import { Button } from "@/components/ui/button";
@@ -80,7 +80,7 @@ export default function TablePage() {
   const [previousSlideIndex, setPreviousSlideIndex] = useState<number | null>(null);
   const [showDeletePageConfirmation, setShowDeletePageConfirmation] = useState(false);
   const [pageToDelete, setPageToDelete] = useState<Page | null>(null);
-  const [showTutorial, setShowTutorial] = useState(false);
+  const [showHelpChatbot, setShowHelpChatbot] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [bulkColorModalOpen, setBulkColorModalOpen] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
@@ -1125,7 +1125,7 @@ export default function TablePage() {
             });
           }}
           onSavedLinks={() => setSavedLinksModalOpen(true)}
-          onShowTutorial={() => setShowTutorial(true)}
+          onShowHelp={() => setShowHelpChatbot(true)}
           onBulkColorEdit={() => setBulkColorModalOpen(true)}
           onAddColumn={async (columnData) => {
             try {
@@ -1932,13 +1932,11 @@ export default function TablePage() {
         currentRows={rows}
       />
 
-      {/* Tutorial - Controlled from Navigation Help button */}
-      {showTutorial && (
-        <Tutorial 
-          editMode={editMode} 
-          onClose={() => setShowTutorial(false)}
-        />
-      )}
+      {/* Help Chatbot - AI Assistant */}
+      <HelpChatbot 
+        open={showHelpChatbot}
+        onOpenChange={setShowHelpChatbot}
+      />
 
         </div>
       </main>

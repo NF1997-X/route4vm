@@ -1512,7 +1512,7 @@ export function DataTable({
                                       </>
                                     ) : (
                                       <>
-                                        {/* Image Lightbox button - non-edit mode only */}
+                                        {/* Image Lightbox button - non-edit mode only (including shared view) */}
                                         <Button
                                           size="sm"
                                           variant="ghost"
@@ -1528,12 +1528,13 @@ export function DataTable({
                                           }}
                                           disabled={!row.images || row.images.length === 0}
                                           data-testid={`button-image-lightbox-${row.id}`}
-                                          title={row.images && row.images.length > 0 ? `View ${row.images.length} image(s)` : "No images"}
                                         >
                                           {row.images && row.images.length > 0 ? (
                                             <ImageIcon className="w-4 h-4" />
                                           ) : (
-                                            <ImageOff className="w-4 h-4" />
+                                            <MobileTooltip content="No image" showBelow={true}>
+                                              <ImageOff className="w-4 h-4" />
+                                            </MobileTooltip>
                                           )}
                                         </Button>
                                         {/* Info button - normal mode only */}
@@ -1739,17 +1740,33 @@ export function DataTable({
                                         }`}
                                         disabled={true}
                                         data-testid={`button-toggle-active-${row.id}`}
-                                        title={
-                                          row.deliveryAlt === "alt1"
-                                            ? "Delivery Alt 1 (Mon, Wed, Fri, Sun)"
-                                            : row.deliveryAlt === "alt2"
-                                            ? "Delivery Alt 2 (Tue, Thu, Sat)"
-                                            : row.deliveryAlt === "inactive"
-                                            ? "Inactive"
-                                            : "Normal Delivery (Every Day)"
-                                        }
                                       >
-                                        <Power className="w-4 h-4" />
+                                        <MobileTooltip
+                                          content={
+                                            (() => {
+                                              if (row.deliveryAlt === "inactive") {
+                                                return "Red - Terminated (No delivery)";
+                                              }
+                                              
+                                              const currentDay = new Date().getDay();
+                                              const alt1Days = [1, 3, 5, 0];
+                                              const alt2Days = [2, 4, 6];
+                                              
+                                              if (row.deliveryAlt === "alt1") {
+                                                const isToday = alt1Days.includes(currentDay);
+                                                return isToday ? "Green - Delivery today (Alt 1: Mon/Wed/Fri/Sun)" : "Yellow - No delivery today (Alt 1: Mon/Wed/Fri/Sun)";
+                                              } else if (row.deliveryAlt === "alt2") {
+                                                const isToday = alt2Days.includes(currentDay);
+                                                return isToday ? "Green - Delivery today (Alt 2: Tue/Thu/Sat)" : "Yellow - No delivery today (Alt 2: Tue/Thu/Sat)";
+                                              } else {
+                                                return "Green - Daily delivery";
+                                              }
+                                            })()
+                                          }
+                                          showBelow={true}
+                                        >
+                                          <Power className="w-4 h-4" />
+                                        </MobileTooltip>
                                       </Button>
                                     )}
                                 </div>

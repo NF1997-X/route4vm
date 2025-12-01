@@ -35,7 +35,7 @@ interface SlideMenuProps {
   onCalculateTolls?: () => void;
   onSaveLayout?: () => void;
   onSavedLinks?: () => void;
-  onShowTutorial?: () => void;
+  onShowHelp?: () => void;
   onBulkColorEdit?: () => void;
   theme?: string;
   onSetTheme?: (theme: 'dark' | 'light' | 'ocean') => void;
@@ -55,7 +55,7 @@ export function SlideMenu({
   onCalculateTolls,
   onSaveLayout,
   onSavedLinks,
-  onShowTutorial,
+  onShowHelp,
   onBulkColorEdit,
   theme,
   onSetTheme,
@@ -232,13 +232,13 @@ export function SlideMenu({
                   </button>
                 )}
 
-                {onShowTutorial && (
+                {onShowHelp && (
                   <button
-                    onClick={() => handleItemClick(onShowTutorial)}
+                    onClick={() => handleItemClick(onShowHelp)}
                     className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200 font-normal text-[15px] active:bg-gray-200 dark:active:bg-gray-700 transition-colors"
                   >
                     <BookOpen className="w-5 h-5" />
-                    <span>Show Tutorial</span>
+                    <span>Help</span>
                   </button>
                 )}
               </>

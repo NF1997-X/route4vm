@@ -15,14 +15,14 @@ interface NavigationProps {
   onCalculateTolls?: () => void;
   onSaveLayout?: () => void;
   onSavedLinks?: () => void;
-  onShowTutorial?: () => void;
+  onShowHelp?: () => void;
   onBulkColorEdit?: () => void;
   isAuthenticated?: boolean;
   theme?: string;
   onSetTheme?: (theme: 'dark' | 'light') => void;
 }
 
-export function Navigation({ editMode, onEditModeRequest, onShowCustomization, onAddRow, onSaveData, onGenerateTng, onAddColumn, onOptimizeRoute, onCalculateTolls, onSaveLayout, onSavedLinks, onShowTutorial, onBulkColorEdit, isAuthenticated, theme, onSetTheme }: NavigationProps) {
+export function Navigation({ editMode, onEditModeRequest, onShowCustomization, onAddRow, onSaveData, onGenerateTng, onAddColumn, onOptimizeRoute, onCalculateTolls, onSaveLayout, onSavedLinks, onShowHelp, onBulkColorEdit, isAuthenticated, theme, onSetTheme }: NavigationProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [menuOpen, setMenuOpen] = useState(false);
   const [, navigate] = useLocation();
@@ -273,11 +273,11 @@ export function Navigation({ editMode, onEditModeRequest, onShowCustomization, o
           <div className="h-px bg-black/10 dark:bg-white/10 my-1" />
 
           <button
-            onClick={() => { navigate('/help'); setMenuOpen(false); }}
+            onClick={() => { onShowHelp?.(); setMenuOpen(false); }}
             className="w-full text-left px-4 py-3 text-black/90 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-sm flex items-center gap-3"
           >
             <BookOpen className="w-4 h-4" />
-            User Guide
+            Help
           </button>
         </div>
       )}
