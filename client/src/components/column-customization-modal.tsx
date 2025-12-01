@@ -39,7 +39,7 @@ export function ColumnCustomizationModal({
   const coreColumnNames = ['ID', 'No', 'Route', 'Code', 'Location', 'Delivery', 'Destination'];
 
   useEffect(() => {
-    if (columns.length > 0) {
+    if (columns.length > 0 && open) {
       const columnsToHide = ['longitude', 'latitude', 'info', 'tollPrice', 'tngRoute'];
       // Also hide 'images' column when NOT in edit mode
       if (!editMode) {
@@ -59,7 +59,7 @@ export function ColumnCustomizationModal({
       setLocalColumns(columnItems);
       setOriginalColumns(columnItems);
     }
-  }, [columns, visibleColumns, editMode]);
+  }, [columns, open, editMode]);
 
   const handleToggleVisibility = (columnId: string) => {
     setLocalColumns(prev =>

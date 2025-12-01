@@ -910,7 +910,9 @@ export function DataTable({
                   variant="outline" 
                   className="h-8 w-8 p-0 pagination-button rounded-lg relative" 
                   data-testid="combined-filter-trigger"
-                  title="Filters"
+                  title={(filterValue.length > 0 || deliveryFilterValue.length > 0) 
+                    ? `Active filters: ${filterValue.length + deliveryFilterValue.length}` 
+                    : "Filters"}
                 >
                   <Filter className="w-4 h-4" />
                   {(filterValue.length > 0 || deliveryFilterValue.length > 0) && (
@@ -1435,7 +1437,7 @@ export function DataTable({
                                         <MobileTooltip
                                           content={(() => {
                                             if (row.location === "QL Kitchen") {
-                                              return "Starting point - Front of route";
+                                              return "Starting Point";
                                             }
                                             const segmentDistance = (row as any).segmentDistance;
                                             if (segmentDistance && typeof segmentDistance === "number" && segmentDistance > 0) {
