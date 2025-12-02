@@ -443,11 +443,8 @@ export default function SharedTablePage() {
         <div className="container mx-auto px-4 py-8">
           {/* Route Filter Info Banner */}
           {routeFilters.length > 0 && (
-            <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-lg border-2 border-transparent">
+            <div className="mb-4 p-3 bg-transparent rounded-lg border-2 border-transparent">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs font-semibold text-blue-900 dark:text-blue-100">
-                  📍 Showing Routes:
-                </span>
                 {routeFilters.map(route => {
                   const routeUpper = route.toUpperCase();
                   const isKL = routeUpper.includes('KL');
@@ -460,7 +457,8 @@ export default function SharedTablePage() {
                   const code = parts[2] || ''; // "3AVS01" or "3AVK03"
                   
                   return (
-                    <div key={route} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/60 dark:bg-black/40 rounded-md border border-blue-200/50 dark:border-blue-700/50">
+                    <div key={route} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-transparent rounded-md border border-transparent">
+                      <span className="text-xs font-semibold text-blue-900 dark:text-blue-100">📍 Showing Routes:</span>
                       {isKL && (
                         <img src="/assets/kl-flag.png" alt="KL" className="w-4 h-4 object-cover rounded" />
                       )}
@@ -500,13 +498,10 @@ export default function SharedTablePage() {
             const weekdayNote = isWeekend ? " & Weekend" : "";
             
             return (
-              <div className="mb-4 p-3 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg border border-orange-200/50 dark:border-orange-700/50">
+              <div className="mb-4 p-3 bg-transparent rounded-lg border border-transparent">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-semibold text-orange-900 dark:text-orange-100">
-                    🗓️ No Delivery:
-                  </span>
-                  <span className="text-xs font-medium text-orange-800 dark:text-orange-200">
-                    ({altType} follow the day{weekdayNote})
+                    🗓️ No Delivery: ({altType})
                   </span>
                 </div>
               </div>
