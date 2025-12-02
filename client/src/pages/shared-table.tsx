@@ -424,7 +424,7 @@ export default function SharedTablePage() {
                       return "/assets/Logofm.png";
                     })()} 
                     alt="Logo" 
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-contain"
                   />
                 </div>
                 <span className="font-bold text-slate-600 dark:text-slate-300 text-[12px]">
