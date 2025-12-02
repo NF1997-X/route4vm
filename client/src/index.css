@@ -221,39 +221,39 @@ textarea {
 }
 
 .light {
-  /* Light Theme - inspired by Ht.git */
-  --background: hsl(240, 20%, 97%);
-  --foreground: hsl(240, 10%, 11%);
-  --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(240, 10%, 11%);
-  --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(240, 10%, 11%);
-  --primary: hsl(221, 83%, 53%);
+  /* Light Theme - Soft & Muted Colors */
+  --background: hsl(240, 10%, 92%);
+  --foreground: hsl(240, 8%, 20%);
+  --card: hsl(240, 5%, 96%);
+  --card-foreground: hsl(240, 8%, 20%);
+  --popover: hsl(240, 5%, 96%);
+  --popover-foreground: hsl(240, 8%, 20%);
+  --primary: hsl(221, 70%, 48%);
   --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(240, 20%, 93%);
-  --secondary-foreground: hsl(240, 10%, 11%);
-  --muted: hsl(240, 20%, 90%);
-  --muted-foreground: hsl(240, 5%, 50%);
-  --accent: hsl(240, 20%, 95%);
-  --accent-foreground: hsl(240, 10%, 11%);
-  --destructive: hsl(0, 70%, 50%);
+  --secondary: hsl(240, 8%, 88%);
+  --secondary-foreground: hsl(240, 8%, 25%);
+  --muted: hsl(240, 8%, 85%);
+  --muted-foreground: hsl(240, 5%, 45%);
+  --accent: hsl(240, 8%, 90%);
+  --accent-foreground: hsl(240, 8%, 25%);
+  --destructive: hsl(0, 65%, 48%);
   --destructive-foreground: hsl(0, 0%, 98%);
-  --border: hsl(240, 10%, 85%);
-  --input: hsl(240, 20%, 90%);
-  --ring: hsl(221, 83%, 53%);
-  --chart-1: hsl(221, 83%, 53%);
-  --chart-2: hsl(199, 89%, 48%);
-  --chart-3: hsl(173, 58%, 39%);
-  --chart-4: hsl(142, 71%, 45%);
-  --chart-5: hsl(79, 70%, 43%);
-  --sidebar: hsl(0, 0%, 100%);
-  --sidebar-foreground: hsl(240, 10%, 11%);
-  --sidebar-primary: hsl(221, 83%, 53%);
+  --border: hsl(240, 8%, 82%);
+  --input: hsl(240, 8%, 88%);
+  --ring: hsl(221, 70%, 48%);
+  --chart-1: hsl(221, 70%, 48%);
+  --chart-2: hsl(199, 75%, 45%);
+  --chart-3: hsl(173, 50%, 38%);
+  --chart-4: hsl(142, 60%, 42%);
+  --chart-5: hsl(79, 60%, 40%);
+  --sidebar: hsl(240, 5%, 96%);
+  --sidebar-foreground: hsl(240, 8%, 20%);
+  --sidebar-primary: hsl(221, 70%, 48%);
   --sidebar-primary-foreground: hsl(0, 0%, 100%);
-  --sidebar-accent: hsl(240, 20%, 95%);
-  --sidebar-accent-foreground: hsl(240, 10%, 11%);
-  --sidebar-border: hsl(240, 10%, 90%);
-  --sidebar-ring: hsl(221, 83%, 53%);
+  --sidebar-accent: hsl(240, 8%, 90%);
+  --sidebar-accent-foreground: hsl(240, 8%, 25%);
+  --sidebar-border: hsl(240, 8%, 85%);
+  --sidebar-ring: hsl(221, 70%, 48%);
 }
 
 .ocean {

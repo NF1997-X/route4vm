@@ -69,7 +69,7 @@ export function PasswordPrompt({ open, onOpenChange, onSuccess, title, descripti
                 placeholder="Enter password..."
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pr-10 bg-white/10 dark:bg-black/10 backdrop-blur-sm border-transparent h-9 text-xs"
+                className="pr-10 bg-white/10 dark:bg-black/10 backdrop-blur-sm border-transparent h-9 text-[10px]"
                 data-testid="password-input"
                 autoFocus
               />
