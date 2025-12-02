@@ -441,7 +441,81 @@ export default function SharedTablePage() {
 
       <main className="pt-[56px]">
         <div className="container mx-auto px-4 py-8">
-          {/* Data Table with all interactive features enabled */}
+          {/* Panel 1: Route Info & No Delivery */}
+          <div className="mt-10 mb-4 p-4 bg-white/80 dark:bg-gray-900/50 rounded-lg border border-slate-200 dark:border-blue-700/30 shadow-md">
+            <div className="flex flex-wrap items-center gap-4">
+              {/* Route Info */}
+              {routeFilters.length > 0 && routeFilters.map(route => {
+                const routeUpper = route.toUpperCase();
+                const isKL = routeUpper.includes('KL');
+                const isSL = routeUpper.includes('SL');
+                const parts = route.split('-').map(p => p.trim());
+                const routeNumber = parts[0] || route;
+                const shift = parts[1] || '';
+                const code = parts[2] || '';
+                
+                return (
+                  <div key={route} className="flex items-center gap-2">
+                    {isKL && <img src="/assets/kl-flag.png" alt="KL" className="w-5 h-5 object-cover rounded" />}
+                    {isSL && <img src="/assets/selangor-flag.png" alt="SL" className="w-5 h-5 object-cover rounded" />}
+                    <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                      Route: {shift} - {code}
+                    </span>
+                  </div>
+                );
+              })}
+              
+              {/* No Delivery */}
+              {(() => {
+                const now = new Date();
+                const dayOfMonth = now.getDate();
+                const isAlt1Day = dayOfMonth % 2 === 1;
+                const altType = isAlt1Day ? "Alt 1" : "Alt 2";
+                
+                return (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">🗓️</span>
+                    <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                      No Delivery: {altType}
+                    </span>
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+
+          {/* Panel 2: Color Indicators */}
+          {(() => {
+            const now = new Date();
+            const dayOfWeek = now.getDay();
+            const stockInColors = ['bg-yellow-500', 'bg-blue-500', 'bg-orange-500', 'bg-amber-700', 'bg-green-500', 'bg-purple-500', 'bg-pink-500'];
+            const moveFrontColors = ['bg-pink-500', 'bg-yellow-500', 'bg-blue-500', 'bg-orange-500', 'bg-amber-700', 'bg-green-500', 'bg-purple-500'];
+            const expiredColors = ['bg-purple-500', 'bg-pink-500', 'bg-yellow-500', 'bg-blue-500', 'bg-orange-500', 'bg-amber-700', 'bg-green-500'];
+            
+            return (
+              <div className="mb-4 p-4 bg-white/80 dark:bg-gray-900/50 rounded-lg border border-slate-200 dark:border-blue-700/30 shadow-md">
+                <div className="flex flex-wrap gap-6">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">✅</span>
+                    <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">Stock In Color:</span>
+                    <div className={`w-6 h-6 rounded-full ${stockInColors[dayOfWeek]} border-2 border-white dark:border-slate-800 shadow-md`}></div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">🔄</span>
+                    <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">Move Front Color:</span>
+                    <div className={`w-6 h-6 rounded-full ${moveFrontColors[dayOfWeek]} border-2 border-white dark:border-slate-800 shadow-md`}></div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">🚫</span>
+                    <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">Expired Color:</span>
+                    <div className={`w-6 h-6 rounded-full ${expiredColors[dayOfWeek]} border-2 border-white dark:border-slate-800 shadow-md`}></div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Data Table */}
           <DataTable
             rows={rowsWithDistances}
             columns={displayColumns}
@@ -472,73 +546,6 @@ export default function SharedTablePage() {
             onClearAllFilters={handleClearAllFilters}
             filteredRowsCount={rowsWithDistances.length}
             totalRowsCount={rows.length}
-            // Pass route info for toolbar display
-            customToolbarContent={
-              <div className="flex items-center gap-3 text-[10px]">
-                {/* Route Info */}
-                {routeFilters.length > 0 && routeFilters.map(route => {
-                  const routeUpper = route.toUpperCase();
-                  const isKL = routeUpper.includes('KL');
-                  const isSL = routeUpper.includes('SL');
-                  const parts = route.split('-').map(p => p.trim());
-                  const routeNumber = parts[0] || route;
-                  const shift = parts[1] || '';
-                  const code = parts[2] || '';
-                  
-                  return (
-                    <div key={route} className="flex items-center gap-1">
-                      <span className="text-blue-700 dark:text-blue-300">📍 Showing Routes:</span>
-                      {isKL && <img src="/assets/kl-flag.png" alt="KL" className="w-3 h-3 object-cover rounded" />}
-                      {isSL && <img src="/assets/selangor-flag.png" alt="SL" className="w-3 h-3 object-cover rounded" />}
-                      <span className="font-semibold text-blue-900 dark:text-blue-100">{routeNumber}</span>
-                      {shift && <span className="text-blue-700 dark:text-blue-300">- {shift}</span>}
-                      {code && <span className="text-blue-600 dark:text-blue-400 font-mono">- {code}</span>}
-                    </div>
-                  );
-                })}
-                
-                {/* No Delivery Info */}
-                {(() => {
-                  const now = new Date();
-                  const dayOfMonth = now.getDate();
-                  const isAlt1Day = dayOfMonth % 2 === 1;
-                  const altType = isAlt1Day ? "Alt1" : "Alt2";
-                  
-                  return (
-                    <div className="flex items-center gap-1">
-                      <span className="text-orange-700 dark:text-orange-300">🗓️</span>
-                      <span className="font-semibold text-orange-900 dark:text-orange-100">No Del: {altType}</span>
-                    </div>
-                  );
-                })()}
-                
-                {/* Color Indicators */}
-                {(() => {
-                  const now = new Date();
-                  const dayOfWeek = now.getDay();
-                  const stockInColors = ['bg-yellow-500', 'bg-blue-500', 'bg-orange-500', 'bg-amber-700', 'bg-green-500', 'bg-purple-500', 'bg-pink-500'];
-                  const moveFrontColors = ['bg-pink-500', 'bg-yellow-500', 'bg-blue-500', 'bg-orange-500', 'bg-amber-700', 'bg-green-500', 'bg-purple-500'];
-                  const expiredColors = ['bg-purple-500', 'bg-pink-500', 'bg-yellow-500', 'bg-blue-500', 'bg-orange-500', 'bg-amber-700', 'bg-green-500'];
-                  
-                  return (
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        <span className="text-slate-700 dark:text-slate-300">✅</span>
-                        <div className={`w-3 h-3 rounded-full ${stockInColors[dayOfWeek]} border border-white dark:border-slate-800`}></div>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-slate-700 dark:text-slate-300">🔄</span>
-                        <div className={`w-3 h-3 rounded-full ${moveFrontColors[dayOfWeek]} border border-white dark:border-slate-800`}></div>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-slate-700 dark:text-slate-300">🚫</span>
-                        <div className={`w-3 h-3 rounded-full ${expiredColors[dayOfWeek]} border border-white dark:border-slate-800`}></div>
-                      </div>
-                    </div>
-                  );
-                })()}
-              </div>
-            }
           />
         </div>
       </main>
