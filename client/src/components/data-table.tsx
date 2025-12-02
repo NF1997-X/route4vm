@@ -193,6 +193,7 @@ interface DataTableProps {
   onClearAllFilters?: () => void;
   filteredRowsCount?: number;
   totalRowsCount?: number;
+  customToolbarContent?: React.ReactNode;
 }
 
 export function DataTable({
@@ -227,6 +228,7 @@ export function DataTable({
   onClearAllFilters,
   filteredRowsCount = 0,
   totalRowsCount = 0,
+  customToolbarContent,
 }: DataTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(16);
@@ -782,6 +784,13 @@ export function DataTable({
       {/* Single Row: Filter/Sort/Search + Action Buttons */}
       <div className="flex justify-between items-center px-6 py-5 border-b border-slate-300 dark:border-blue-500/20 bg-gradient-to-r from-slate-200/50 via-slate-100/30 to-slate-200/50 dark:from-gray-900/40 dark:via-gray-900/50 dark:to-gray-900/40 backdrop-blur-sm">
         <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Custom Toolbar Content */}
+          {customToolbarContent && (
+            <div className="mr-4 border-r border-slate-300 dark:border-blue-500/20 pr-4">
+              {customToolbarContent}
+            </div>
+          )}
+          
           {/* Sort Popover */}
           <Popover>
             <PopoverTrigger asChild>
