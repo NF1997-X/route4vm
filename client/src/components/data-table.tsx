@@ -1662,29 +1662,35 @@ export function DataTable({
                                           <SelectItem value="alt1">
                                             <div className="flex items-center gap-2">
                                               {(() => {
-                                                const currentDate = new Date().getDate();
-                                                const isOddDate = currentDate % 2 === 1;
+                                                const now = new Date();
+                                                const baseDate = new Date('2025-12-02');
+                                                const currentDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                                                const daysSinceBase = Math.floor((currentDate.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24));
+                                                const isAlt1Day = daysSinceBase % 2 === 1;
                                                 return (
-                                                  <div className={`w-4 h-4 rounded-full bg-yellow-500 flex items-center justify-center text-white text-xs font-bold ${!isOddDate ? 'opacity-60' : ''}`}>
-                                                    {isOddDate ? '✓' : '✗'}
+                                                  <div className={`w-4 h-4 rounded-full bg-yellow-500 flex items-center justify-center text-white text-xs font-bold ${!isAlt1Day ? 'opacity-60' : ''}`}>
+                                                    {isAlt1Day ? '✓' : '✗'}
                                                   </div>
                                                 );
                                               })()}
-                                              <span className="text-yellow-600 dark:text-yellow-400 text-xs font-medium">Alt 1 (Odd)</span>
+                                              <span className="text-yellow-600 dark:text-yellow-400 text-xs font-medium">Alt 1 (Even)</span>
                                             </div>
                                           </SelectItem>
                                           <SelectItem value="alt2">
                                             <div className="flex items-center gap-2">
                                               {(() => {
-                                                const currentDate = new Date().getDate();
-                                                const isOddDate = currentDate % 2 === 1;
+                                                const now = new Date();
+                                                const baseDate = new Date('2025-12-02');
+                                                const currentDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                                                const daysSinceBase = Math.floor((currentDate.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24));
+                                                const isAlt2Day = daysSinceBase % 2 === 0;
                                                 return (
-                                                  <div className={`w-4 h-4 rounded-full bg-yellow-500 flex items-center justify-center text-white text-xs font-bold ${isOddDate ? 'opacity-60' : ''}`}>
-                                                    {!isOddDate ? '✓' : '✗'}
+                                                  <div className={`w-4 h-4 rounded-full bg-yellow-500 flex items-center justify-center text-white text-xs font-bold ${!isAlt2Day ? 'opacity-60' : ''}`}>
+                                                    {isAlt2Day ? '✓' : '✗'}
                                                   </div>
                                                 );
                                               })()}
-                                              <span className="text-yellow-600 dark:text-yellow-400 text-xs font-medium">Alt 2 (Even)</span>
+                                              <span className="text-yellow-600 dark:text-yellow-400 text-xs font-medium">Alt 2 (Odd)</span>
                                             </div>
                                           </SelectItem>
                                           <SelectItem value="inactive">
