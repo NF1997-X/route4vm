@@ -169,7 +169,7 @@ export function Footer({ editMode = false }: FooterProps) {
                   )}
                 </div>
                 <div className="mt-0.5 text-slate-500 dark:text-slate-500">
-                  <span className="font-bold">Powered by React & Vite</span>
+                  <span className="font-bold">Table Route . Powered By</span>
                 </div>
               </div>
             </div>
